@@ -20,6 +20,7 @@
     <ProjectReference Include="..\cryptoworld.news.client\cryptoworld.news.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\CryptoWorld.News.Core\CryptoWorld.News.Core.csproj" />
   </ItemGroup>
 
 </Project>
