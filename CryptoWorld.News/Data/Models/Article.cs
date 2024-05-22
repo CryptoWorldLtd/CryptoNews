@@ -1,22 +1,22 @@
 ﻿namespace Data.Models
 {
-    public class Article : BaseModel<int>
+    public class Article : BaseModel
     {
-        public string Title { get; set; } = string.Empty;
+        public string Title { get; set; }
 
-        public string Content { get; set; } = string.Empty;
+        public string Content { get; set; }
 
-        public string ImageUrl { get; set; } = string.Empty;
+        public string ImageUrl { get; set; }
 
         public DateTime PublicationDate { get; set; }
 
         public int CategoryId { get; set; }
 
-        public virtual Category Category { get; set; } = null!;
+        public virtual Category Category { get; set; }
 
         public int SourceId { get; set; }
 
-        public virtual Source Source { get; set; } = null!;
+        public virtual Source Source { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
 

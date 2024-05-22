@@ -1,10 +1,10 @@
 ﻿namespace Data.Models
 {
-    public class Source : BaseModel<int>
+    public class Source : BaseModel
     {
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
 
-        public string Url { get; set; } = string.Empty;
+        public string Url { get; set; }
 
         public virtual ICollection<Article> Articles { get; set; } = new HashSet<Article>();
     }

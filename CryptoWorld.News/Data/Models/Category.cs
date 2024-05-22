@@ -1,8 +1,8 @@
 ﻿namespace Data.Models
 {
-    public class Category
+    public class Category : BaseModel
     {
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
 
         public virtual ICollection<Article> Articles { get; set; } = new HashSet<Article>();
     }

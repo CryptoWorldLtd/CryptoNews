@@ -2,10 +2,10 @@
 
 namespace Data.Models
 {
-    public class BaseModel<TKey>
+    public class BaseModel
     {
         [Key]
-        public TKey Id { get; set; }
+        public Guid Id { get; set; }
 
         public DateTime CreatedOn { get; set; }
 
