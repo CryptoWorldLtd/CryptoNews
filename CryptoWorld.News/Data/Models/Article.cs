@@ -1,6 +1,8 @@
-﻿namespace Data.Models
+﻿using Data.Models.Common;
+
+namespace Data.Models
 {
-    public class Article : BaseModel
+    public class Article : BaseEntity
     {
         public string Title { get; set; }
 
@@ -23,3 +25,4 @@
         public virtual ICollection<ArticleKeyword> Keywords { get; set; } = new HashSet<ArticleKeyword>();
     }
 }
+

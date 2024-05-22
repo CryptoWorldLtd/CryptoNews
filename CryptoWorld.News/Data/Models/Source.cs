@@ -1,6 +1,8 @@
-﻿namespace Data.Models
+﻿using Data.Models.Common;
+
+namespace Data.Models
 {
-    public class Source : BaseModel
+    public class Source : BaseEntity
     {
         public string Name { get; set; }
 

@@ -1,14 +1,14 @@
 ﻿namespace Data.Models
 {
-	using Microsoft.AspNetCore.Identity;
+    using Data.Models.Common;
+    using Microsoft.AspNetCore.Identity;
 
-	public class ApplicationUser : IdentityUser<Guid>
+	public class ApplicationUser : IdentityUser<Guid>, IBaseEntity
 	{
 		public ApplicationUser()
 		{
 			this.Id = Guid.NewGuid();
 			this.Comments = new HashSet<Comment>();
-
 		}
 
 		public string FirstName { get; set; }
@@ -32,6 +32,6 @@
 		public DateTime? DeletedOn { get; set; }
 
 		public virtual ICollection<Comment> Comments { get; set; }
-
 	}
 }
+

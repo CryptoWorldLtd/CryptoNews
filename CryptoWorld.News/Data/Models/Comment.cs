@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Data.Models.Common;
 using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models
 {
-    public class Comment : BaseModel
+    public class Comment : BaseEntity
     {
         [Required]
         public string Content { get; set; }
@@ -16,6 +16,6 @@ namespace Data.Models
 
         public string PublisherId { get; set; }
 
-        public virtual IdentityUser Publisher { get; set; }
+        public virtual ApplicationUser Publisher { get; set; }
     }
 }

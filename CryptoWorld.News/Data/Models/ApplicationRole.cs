@@ -1,8 +1,9 @@
 ﻿namespace Data.Models
 {
-	using Microsoft.AspNetCore.Identity;
+    using Data.Models.Common;
+    using Microsoft.AspNetCore.Identity;
 
-	public class ApplicationRole : IdentityRole<Guid>
+	public class ApplicationRole : IdentityRole<Guid>, IBaseEntity
 	{
 		public ApplicationRole()
 		{
@@ -18,3 +19,4 @@
 		public DateTime? DeletedOn { get; set; }
 	}
 }
+

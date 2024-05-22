@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Data.Models
+namespace Data.Models.Common
 {
-    public class BaseModel
+    public class BaseEntity : IBaseEntity
     {
         [Key]
         public Guid Id { get; set; }
