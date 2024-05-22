@@ -16,6 +16,6 @@ namespace Data.Models
 
         public string PublisherId { get; set; } = string.Empty;
 
-        public virtual ApplicationUser Publisher { get; set; } = null!;
+        public virtual IdentityUser Publisher { get; set; } = null!;
     }
 }
