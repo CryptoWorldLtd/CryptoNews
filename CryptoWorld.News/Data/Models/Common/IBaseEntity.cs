@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Data.Models.Common
+﻿namespace Data.Models.Common
 {
     public interface IBaseEntity
     {

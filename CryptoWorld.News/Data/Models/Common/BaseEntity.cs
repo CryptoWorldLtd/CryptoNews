@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Data.Models.Common
+﻿namespace Data.Models.Common
 {
     public class BaseEntity : IBaseEntity
     {
-        [Key]
         public Guid Id { get; set; }
 
         public DateTime CreatedOn { get; set; }
