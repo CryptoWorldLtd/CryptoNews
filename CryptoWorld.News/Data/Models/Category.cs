@@ -1,12 +1,11 @@
-﻿using Data.Models.Common;
+﻿using CryptoWorld.News.Data.Models.Common;
 
-namespace Data.Models
+namespace CryptoWorld.News.Data.Models
 {
-    public class Keyword : BaseEntity
+    public class Category : BaseEntity
     {
         public string Name { get; set; }
 
         public virtual ICollection<Article> Articles { get; set; } = new HashSet<Article>();
     }
 }
-

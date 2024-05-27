@@ -1,4 +1,4 @@
-﻿namespace Data.Models
+﻿namespace CryptoWorld.News.Data.Models
 {
     public class ArticleKeyword
     {

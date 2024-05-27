@@ -1,4 +1,4 @@
-﻿namespace Data.Models.Common
+﻿namespace CryptoWorld.News.Data.Models.Common
 {
     public interface IBaseEntity
     {

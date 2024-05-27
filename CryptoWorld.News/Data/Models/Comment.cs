@@ -1,7 +1,7 @@
-﻿using Data.Models.Common;
+﻿using CryptoWorld.News.Data.Models.Common;
 using System.ComponentModel.DataAnnotations;
 
-namespace Data.Models
+namespace CryptoWorld.News.Data.Models
 {
     public class Comment : BaseEntity
     {

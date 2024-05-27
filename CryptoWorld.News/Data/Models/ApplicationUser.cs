@@ -1,4 +1,4 @@
-﻿namespace Data.Models
+﻿namespace CryptoWorld.News.Data.Models
 {
     using Data.Models.Common;
     using Microsoft.AspNetCore.Identity;
