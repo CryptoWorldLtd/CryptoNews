@@ -20,4 +20,8 @@
     <ProjectReference Include="..\cryptoworld.news.client\cryptoworld.news.client.esproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
