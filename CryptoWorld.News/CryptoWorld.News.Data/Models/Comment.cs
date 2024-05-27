@@ -7,15 +7,10 @@ namespace CryptoWorld.News.Data.Models
     {
         [Required]
         public string Content { get; set; }
-
         public int ArticleId { get; set; }
-
         public virtual Article Article { get; set; }
-
         public DateTime PublishedOn { get; set; }
-
         public string PublisherId { get; set; }
-
         public virtual ApplicationUser Publisher { get; set; }
     }
 }
