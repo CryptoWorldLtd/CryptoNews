@@ -1,0 +1,6 @@
+@CryptoNews.API_HostAddress = http://localhost:5091
+
+GET {{CryptoNews.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
