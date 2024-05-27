@@ -6,6 +6,6 @@ namespace CryptoWorld.News.Data.Models
     {
         public string Name { get; set; }
         public string Url { get; set; }
-        public virtual ICollection<Article> Articles { get; set; } = new List<Article>();
+        public virtual List<Article> Articles { get; set; } = new List<Article>();
     }
 }
