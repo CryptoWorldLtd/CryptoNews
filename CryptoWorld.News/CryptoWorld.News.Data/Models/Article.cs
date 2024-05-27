@@ -12,7 +12,7 @@ namespace CryptoWorld.News.Data.Models
         public virtual Category Category { get; set; }
         public int SourceId { get; set; }
         public virtual Source Source { get; set; }
-        public virtual List<Comment> Comments { get; set; } = new List<Comment>();
-        public virtual List<ArticleKeyword> Keywords { get; set; } = new List<ArticleKeyword>();
+        public virtual List<Comment> Comments { get; set; } = [];
+        public virtual List<ArticleKeyword> Keywords { get; set; } =[];
     }
 }
