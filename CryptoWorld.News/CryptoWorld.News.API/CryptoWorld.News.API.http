@@ -1,0 +1,6 @@
+@CryptoWorld.News.API_HostAddress = http://localhost:5193
+
+GET {{CryptoWorld.News.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

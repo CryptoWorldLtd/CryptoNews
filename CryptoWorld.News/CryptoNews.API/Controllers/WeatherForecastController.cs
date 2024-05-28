@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace CryptoWorld.News.Server.Controllers
+namespace CryptoNews.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
