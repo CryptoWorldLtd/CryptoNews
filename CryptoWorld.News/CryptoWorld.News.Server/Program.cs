@@ -1,8 +1,8 @@
 using CryptoWorld.News.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 // Add services to the container.
 
@@ -14,8 +14,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
 var app = builder.Build();
+
+//Apply migrations after project run
+using (var serviceScope = app.Services.CreateScope())
+{
+    var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
