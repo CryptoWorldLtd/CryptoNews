@@ -2,9 +2,9 @@
 {
     public class ArticleKeyword
     {
-        public int ArticleId { get; set; }
+        public Guid ArticleId { get; set; }
         public virtual Article Article { get; set; }
-        public int KeywordId { get; set; }
+        public Guid KeywordId { get; set; }
         public virtual Keyword Keyword { get; set; }
     }
 }

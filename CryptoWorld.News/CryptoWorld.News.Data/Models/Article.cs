@@ -8,9 +8,9 @@ namespace CryptoWorld.News.Data.Models
         public string Content { get; set; }
         public string ImageUrl { get; set; }
         public DateTime PublicationDate { get; set; }
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public virtual Category Category { get; set; }
-        public int SourceId { get; set; }
+        public Guid SourceId { get; set; }
         public virtual Source Source { get; set; }
         public virtual List<Comment> Comments { get; set; } = [];
         public virtual List<ArticleKeyword> Keywords { get; set; } =[];
