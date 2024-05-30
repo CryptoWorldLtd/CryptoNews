@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CryptoWorld.News.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240529174628_InitialCreate")]
+    [Migration("20240530075221_Initial-Create")]
     partial class InitialCreate
     {
         /// <inheritdoc />
