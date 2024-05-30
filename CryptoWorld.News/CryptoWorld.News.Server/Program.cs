@@ -19,10 +19,20 @@ var app = builder.Build();
 //Apply migrations after project run
 using (var serviceScope = app.Services.CreateScope())
 {
-    var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();
+    if (app.Environment.IsDevelopment())
+    {
+        try
+        {
+            var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            dbContext.Database.Migrate();
+        }
+        catch (Exception ex)
+        {
+            var logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+        }
+    }
 }
-
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
