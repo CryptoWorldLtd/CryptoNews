@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\cryptoworld.news.client\cryptoworld.news.client.esproj" />
+    <ProjectReference Include="..\cryptoworld.news.client\CryptoWorld.News.Client.esproj" />
     <ProjectReference Include="..\CryptoWorld.News.Data\CryptoWorld.News.Data.csproj" />
   </ItemGroup>
 
