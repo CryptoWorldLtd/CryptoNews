@@ -26,9 +26,4 @@
     <ProjectReference Include="..\CryptoWorld.News.Data\CryptoWorld.News.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

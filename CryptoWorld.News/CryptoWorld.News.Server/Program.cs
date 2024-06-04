@@ -1,6 +1,8 @@
 using CryptoWorld.Application.Server.Settings;
 using CryptoWorld.News.Data;
+using CryptoWorld.News.Data.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -21,6 +23,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add JWT authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 var key = Encoding.ASCII.GetBytes(jwtSettings.Secret);
+
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services
     .AddSingleton(jwtSettings)
