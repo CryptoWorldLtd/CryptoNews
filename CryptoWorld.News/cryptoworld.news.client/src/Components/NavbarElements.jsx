@@ -16,7 +16,7 @@ export const Nav = styled.nav`
 `;
  
 export const NavLink = styled(Link)`
-    color: #808080;
+    color: #ffffff;
     display: flex;
     align-items: center;
     text-decoration: none;
@@ -30,7 +30,7 @@ export const NavLink = styled(Link)`
  
 export const NavMenu = styled.div`
     display: flex;
-    align-items: center;
+    align-items: start;
    
     @media screen and (max-width: 768px) {
         display: none;
