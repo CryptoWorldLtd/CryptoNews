@@ -1,5 +1,5 @@
-﻿using CryptoNews.World.Core.Contracts;
-using CryptoNews.World.Core.ViewModels;
+﻿using CryptoWorld.News.Core.Contracts;
+using CryptoWorld.News.Core.ViewModels;
 using CryptoWorld.News.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -7,9 +7,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using static CryptoWorld.Common.GlobalConstants;
+using static CryptoWorld.News.Common.GlobalConstants;
 
-namespace CryptoNews.World.Core.Services
+namespace CryptoWorld.News.Core.Services
 {
     public class AccountService : IAccountService
     {

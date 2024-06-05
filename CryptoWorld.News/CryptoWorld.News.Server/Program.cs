@@ -1,6 +1,6 @@
-using CryptoNews.World.Core.Contracts;
-using CryptoNews.World.Core.Services;
 using CryptoWorld.Application.Server.Settings;
+using CryptoWorld.News.Core.Contracts;
+using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,7 +26,7 @@ var jwtSettingsSection = builder.Configuration.GetSection("JwtSettings");
 builder.Services.Configure<JwtSettings>(jwtSettingsSection);
 
 var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
-var key = Encoding.ASCII.GetBytes(jwtSettings.Secret);
+var key = Encoding.UTF8.GetBytes(jwtSettings.Secret);
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()

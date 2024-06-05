@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Contracts\CryptoWorld.News.Core.Contracts.csproj" />
-    <ProjectReference Include="..\CryptoWorld.News.Core.ViewModels\CryptoWorld.News.Core.ViewModels.csproj" />
-    <ProjectReference Include="..\CryptoWorld.News.Server\CryptoWorld.Application.Server.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CryptoWorld.News.Common\CryptoWorld.News.Common.csproj" />
     <ProjectReference Include="..\CryptoWorld.News.Data\CryptoWorld.News.Data.csproj" />
   </ItemGroup>
 

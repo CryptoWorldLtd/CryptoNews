@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CryptoNews.World.Core.ViewModels
+namespace CryptoWorld.News.Core.ViewModels
 {
     public class LoginRequestModel
     {

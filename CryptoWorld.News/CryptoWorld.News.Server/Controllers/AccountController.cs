@@ -1,8 +1,8 @@
-﻿using CryptoNews.World.Core.Contracts;
-using CryptoNews.World.Core.ViewModels;
+﻿using CryptoWorld.News.Core.Contracts;
+using CryptoWorld.News.Core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static CryptoWorld.Common.GlobalConstants;
+using static CryptoWorld.News.Common.GlobalConstants;
 
 namespace CryptoWorld.Application.Server.Controllers
 {

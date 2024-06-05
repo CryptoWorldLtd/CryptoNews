@@ -22,8 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CryptoNews.World.Core\CryptoNews.World.Core.csproj" />
+    <ProjectReference Include="..\CryptoNews.World.Core\CryptоWorld.News.Core.csproj" />
     <ProjectReference Include="..\cryptoworld.news.client\cryptoworld.news.client.esproj" />
+    <ProjectReference Include="..\CryptoWorld.News.Common\CryptoWorld.News.Common.csproj" />
+    <ProjectReference Include="..\CryptoWorld.News.Core\CryptоWorld.News.Core.csproj" />
     <ProjectReference Include="..\CryptoWorld.News.Data\CryptoWorld.News.Data.csproj" />
   </ItemGroup>
 
