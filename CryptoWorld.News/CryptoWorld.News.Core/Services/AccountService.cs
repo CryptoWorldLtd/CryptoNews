@@ -37,16 +37,12 @@ namespace CryptoWorld.News.Core.Services
             var user = await userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
-            {
-                throw new ArgumentException(UserNotFound);
-            }
+            throw new ArgumentException(UserNotFound);
 
             var passworIsValid = await userManager.CheckPasswordAsync(user, model.Password);
 
             if (!passworIsValid)
-            {
-                throw new ArgumentException(IncorrectPassword);
-            }
+            throw new ArgumentException(IncorrectPassword);
 
             var token = GenerateJwtToken(user);
 

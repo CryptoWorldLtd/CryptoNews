@@ -20,9 +20,7 @@ namespace CryptoWorld.Application.Server.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterRequestModel model)
         {
             if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            return BadRequest(ModelState);
 
             var result = await accountService.RegisterAsync(model);
 
@@ -43,9 +41,7 @@ namespace CryptoWorld.Application.Server.Controllers
         public async Task<ActionResult<LoginResponseModel>> Login([FromBody] LoginRequestModel model)
         {
             if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            return BadRequest(ModelState);
 
             var token = await accountService.LoginAsync(model);
 
