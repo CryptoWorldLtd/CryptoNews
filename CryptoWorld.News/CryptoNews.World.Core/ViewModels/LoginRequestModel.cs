@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CryptoWorld.Application.Server.Models
+namespace CryptoNews.World.Core.ViewModels
 {
     public class LoginRequestModel
     {
         [Required]
-        public string Username { get; set; }
+        public string Email { get; set; }
         [Required]
         public string Password { get; set; }
     }

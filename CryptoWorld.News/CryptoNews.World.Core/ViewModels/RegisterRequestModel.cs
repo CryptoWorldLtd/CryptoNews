@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CryptoWorld.Application.Server.Models
+namespace CryptoNews.World.Core.ViewModels
 {
     public class RegisterRequestModel
     {

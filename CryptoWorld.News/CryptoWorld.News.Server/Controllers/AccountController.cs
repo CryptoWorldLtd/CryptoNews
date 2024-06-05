@@ -1,28 +1,21 @@
-﻿using CryptoWorld.Application.Server.Models;
-using CryptoWorld.News.Data.Models;
+﻿using CryptoNews.World.Core.Contracts;
+using CryptoNews.World.Core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using static CryptoWorld.Common.GlobalConstants;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
     public class AccountController : BaseApiController
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IConfiguration _configuration;
+        private readonly IAccountService accountService;
 
-        public AccountController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IConfiguration configuration)
+        public AccountController(IAccountService _accountService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _configuration = configuration;
+            accountService = _accountService;
         }
 
-        [HttpPost("register")]
+        [HttpPost(RegisterRoute)]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterRequestModel model)
         {
@@ -31,8 +24,7 @@ namespace CryptoWorld.Application.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await accountService.RegisterAsync(model);
 
             if (!result.Succeeded)
             {
@@ -43,7 +35,21 @@ namespace CryptoWorld.Application.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok(new { Message = "User registered successfully!" });
+            return Ok(new { Message = SuccessfullRegistration });
+        }
+
+        [HttpPost(LoginRoute)]
+        [AllowAnonymous]
+        public async Task<ActionResult<LoginResponseModel>> Login([FromBody] LoginRequestModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var token = await accountService.LoginAsync(model);
+
+            return Ok(token);
         }
     }
 }
