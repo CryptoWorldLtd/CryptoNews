@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import './RegisterLogin.css';
+import './Register.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 
-const RegisterLogin = () => {
+const Register = () => {
     
   const [action, setAction] = useState("Register");
   const [name, setName] = useState("");
@@ -25,7 +26,6 @@ const RegisterLogin = () => {
         <div className='underline'></div>
       </div>
       <div className='inputs'>
-        {action==="Register"? <div></div> : 
           <div className='input-group'>
             <div className='input'>
               <i>
@@ -39,7 +39,7 @@ const RegisterLogin = () => {
               />
             </div>
           </div>
-        }
+        
         <div className='input-group'>
           <div className='input'>
             <i>
@@ -59,13 +59,13 @@ const RegisterLogin = () => {
           </i>
           <input type='password' placeholder='Password' />
         </div>
-       
+      
         <div className='submit-container'>
           <div className={action==="Login"?"submit gray" : "submit"} onClick={()=>{setAction("Register")}}>Register</div>
-          
+    
         </div>
       </div>
     </div>
   );
 }
-export default RegisterLogin;
+export default Register;

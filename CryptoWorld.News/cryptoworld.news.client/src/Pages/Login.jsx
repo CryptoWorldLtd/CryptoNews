@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"
 import './Login.css'
-
-import user_icon from '../assets/user.png'
-import password_icon from '../assets/password.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
 
 const Login = () => {
     return (
@@ -14,13 +14,17 @@ const Login = () => {
             </div>
             <div className="inputs">
                 <div className="input">
-                    <img src={user_icon} alt="" />
+                <i>
+                <FontAwesomeIcon icon={faUser} />
+              </i>
                     <input type="username"placeholder="Name"/>
                 </div>
             </div>
             <div className="inputs">
                 <div className="input">
-                    <img src={password_icon} alt="" />
+                <i>
+            <FontAwesomeIcon icon={faLock} />
+          </i>
                     <input type="password" placeholder="Password"/>
                 </div>
             </div>
