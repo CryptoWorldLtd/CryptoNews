@@ -7,6 +7,7 @@
     <SpaRoot>..\cryptoworld.news.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:5173</SpaProxyServerUrl>
+    <UserSecretsId>2a74de2a-60b9-425c-bb9b-eb1c521c21aa</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
