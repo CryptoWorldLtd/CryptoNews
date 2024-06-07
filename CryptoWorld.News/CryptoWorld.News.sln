@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoWorld.Application.Server", "CryptoWorld.News.Server\CryptoWorld.Application.Server.csproj", "{139031F0-89FF-4E56-8A33-5C4C1DDFE794}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A00BF946-0480-487B-ADBB-1A210E78323B} = {A00BF946-0480-487B-ADBB-1A210E78323B}
-	EndProjectSection
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "cryptoworld.news.client", "cryptoworld.news.client\cryptoworld.news.client.esproj", "{1A2AD1AB-20EE-4DD7-BC12-87837EB4B85D}"
 EndProject
@@ -23,10 +20,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoWorld.News.Data", "CryptoWorld.News.Data\CryptoWorld.News.Data.csproj", "{69793180-A251-49EA-A0B1-8EDBB8459AFF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CryptoWorld.News.Data", "CryptoWorld.News.Data", "{AAC2EADA-EE45-4597-BA0B-BD9853690E02}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CryptoWorld.News.Common", "CryptoWorld.News.Common", "{9C19061E-DAA8-43D7-8F1A-6FAE4C8C5A42}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoWorld.News.Common", "CryptoWorld.News.Common\CryptoWorld.News.Common.csproj", "{A00BF946-0480-487B-ADBB-1A210E78323B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptоWorld.News.Core", "CryptoWorld.News.Core\CryptоWorld.News.Core.csproj", "{629AFE0D-8C51-4109-B8E3-8745619ECF07}"
 EndProject
@@ -54,10 +47,6 @@ Global
 		{69793180-A251-49EA-A0B1-8EDBB8459AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69793180-A251-49EA-A0B1-8EDBB8459AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69793180-A251-49EA-A0B1-8EDBB8459AFF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A00BF946-0480-487B-ADBB-1A210E78323B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A00BF946-0480-487B-ADBB-1A210E78323B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A00BF946-0480-487B-ADBB-1A210E78323B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A00BF946-0480-487B-ADBB-1A210E78323B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{629AFE0D-8C51-4109-B8E3-8745619ECF07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{629AFE0D-8C51-4109-B8E3-8745619ECF07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{629AFE0D-8C51-4109-B8E3-8745619ECF07}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -74,8 +63,6 @@ Global
 		{737E1F95-7AC8-4AC0-B3B2-8CCDE35B1D57} = {412DE7B1-04E5-4CF1-9C74-8F2881D9A18E}
 		{69793180-A251-49EA-A0B1-8EDBB8459AFF} = {AAC2EADA-EE45-4597-BA0B-BD9853690E02}
 		{AAC2EADA-EE45-4597-BA0B-BD9853690E02} = {412DE7B1-04E5-4CF1-9C74-8F2881D9A18E}
-		{9C19061E-DAA8-43D7-8F1A-6FAE4C8C5A42} = {412DE7B1-04E5-4CF1-9C74-8F2881D9A18E}
-		{A00BF946-0480-487B-ADBB-1A210E78323B} = {9C19061E-DAA8-43D7-8F1A-6FAE4C8C5A42}
 		{629AFE0D-8C51-4109-B8E3-8745619ECF07} = {737E1F95-7AC8-4AC0-B3B2-8CCDE35B1D57}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

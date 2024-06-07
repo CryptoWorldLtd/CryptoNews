@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using static CryptoWorld.News.Common.GlobalConstants;
 
 namespace CryptoWorld.News.Core.Services
 {
@@ -33,12 +32,12 @@ namespace CryptoWorld.News.Core.Services
             var user = await userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
-            throw new ArgumentException(UserNotFound);
+            throw new ArgumentException("There is no such user.");
 
             var passworIsValid = await userManager.CheckPasswordAsync(user, model.Password);
 
             if (!passworIsValid)
-            throw new ArgumentException(IncorrectPassword);
+            throw new ArgumentException("Password is incorrect.");
 
             var token = GenerateJwtToken(user);
 

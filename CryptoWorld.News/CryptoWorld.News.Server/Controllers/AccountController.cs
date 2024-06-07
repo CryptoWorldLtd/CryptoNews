@@ -2,7 +2,6 @@
 using CryptoWorld.News.Core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static CryptoWorld.News.Common.GlobalConstants;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
@@ -15,7 +14,7 @@ namespace CryptoWorld.Application.Server.Controllers
             accountService = _accountService;
         }
 
-        [HttpPost(RegisterRoute)]
+        [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterRequestModel model)
         {
@@ -33,10 +32,10 @@ namespace CryptoWorld.Application.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok(new { Message = SuccessfullRegistration });
+            return Ok(new { Message = "The user was registered successfully!" });
         }
 
-        [HttpPost(LoginRoute)]
+        [HttpPost("login")]
         [AllowAnonymous]
         public async Task<ActionResult<LoginResponseModel>> Login([FromBody] LoginRequestModel model)
         {
