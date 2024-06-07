@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
 import './Login.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
+import axios from "axios";
 
 const Login = () => {
+    const[values,setValues] = useState({
+        username: "",
+        password: "",
+        showPassword: false
+    });
+    const handlePasswordVisibility = () =>{
+        setValues({
+            ...values,
+            showPassword: !values.showPassword
+        });
+    }
+    console.log(values);
     return (
         <div className="container">
             <div className="header">
@@ -17,7 +30,11 @@ const Login = () => {
                 <i>
                 <FontAwesomeIcon icon={faUser} />
               </i>
-                    <input type="username"placeholder="Name"/>
+              <input 
+                type='text' 
+                placeholder='Name' 
+                onChange={(e)=>setValues({...values,username:e.target.value})} 
+              />
                 </div>
             </div>
             <div className="inputs">
@@ -25,7 +42,11 @@ const Login = () => {
                 <i>
             <FontAwesomeIcon icon={faLock} />
           </i>
-                    <input type="password" placeholder="Password"/>
+          <input 
+                type={values.showPassword ? "text" : "password"} 
+                placeholder='Password' 
+                onChange={(e)=>setValues({...values,password:e.target.value})} 
+              />
                 </div>
             </div>
             <div className="forgot-password">Forgot Password? <span>Click Here!</span></div>
