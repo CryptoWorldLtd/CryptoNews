@@ -2,8 +2,8 @@
     display: flex;
     flex-direction: column;
     width: 600px;
-    margin: auto;
-    margin-top: 200px;
+    margin: 0 auto;
+    margin-top: 50px;
     background: #fff;
     padding-bottom: 30px;
 }
@@ -70,7 +70,7 @@
 .submit-container{
     display: flex;
     gap: 30px;
-    margin: 60px auto;
+    margin: 2em auto;
 }
 .submit{
     display: flex;
