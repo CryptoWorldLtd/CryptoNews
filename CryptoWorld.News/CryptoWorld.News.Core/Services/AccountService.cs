@@ -22,6 +22,11 @@ namespace CryptoWorld.News.Core.Services
 
         public async Task<IdentityResult>RegisterAsync(RegisterRequestModel model)
         {
+            var userExists = await userManager.FindByEmailAsync(model.Email);
+
+            if (userExists != null)
+                throw new ArgumentException("User with such email already exists.");
+
             if (!IsValidEmail(model.Email))
             {
                 throw new ArgumentException("Invalid email address format.");
