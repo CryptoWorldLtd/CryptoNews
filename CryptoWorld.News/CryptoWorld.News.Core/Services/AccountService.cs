@@ -28,9 +28,7 @@ namespace CryptoWorld.News.Core.Services
                 throw new ArgumentException("User with such email already exists.");
 
             if (!IsValidEmail(model.Email))
-            {
                 throw new ArgumentException("Invalid email address format.");
-            }
 
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
             var result = await userManager.CreateAsync(user, model.Password);
