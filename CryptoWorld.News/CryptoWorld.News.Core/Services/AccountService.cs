@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CryptoWorld.News.Core.Services
 {
@@ -21,6 +22,11 @@ namespace CryptoWorld.News.Core.Services
 
         public async Task<IdentityResult>RegisterAsync(RegisterRequestModel model)
         {
+            if (!IsValidEmail(model.Email))
+            {
+                throw new ArgumentException("Invalid email address format.");
+            }
+
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
             var result = await userManager.CreateAsync(user, model.Password);
 
@@ -68,6 +74,15 @@ namespace CryptoWorld.News.Core.Services
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            var emailPattern = @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$";
+            return Regex.IsMatch(email, emailPattern);
         }
     }
 }
