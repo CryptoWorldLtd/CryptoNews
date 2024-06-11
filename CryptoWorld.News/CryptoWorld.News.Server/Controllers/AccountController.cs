@@ -1,6 +1,7 @@
 ﻿using CryptoWorld.News.Core.Contracts;
 using CryptoWorld.News.Core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CryptoWorld.Application.Server.Controllers
