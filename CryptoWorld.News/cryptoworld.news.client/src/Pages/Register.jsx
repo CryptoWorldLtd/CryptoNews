@@ -7,12 +7,13 @@ import axios from 'axios';
 
 const Register = () => {
   const [action, setAction] = useState("Register");
-  const [name, setName] = useState("");
+  const [username, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
 
-  const handleNameChange = (event) => {
+  const handleUsernameChange = (event) => {
     setName(event.target.value);
   };
 
@@ -23,13 +24,17 @@ const Register = () => {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
+  };
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/register', {
-        name,
+      const response = await axios.post('https://localhost:61600/account/register', {
+        username,
         email,
-        password
+        password,
+        confirmPassword
       });
       console.log(response.data);
       // Handle success (e.g., redirect or show success message)
@@ -55,8 +60,8 @@ const Register = () => {
             <input 
               type='text' 
               placeholder='Name' 
-              value={name} 
-              onChange={handleNameChange} 
+              value={username} 
+              onChange={handleUsernameChange} 
             />
           </div>
         </div>
@@ -83,6 +88,17 @@ const Register = () => {
             placeholder='Password' 
             value={password}
             onChange={handlePasswordChange}
+          />
+        </div>
+        <div className='input'>
+          <i>
+            <FontAwesomeIcon icon={faLock} />
+          </i>
+          <input 
+            type='confirmPassword' 
+            placeholder='Confirm Password' 
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
           />
         </div>
       
