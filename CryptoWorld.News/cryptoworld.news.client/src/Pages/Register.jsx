@@ -6,15 +6,15 @@ import { faLock } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
 const Register = () => {
-  const [action, setAction] = useState("Register");
-  const [username, setName] = useState("");
+  const [action] = useState("Register");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
 
   const handleUsernameChange = (event) => {
-    setName(event.target.value);
+    setUsername(event.target.value);
   };
 
   const handleEmailChange = (event) => {
@@ -24,24 +24,30 @@ const Register = () => {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
+
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value);
   };
 
   const handleSubmit = async () => {
+    setError(null); // Reset the error state before submitting
     try {
+      console.log('Submitting:', { username, email, password, confirmPassword });
       const response = await axios.post('https://localhost:7249/account/register', {
         username,
         email,
         password,
         confirmPassword
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
-      console.log(response.data);
-      // Handle success (e.g., redirect or show success message)
+      console.log('Response:', response.data);
+      // Handle successful registration (e.g., redirect or show success message)
     } catch (error) {
-      console.error(error);
-      setError("Registration failed");
-      // Handle error (e.g., show error message)
+      console.error('Error:', error.response ? error.response.data : error.message);
+      setError(error.response?.data?.message || "Registration failed");
     }
   };
 
@@ -95,7 +101,7 @@ const Register = () => {
             <FontAwesomeIcon icon={faLock} />
           </i>
           <input 
-            type='confirmPassword' 
+            type='password' 
             placeholder='Confirm Password' 
             value={confirmPassword}
             onChange={handleConfirmPasswordChange}
