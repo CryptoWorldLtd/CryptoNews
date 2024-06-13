@@ -30,7 +30,7 @@ const Register = () => {
   };
 
   const handleSubmit = async () => {
-    setError(null); // Reset the error state before submitting
+    setError(null); 
     try {
       console.log('Submitting:', { username, email, password, confirmPassword });
       const response = await axios.post('https://localhost:7249/account/register', {
@@ -44,7 +44,7 @@ const Register = () => {
         }
       });
       console.log('Response:', response.data);
-      // Handle successful registration (e.g., redirect or show success message)
+      
     } catch (error) {
       console.error('Error:', error.response ? error.response.data : error.message);
       setError(error.response?.data?.message || "Registration failed");
