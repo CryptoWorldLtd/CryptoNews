@@ -8,15 +8,12 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 
-
 namespace CryptoWorld.News.Core.Services
 {
 	public class AccountService : IAccountService
 	{
 		private readonly UserManager<ApplicationUser> userManager;
 		private readonly SignInManager<ApplicationUser> signInManager;
-
-
 		public AccountService(
 			UserManager<ApplicationUser> _userManager, SignInManager<ApplicationUser> _signInManager)
 		{
@@ -40,9 +37,7 @@ namespace CryptoWorld.News.Core.Services
 			if (result.Succeeded)
 			{
 				await this.signInManager.SignInAsync(user, false);
-
 			}
-
 			return result;
 		}
 
@@ -92,8 +87,8 @@ namespace CryptoWorld.News.Core.Services
 		{
 			if (string.IsNullOrWhiteSpace(email))
 				return false;
-
 			var emailPattern = @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$";
+
 			return Regex.IsMatch(email, emailPattern);
 		}
 	}

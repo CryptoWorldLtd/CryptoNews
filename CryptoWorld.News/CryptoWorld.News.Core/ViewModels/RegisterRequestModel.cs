@@ -5,7 +5,7 @@ namespace CryptoWorld.News.Core.ViewModels
     public class RegisterRequestModel
     {
         [Required]
-        [MinLength(4, ErrorMessage = "The username should be at least 4 characters long.")]
+        [Length(minimumLength: 4, maximumLength: 15, ErrorMessage = "The username should be at least 4 characters long.")]
         public string Username { get; set; }
 
         [Required]
