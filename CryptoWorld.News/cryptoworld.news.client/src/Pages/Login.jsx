@@ -18,7 +18,7 @@ const Login = () => {
             showPassword: !values.showPassword
         });
     }
-    console.log(values);
+   
     return (
         <div className="container">
             <div className="header">
