@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import './Register.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope } from '@fortawesome/free-regular-svg-icons';
@@ -12,6 +13,8 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
+    
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -43,8 +46,9 @@ const Register = () => {
           'Content-Type': 'application/json'
         }
       });
-      console.log('Response:', response.data);
-      
+        console.log('Response:', response.data);
+        navigate("/Login");
+        
     } catch (error) {
       console.error('Error:', error.response ? error.response.data : error.message);
       setError(error.response?.data?.message || "Registration failed");
@@ -111,7 +115,7 @@ const Register = () => {
         <div className='submit-container'>
           <div 
             className={action === "Login" ? "submit gray" : "submit"} 
-            onClick={handleSubmit}
+            onClick={(handleSubmit)}
           >
             Register
           </div>
