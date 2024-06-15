@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import {  faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,6 +11,8 @@ const Login = () => {
   const [password, setPassword] = useState(() => (localStorage.checkbox ? localStorage.password : ""));
   const [isChecked, setIsChecked] = useState(() => !!localStorage.checkbox);
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -38,6 +41,7 @@ const Login = () => {
         }
       });
       console.log('Response:', response.data);
+      navigate("/");
       alert('Login successful!');
     } catch (error) {
       console.error(error);
