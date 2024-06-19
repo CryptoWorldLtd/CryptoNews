@@ -4,7 +4,6 @@ import './App.css';
 import Navbar from './Components/Navbar'; 
 import Home from './Pages/Home';
 import Login from './Pages/Login';
-import RegisterLogin from './Pages/RegisterLogin';
 import Register from './Pages/Register';
 
 
@@ -16,7 +15,6 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/Login" element={<Login />} />
-                    <Route path="/RegisterLogin" element={<RegisterLogin />} />
                     <Route path="/Register" element={<Register />} />
                 </Routes>
             </Router>
