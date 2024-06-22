@@ -1,7 +1,9 @@
 ﻿using CryptoWorld.News.Core.Contracts;
 using CryptoWorld.News.Core.ViewModels;
+using CryptоWorld.News.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CryptoWorld.Application.Server.Controllers
@@ -9,10 +11,12 @@ namespace CryptoWorld.Application.Server.Controllers
 	public class AccountController : BaseApiController
 	{
 		private readonly IAccountService accountService;
+		private readonly IEmailSenderService emailSenderService;
 
-		public AccountController(IAccountService _accountService)
+		public AccountController(IAccountService _accountService, IEmailSenderService _emailSenderService)
 		{
 			accountService = _accountService;
+			emailSenderService = _emailSenderService;
 		}
 
 		[HttpPost("register")]
@@ -25,6 +29,7 @@ namespace CryptoWorld.Application.Server.Controllers
 			try
 			{
 				var result = await accountService.RegisterAsync(model);
+				
 
 				if (!result.Succeeded)
 				{
@@ -36,7 +41,19 @@ namespace CryptoWorld.Application.Server.Controllers
 				}
 				else
 				{
-					return Ok(new { Message = "The user was registered successfully!" });
+					var receiver = model.Email;
+					var username = model.Username;
+                    
+					try
+					{
+                    await emailSenderService.SendEmailAsync(receiver,username);
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine(e);
+					}
+
+                    return Ok(new { Message = "The user was registered successfully!" });
 				}
 			}
 			catch (Exception ex)
