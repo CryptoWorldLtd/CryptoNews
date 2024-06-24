@@ -34,6 +34,7 @@ builder.Services
 builder.Services.AddCors();
 builder.Services.AddScoped<IAccountService,AccountService>();
 
+
 var app = builder.Build();
 
 //Apply migrations after project run
