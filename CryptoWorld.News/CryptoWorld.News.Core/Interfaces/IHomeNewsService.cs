@@ -9,6 +9,6 @@ namespace CryptоWorld.News.Core.Interfaces
 {
     public interface IHomeNewsService
     {
-        Task<HomePageNewsModel> HomePageNewsAsync(HomePageNewsModel model);
+        public Task <List<HomePageNewsModel>> HomePageNews();
     }
 }

@@ -9,6 +9,14 @@ namespace CryptоWorld.News.Core.ViewModels.Home_Page
 {
     public class HomePageNewsModel
     {
+        public HomePageNewsModel(string title, string content, string imageUrl, string datePublished)
+        {
+           this.Title= title; 
+            this.Content= content;
+            this.ImageUrl= imageUrl;
+            this.DatePublished= datePublished;
+
+        }
         [Required]
         string Title {  get; set; } 
 
@@ -17,7 +25,7 @@ namespace CryptоWorld.News.Core.ViewModels.Home_Page
 
         public string ImageUrl {  get; set; }
 
-        public string DateTime { get; set; }
+        public string DatePublished { get; set; }
 
     }
 }
