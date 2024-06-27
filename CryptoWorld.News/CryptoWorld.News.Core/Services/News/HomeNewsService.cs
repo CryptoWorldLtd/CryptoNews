@@ -13,16 +13,16 @@ namespace CryptоWorld.News.Core.Services.News
     {    
         private readonly AngleSharp.IConfiguration config;
         private readonly IBrowsingContext context;
-        private List<HomePageNewsModel> _homeNews = new();
-        private List<string> _urls = new();
-        private readonly ApplicationDbContext _dbContext;
-        public HomeNewsService(List<HomePageNewsModel> homeNews, List<string> urls,ApplicationDbContext dbContext)
+        private List<HomePageNewsModel> homeNews = new();
+        private List<string> urls = new();
+        private readonly ApplicationDbContext dbContext;
+        public HomeNewsService(List<HomePageNewsModel> _homeNews, List<string> _urls,ApplicationDbContext _dbContext)
         {
             config = Configuration.Default.WithDefaultLoader();
             context = BrowsingContext.New(config);
-            _homeNews = homeNews;
-            _urls = urls;
-            _dbContext = dbContext;
+            homeNews = _homeNews;
+            urls = _urls;
+            dbContext = _dbContext;
         }
 
         public async Task<List<HomePageNewsModel>> HomePageNews()
@@ -40,12 +40,12 @@ namespace CryptоWorld.News.Core.Services.News
                     Console.WriteLine(item.GetAttribute("href"));
                 }
                 
-                _urls.Add(item.GetAttribute("href"));
+                urls.Add(item.GetAttribute("href"));
             }
             if (newsUrl != null)
             {
                
-                foreach (var url in _urls)
+                foreach (var url in urls)
                 {
                     var documentForNews = await context.OpenAsync(url);
                     var title = documentForNews.QuerySelector("header > h1").ToString();
@@ -66,11 +66,11 @@ namespace CryptоWorld.News.Core.Services.News
 
                     HomePageNewsModel model = new HomePageNewsModel(title, contentInString, imageUrl, dateOfPublish);
 
-                    _homeNews.Add(model);
+                    homeNews.Add(model);
                 }
 
                 List<Article> articles = new List<Article>();
-                foreach (var article in _homeNews)
+                foreach (var article in homeNews)
                 {
                     Article articleModel = new Article();
                     articleModel.Title = article.Title;
@@ -94,11 +94,11 @@ namespace CryptоWorld.News.Core.Services.News
                     articles.Add(articleModel);
                 }
 
-               await _dbContext.AddRangeAsync(articles);
-                await _dbContext.SaveChangesAsync();
+               await dbContext.AddRangeAsync(articles);
+                await dbContext.SaveChangesAsync();
             }
 
-            return _homeNews;
+            return homeNews;
         }
     }
 }

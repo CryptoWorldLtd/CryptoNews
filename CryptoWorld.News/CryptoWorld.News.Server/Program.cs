@@ -2,6 +2,8 @@ using CryptoWorld.News.Core.Contracts;
 using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
+using CryptîWorld.News.Core.Interfaces;
+using CryptîWorld.News.Core.Services.News;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IHomeNewsService, HomeNewsService> ();
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequiredLength = 8;
