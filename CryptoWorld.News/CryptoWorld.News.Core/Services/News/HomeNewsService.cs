@@ -1,6 +1,10 @@
 ﻿using AngleSharp;
+using CryptoWorld.News.Data;
+using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.ViewModels.Home_Page;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Text;
 
 namespace CryptоWorld.News.Core.Services.News
@@ -11,12 +15,14 @@ namespace CryptоWorld.News.Core.Services.News
         private readonly IBrowsingContext context;
         private List<HomePageNewsModel> _homeNews = new();
         private List<string> _urls = new();
-        public HomeNewsService(List<HomePageNewsModel> homeNews, List<string> urls)
+        private readonly ApplicationDbContext _dbContext;
+        public HomeNewsService(List<HomePageNewsModel> homeNews, List<string> urls,ApplicationDbContext dbContext)
         {
             config = Configuration.Default.WithDefaultLoader();
             context = BrowsingContext.New(config);
             _homeNews = homeNews;
             _urls = urls;
+            _dbContext = dbContext;
         }
 
         public async Task<List<HomePageNewsModel>> HomePageNews()
@@ -58,11 +64,38 @@ namespace CryptоWorld.News.Core.Services.News
                     
                    var contentInString = content.ToString().TrimEnd();
 
-                    HomePageNewsModel model = new(title, dateOfPublish, imageUrl,contentInString);
+                    HomePageNewsModel model = new HomePageNewsModel(title, contentInString, imageUrl, dateOfPublish);
 
                     _homeNews.Add(model);
                 }
-                
+
+                List<Article> articles = new List<Article>();
+                foreach (var article in _homeNews)
+                {
+                    Article articleModel = new Article();
+                    articleModel.Title = article.Title;
+                    articleModel.Content = article.Content;
+                    articleModel.ImageUrl = article.ImageUrl;
+                    DateTime publicationDate;
+                    string format = "dd.MM.yyyy HH:mm:ss";
+                    bool isValidDate = DateTime.TryParseExact(article.DatePublished,format,CultureInfo.InvariantCulture
+                        ,DateTimeStyles.None,out publicationDate
+                    );
+
+                    if (isValidDate)
+                    {
+                        articleModel.PublicationDate = publicationDate;
+                    }
+                    else
+                    {
+                        
+                        articleModel.PublicationDate = DateTime.MinValue; 
+                    }
+                    articles.Add(articleModel);
+                }
+
+               await _dbContext.AddRangeAsync(articles);
+                await _dbContext.SaveChangesAsync();
             }
 
             return _homeNews;
