@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
-    public class HomeNewsController : Controller
+    public class HomeNewsController : BaseApiController
     {
         private readonly ILogger logger;
         private readonly IHomeNewsService homeNewsService;
@@ -20,13 +20,13 @@ namespace CryptoWorld.Application.Server.Controllers
         {
             var model = await homeNewsService.HomePageNews();
 
-            if (ModelState.IsValid) 
+            if (!ModelState.IsValid) 
             {
                 return BadRequest();
             
             }
 
-            return View(model);
+            return Ok(model);
         }
     }
 }

@@ -13,15 +13,15 @@ namespace CryptоWorld.News.Core.Services.News
     {    
         private readonly AngleSharp.IConfiguration config;
         private readonly IBrowsingContext context;
-        private List<HomePageNewsModel> homeNews = new();
-        private List<string> urls = new();
+        private List<HomePageNewsModel> homeNews;
+        private List<string> urls;
         private readonly ApplicationDbContext dbContext;
-        public HomeNewsService(List<HomePageNewsModel> _homeNews, List<string> _urls,ApplicationDbContext _dbContext)
+        public HomeNewsService( ApplicationDbContext _dbContext)
         {
             config = Configuration.Default.WithDefaultLoader();
             context = BrowsingContext.New(config);
-            homeNews = _homeNews;
-            urls = _urls;
+            homeNews = new List<HomePageNewsModel>();
+            urls = new List<string>();
             dbContext = _dbContext;
         }
 
@@ -37,30 +37,30 @@ namespace CryptоWorld.News.Core.Services.News
             {
                 if (item.GetAttribute("href").Contains("kripto"))
                 {
-                    Console.WriteLine(item.GetAttribute("href"));
+                    urls.Add(item.GetAttribute("href"));
                 }
                 
-                urls.Add(item.GetAttribute("href"));
+                
             }
-            if (newsUrl != null)
+            if (urls != null)
             {
                
                 foreach (var url in urls)
                 {
                     var documentForNews = await context.OpenAsync(url);
-                    var title = documentForNews.QuerySelector("header > h1").ToString();
+                    var title = documentForNews.QuerySelector("header > h1").TextContent;
 
                     StringBuilder content = new StringBuilder();
 
                     var allContentOfNews =  documentForNews.QuerySelectorAll(".article-text > p");
                     foreach (var item in allContentOfNews) 
                     {
-                        content.AppendLine(documentForNews.TextContent);
+                        content.AppendLine(item.TextContent);
                     }
 
                     var imageUrl = documentForNews.QuerySelector(".img-wrapper > .img > img").GetAttribute("src");
 
-                    var dateOfPublish = documentForNews.QuerySelector(".article-info > .time").ToString().Trim();
+                    var dateOfPublish = documentForNews.QuerySelector(".article-info > .time").TextContent.Trim();
                     
                    var contentInString = content.ToString().TrimEnd();
 
@@ -69,33 +69,33 @@ namespace CryptоWorld.News.Core.Services.News
                     homeNews.Add(model);
                 }
 
-                List<Article> articles = new List<Article>();
-                foreach (var article in homeNews)
-                {
-                    Article articleModel = new Article();
-                    articleModel.Title = article.Title;
-                    articleModel.Content = article.Content;
-                    articleModel.ImageUrl = article.ImageUrl;
-                    DateTime publicationDate;
-                    string format = "dd.MM.yyyy HH:mm:ss";
-                    bool isValidDate = DateTime.TryParseExact(article.DatePublished,format,CultureInfo.InvariantCulture
-                        ,DateTimeStyles.None,out publicationDate
-                    );
+                //List<Article> articles = new List<Article>();
+                //foreach (var article in homeNews)
+                //{
+                //    Article articleModel = new Article();
+                //    articleModel.Title = article.Title;
+                //    articleModel.Content = article.Content;
+                //    articleModel.ImageUrl = article.ImageUrl;
+                //    DateTime publicationDate;
+                //    string format = "dd.MM.yyyy HH:mm:ss";
+                //    bool isValidDate = DateTime.TryParseExact(article.DatePublished,format,CultureInfo.InvariantCulture
+                //        ,DateTimeStyles.None,out publicationDate
+                //    );
 
-                    if (isValidDate)
-                    {
-                        articleModel.PublicationDate = publicationDate;
-                    }
-                    else
-                    {
+                //    if (isValidDate)
+                //    {
+                //        articleModel.PublicationDate = publicationDate;
+                //    }
+                //    else
+                //    {
                         
-                        articleModel.PublicationDate = DateTime.MinValue; 
-                    }
-                    articles.Add(articleModel);
-                }
+                //        articleModel.PublicationDate = DateTime.MinValue; 
+                //    }
+                //    articles.Add(articleModel);
+                //}
 
-               await dbContext.AddRangeAsync(articles);
-                await dbContext.SaveChangesAsync();
+               //await dbContext.AddRangeAsync(articles);
+               // await dbContext.SaveChangesAsync();
             }
 
             return homeNews;
