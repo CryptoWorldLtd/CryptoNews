@@ -24,7 +24,6 @@ namespace CryptоWorld.News.Core.ViewModels.Home_Page
 
         public string ImageUrl {  get; set; }
 
-
         //06.06.2024 12:33:36
         public string DatePublished { get; set; }
 

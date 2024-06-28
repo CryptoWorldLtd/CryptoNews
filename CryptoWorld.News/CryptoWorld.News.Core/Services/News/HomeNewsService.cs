@@ -4,6 +4,7 @@ using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.ViewModels.Home_Page;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
 
@@ -44,7 +45,7 @@ namespace CryptоWorld.News.Core.Services.News
             }
             if (urls != null)
             {
-               
+
                 foreach (var url in urls)
                 {
                     var documentForNews = await context.OpenAsync(url);
@@ -52,8 +53,8 @@ namespace CryptоWorld.News.Core.Services.News
 
                     StringBuilder content = new StringBuilder();
 
-                    var allContentOfNews =  documentForNews.QuerySelectorAll(".article-text > p");
-                    foreach (var item in allContentOfNews) 
+                    var allContentOfNews = documentForNews.QuerySelectorAll(".article-text > p");
+                    foreach (var item in allContentOfNews)
                     {
                         content.AppendLine(item.TextContent);
                     }
@@ -61,44 +62,81 @@ namespace CryptоWorld.News.Core.Services.News
                     var imageUrl = documentForNews.QuerySelector(".img-wrapper > .img > img").GetAttribute("src");
 
                     var dateOfPublish = documentForNews.QuerySelector(".article-info > .time").TextContent.Trim();
-                    
-                   var contentInString = content.ToString().TrimEnd();
+
+                    var contentInString = content.ToString().TrimEnd();
 
                     HomePageNewsModel model = new HomePageNewsModel(title, contentInString, imageUrl, dateOfPublish);
 
                     homeNews.Add(model);
                 }
 
-                //List<Article> articles = new List<Article>();
-                //foreach (var article in homeNews)
-                //{
-                //    Article articleModel = new Article();
-                //    articleModel.Title = article.Title;
-                //    articleModel.Content = article.Content;
-                //    articleModel.ImageUrl = article.ImageUrl;
-                //    DateTime publicationDate;
-                //    string format = "dd.MM.yyyy HH:mm:ss";
-                //    bool isValidDate = DateTime.TryParseExact(article.DatePublished,format,CultureInfo.InvariantCulture
-                //        ,DateTimeStyles.None,out publicationDate
-                //    );
+                // Ensure Category and Source exist
+                var category = await GetOrCreateCategory("Crypto");
+                var source = await GetOrCreateSource("Money.bg" , "https://money.bg/finance/");
 
-                //    if (isValidDate)
-                //    {
-                //        articleModel.PublicationDate = publicationDate;
-                //    }
-                //    else
-                //    {
-                        
-                //        articleModel.PublicationDate = DateTime.MinValue; 
-                //    }
-                //    articles.Add(articleModel);
-                //}
+                List<Article> articles = new List<Article>();
+                foreach (var article in homeNews)
+                {
+                    Article articleModel = new Article();
+                    articleModel.Title = article.Title;
+                    articleModel.Content = article.Content;
+                    articleModel.ImageUrl = article.ImageUrl;
+                    DateTime publicationDate;
+                    string format = "dd.MM.yyyy HH:mm:ss";
+                    bool isValidDate = DateTime.TryParseExact(article.DatePublished, format, CultureInfo.InvariantCulture
+                        , DateTimeStyles.None, out publicationDate
+                    );
 
-               //await dbContext.AddRangeAsync(articles);
-               // await dbContext.SaveChangesAsync();
+                    if (isValidDate)
+                    {
+                        articleModel.PublicationDate = publicationDate;
+                    }
+                    else
+                    {
+
+                        articleModel.PublicationDate = DateTime.MinValue;
+                    }
+                    articleModel.SourceId = source.Id;
+                    articleModel.CategoryId = category.Id;
+                    
+
+                    articles.Add(articleModel);
+                }
+
+                await dbContext.AddRangeAsync(articles);
+                await dbContext.SaveChangesAsync();
             }
 
             return homeNews;
+        }
+
+        private async Task<Source> GetOrCreateSource (string sourceName , string sourceUrl)
+        {
+            Source source = new()
+            {
+
+                Name = sourceName,
+                Url = sourceUrl
+            };
+
+            dbContext.Add(source);
+            await dbContext.SaveChangesAsync();
+
+            return source;
+        }
+         
+
+        private async Task<Category> GetOrCreateCategory(string categoryName)
+        {
+            Category category = new()
+            {
+                Name = categoryName ,
+                
+            };
+            dbContext.Categories.Add(category);
+            await dbContext.SaveChangesAsync();
+
+            return category;
         }
     }
 }
