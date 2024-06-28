@@ -3,8 +3,6 @@ using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.ViewModels.Home_Page;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
 
@@ -29,19 +27,14 @@ namespace CryptоWorld.News.Core.Services.News
         public async Task<List<HomePageNewsModel>> HomePageNews()
         {
             var document = await context.OpenAsync("https://money.bg/finance/");
-
             var newsUrl = document.QuerySelectorAll(".topic > a");
-
-            
 
             foreach (var item in newsUrl)
             {
                 if (item.GetAttribute("href").Contains("kripto"))
                 {
                     urls.Add(item.GetAttribute("href"));
-                }
-                
-                
+                }     
             }
             if (urls != null)
             {
@@ -50,9 +43,7 @@ namespace CryptоWorld.News.Core.Services.News
                 {
                     var documentForNews = await context.OpenAsync(url);
                     var title = documentForNews.QuerySelector("header > h1").TextContent;
-
-                    StringBuilder content = new StringBuilder();
-
+                    var content = new StringBuilder();
                     var allContentOfNews = documentForNews.QuerySelectorAll(".article-text > p");
                     foreach (var item in allContentOfNews)
                     {
@@ -60,24 +51,18 @@ namespace CryptоWorld.News.Core.Services.News
                     }
 
                     var imageUrl = documentForNews.QuerySelector(".img-wrapper > .img > img").GetAttribute("src");
-
                     var dateOfPublish = documentForNews.QuerySelector(".article-info > .time").TextContent.Trim();
-
                     var contentInString = content.ToString().TrimEnd();
-
                     HomePageNewsModel model = new HomePageNewsModel(title, contentInString, imageUrl, dateOfPublish);
-
                     homeNews.Add(model);
                 }
-
-                // Ensure Category and Source exist
                 var category = await GetOrCreateCategory("Crypto");
                 var source = await GetOrCreateSource("Money.bg" , "https://money.bg/finance/");
 
                 List<Article> articles = new List<Article>();
                 foreach (var article in homeNews)
                 {
-                    Article articleModel = new Article();
+                    var articleModel = new Article();
                     articleModel.Title = article.Title;
                     articleModel.Content = article.Content;
                     articleModel.ImageUrl = article.ImageUrl;
@@ -93,13 +78,10 @@ namespace CryptоWorld.News.Core.Services.News
                     }
                     else
                     {
-
                         articleModel.PublicationDate = DateTime.MinValue;
                     }
                     articleModel.SourceId = source.Id;
                     articleModel.CategoryId = category.Id;
-                    
-
                     articles.Add(articleModel);
                 }
 
@@ -110,22 +92,19 @@ namespace CryptоWorld.News.Core.Services.News
             return homeNews;
         }
 
+        //global Constant for date? and add in source and category
         private async Task<Source> GetOrCreateSource (string sourceName , string sourceUrl)
         {
             Source source = new()
             {
-
                 Name = sourceName,
                 Url = sourceUrl
             };
-
             dbContext.Add(source);
             await dbContext.SaveChangesAsync();
 
             return source;
-        }
-         
-
+        }   
         private async Task<Category> GetOrCreateCategory(string categoryName)
         {
             Category category = new()
