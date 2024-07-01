@@ -1,56 +1,64 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Profile.css';
 import user from '../assets/user.png';
-import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock, faSignOut } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faLock, faSignOut, faNewspaper } from '@fortawesome/free-solid-svg-icons';
+
 
 const Profile = () => {
     const [open, setOpen] = useState(false);
-
-    let menuRef = useRef();
+    const menuRef = useRef();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        let handler = (e)=>{
-            if(!menuRef.current.contains(e.target)){
+        const handler = (e) => {
+            if (!menuRef.current.contains(e.target)) {
                 setOpen(false);
             }
-        }
+        };
 
         document.addEventListener("mousedown", handler);
 
-        return() =>{
+        return () => {
             document.removeEventListener("mousedown", handler);
-        }
+        };
     }, []);
 
-    return(
+    const handleNavigation = (path) => {
+        setOpen(false);
+        navigate(path);
+    };
+
+    return (
         <div className='Profile'>
             <div className='menu-container' ref={menuRef}>
-                <div className='menu-trigger' onClick={()=>{setOpen(!open)}}>
-                    <img src={user}></img>
+                <div className='menu-trigger' onClick={() => setOpen(!open)}>
+                    <img src={user} alt="User" />
                 </div>
 
-                <div className={`dropdown-menu ${open? 'active' : 'inactive'}`}>
+                <div className={`dropdown-menu ${open ? 'active' : 'inactive'}`}>
                     <ul>
-                        <DropdownItem icon={faEnvelope} text = {"Change e-mail"}/>
-                        <DropdownItem icon={faLock} text = {"Change password"}/>
-                        <DropdownItem icon = {faSignOut} text = {"Logout"}/>
+                        <DropdownItem icon={faNewspaper} text="My news" onClick={() => handleNavigation('/MyNews')} />
+                        <DropdownItem icon={faEnvelope} text="Change e-mail" onClick={() => handleNavigation('/ChangeEmail')} />
+                        <DropdownItem icon={faLock} text="Change password" onClick={() => handleNavigation('/ChangePassword')} />
+                        <DropdownItem icon={faSignOut} text="Logout" onClick={() => handleNavigation('/Logout')} />
                     </ul>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-const DropdownItem = (props) => {
-return(
-        <li className='dropdownItem'>
-             <i>
-              <FontAwesomeIcon icon={props.icon} />
+const DropdownItem = ({ icon, text, onClick }) => {
+    return (
+        <li className='dropdownItem' onClick={onClick}>
+            <i>
+                <FontAwesomeIcon icon={icon} />
             </i>
-            <a>{props.text}</a>
+            <span>{text}</span>
         </li>
     );
-}
+};
 
 export default Profile;

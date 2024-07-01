@@ -1,8 +1,8 @@
 .menu-trigger img{
     position: absolute;
-    top: 20px;
+    top: 5px;
     right: 20px;
-    height: 60px;
+    height: 45px;
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
@@ -10,7 +10,7 @@
 
 .dropdown-menu{
     position: absolute;
-    top: 100px;
+    top: 80px;
     right: 20px;
     background-color: #8dadc7;
     border-radius: 5%;
@@ -46,13 +46,14 @@ h3{
 }
 
 .dropdown-menu ul li:hover a{
-    color:rgb(94, 89, 89);
+    color: rgb(240, 116, 33);
     cursor: pointer;
 }
 
-.dropdown-item{
+.dropdownItem{
     display: flex;
     margin: 10px auto;
+    cursor: pointer;
 }
 
 .dropdownItem img{
@@ -61,14 +62,16 @@ h3{
     opacity: 0.5;
     transition: var(--speed);
     background-color: #8dadc7;
+    cursor: pointer;
 }
 
 .dropdownItem i{
-    margin: 0 30px;
+    margin: 0 20px;
+    margin-left: 0%;
     color:rgb(94, 89, 89);
 }
 
-.dropdown-item a{
+.dropdownItem a{
     max-width: 100px;
     margin-left: 10px;
     transition: var(--speed);
