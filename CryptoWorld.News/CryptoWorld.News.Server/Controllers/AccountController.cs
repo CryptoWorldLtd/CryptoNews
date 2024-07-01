@@ -41,18 +41,6 @@ namespace CryptoWorld.Application.Server.Controllers
 				}
 				else
 				{
-					var receiver = model.Email;
-					var username = model.Username;
-                    
-					try
-					{
-                    await emailSenderService.SendEmailAsync(receiver,username);
-					}
-					catch (Exception e)
-					{
-						Console.WriteLine(e);
-					}
-
                     return Ok(new { Message = "The user was registered successfully!" });
 				}
 			}

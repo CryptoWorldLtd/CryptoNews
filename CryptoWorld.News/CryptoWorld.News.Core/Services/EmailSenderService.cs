@@ -18,7 +18,7 @@ namespace CryptоWorld.News.Core.Services
             sendGridSettings = _sendGridSettings.Value;
         }
 
-        public Task SendEmailAsync(string reciever , string username)
+        public Task SendEmailAsync(string reciever , string username, string body)
         {
             var sender = "test.2010@abv.bg";
 
@@ -27,8 +27,8 @@ namespace CryptоWorld.News.Core.Services
             var from = new EmailAddress(sender, "CryptoNews");
             var subject = "CryptoNews Registration";
             var to = new EmailAddress(reciever, username);
-            var plainTextContent = "Your registration is confirmed!";
-            var htmlContent = "Your registration is confirmed!";
+            var plainTextContent = $"Dear {username} you can click the link to confirm your registration! {body}";
+            var htmlContent = $"Dear {username} you can click the link to confirm your registration! {body}";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
             return client.SendEmailAsync(msg);
