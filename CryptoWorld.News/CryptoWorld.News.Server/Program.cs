@@ -1,10 +1,14 @@
-using CryptoWorld.News.Core.Contracts;
+﻿using CryptoWorld.News.Core.Contracts;
 using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
+using CryptоWorld.News.Core.Interfaces;
+using CryptоWorld.News.Core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +37,7 @@ builder.Services
                 });
 builder.Services.AddCors();
 builder.Services.AddScoped<IAccountService,AccountService>();
-
+builder.Services.AddScoped<IUserProfileService,UserProfileService>();
 var app = builder.Build();
 
 //Apply migrations after project run
