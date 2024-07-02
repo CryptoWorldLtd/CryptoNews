@@ -7,5 +7,6 @@ namespace CryptoWorld.News.Core.Contracts
     {
         Task<LoginResponseModel> LoginAsync(LoginRequestModel model);
         Task<IdentityResult> RegisterAsync(RegisterRequestModel model);
+        Task<IdentityResult> VerifyEmailAsync(string token, string email);
     }
 }

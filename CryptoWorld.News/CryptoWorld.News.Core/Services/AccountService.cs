@@ -4,6 +4,8 @@ using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -37,9 +39,10 @@ namespace CryptoWorld.News.Core.Services
 
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
             var result = await userManager.CreateAsync(user, model.Password);
-            var token = GenerateJwtToken(user);
-            var emailBody = GenerateEmailConfirmationLink(model.Email, token);
 
+            var confirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            confirmationToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(confirmationToken));
+            var emailBody = GenerateEmailConfirmationLink(confirmationToken, model.Email);
 
             if (result.Succeeded)
             {
@@ -61,6 +64,9 @@ namespace CryptoWorld.News.Core.Services
             if (!result.Succeeded)
                 throw new ArgumentException("There was a error while loggin you in! Please try again later or contact an administrator.");
 
+            if (!user.EmailConfirmed)
+                throw new ArgumentException("Email address not confirmed!");
+
             var token = GenerateJwtToken(user);
             return new LoginResponseModel()
             {
@@ -68,6 +74,28 @@ namespace CryptoWorld.News.Core.Services
                 Email = model.Email,
                 Id = user.Id.ToString()
             };
+        }
+
+        public async Task<IdentityResult> VerifyEmailAsync(string token, string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                throw new ArgumentException("There is no such user.");
+            }
+
+            var decodedTokenBytes = WebEncoders.Base64UrlDecode(token);
+            var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
+
+            var result = await userManager.ConfirmEmailAsync(user, decodedToken);
+
+            if (!result.Succeeded)
+            {
+                throw new ArgumentException("Incorrect email.");
+            }
+
+            return result;
         }
 
         private string GenerateJwtToken(ApplicationUser user)
@@ -100,11 +128,10 @@ namespace CryptoWorld.News.Core.Services
             return Regex.IsMatch(email, emailPattern);
         }
 
-        public string GenerateEmailConfirmationLink(string email, string token)
+        private string GenerateEmailConfirmationLink(string token, string email)
         {
-            var confirmationLink = $"https://localhost:7249/confirmemail?token={token}&email={email}";
+            var confirmationLink = $"https://localhost:7249/Account/confirmemail?token={token}&email={email}";
             return confirmationLink;
         }
-
     }
 }
