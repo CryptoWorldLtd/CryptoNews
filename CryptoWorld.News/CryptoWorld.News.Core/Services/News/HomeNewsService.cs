@@ -26,16 +26,20 @@ namespace CryptоWorld.News.Core.Services.News
 
         public async Task<List<HomePageNewsModel>> HomePageNews()
         {
-            var document = await context.OpenAsync("https://money.bg/finance/");
-            var newsUrl = document.QuerySelectorAll(".topic > a");
-
-            foreach (var item in newsUrl)
+            for (int i = 0; i <= 7; i++)
             {
-                if (item.GetAttribute("href").Contains("kripto"))
+                var document = await context.OpenAsync($"https://money.bg/finance?page={i}");
+                var newsUrl = document.QuerySelectorAll(".topic > a");
+                foreach (var item in newsUrl)
                 {
-                    urls.Add(item.GetAttribute("href"));
-                }     
+                    if (item.GetAttribute("href").Contains("kripto"))
+                    {
+                        urls.Add(item.GetAttribute("href"));
+                    }
+                }
+
             }
+
             if (urls != null)
             {
 
@@ -57,7 +61,7 @@ namespace CryptоWorld.News.Core.Services.News
                     homeNews.Add(model);
                 }
                 var category = await GetOrCreateCategory("Crypto");
-                var source = await GetOrCreateSource("Money.bg" , "https://money.bg/finance/");
+                var source = await GetOrCreateSource("Money.bg", "https://money.bg/finance/");
 
                 List<Article> articles = new List<Article>();
                 foreach (var article in homeNews)
@@ -88,6 +92,7 @@ namespace CryptоWorld.News.Core.Services.News
                 await dbContext.AddRangeAsync(articles);
                 await dbContext.SaveChangesAsync();
             }
+
 
             return homeNews;
         }

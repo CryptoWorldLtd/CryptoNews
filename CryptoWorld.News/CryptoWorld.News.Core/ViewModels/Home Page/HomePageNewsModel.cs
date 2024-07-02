@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CryptоWorld.News.Core.ViewModels.Home_Page
+﻿namespace CryptоWorld.News.Core.ViewModels.Home_Page
 {
     public class HomePageNewsModel
     {
