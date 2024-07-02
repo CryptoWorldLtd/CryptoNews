@@ -26,7 +26,7 @@ namespace CryptоWorld.News.Core.Services.News
 
         public async Task<List<HomePageNewsModel>> HomePageNews()
         {
-            for (int i = 0; i <= 7; i++)
+            for (int i = 1; i <= 7; i++)
             {
                 var document = await context.OpenAsync($"https://money.bg/finance?page={i}");
                 var newsUrl = document.QuerySelectorAll(".topic > a");
