@@ -88,12 +88,9 @@ namespace CryptоWorld.News.Core.Services.News
                     articleModel.CategoryId = category.Id;
                     articles.Add(articleModel);
                 }
-
                 await dbContext.AddRangeAsync(articles);
                 await dbContext.SaveChangesAsync();
             }
-
-
             return homeNews;
         }
 
