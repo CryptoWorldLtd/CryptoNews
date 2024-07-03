@@ -92,7 +92,11 @@ namespace CryptоWorld.News.Core.Services.News
                     }
                     articleModel.SourceId = source.Id;
                     articleModel.CategoryId = category.Id;
-                    articles.Add(articleModel);
+                    if (!articles.Any(a => a.Title == articleModel.Title) && 
+                        !articles.Any(a => a.PublicationDate == articleModel.PublicationDate))
+                    {
+                        articles.Add(articleModel); 
+                    }
                 }
                 await dbContext.AddRangeAsync(articles);
                 await dbContext.SaveChangesAsync();
