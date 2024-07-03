@@ -37,7 +37,7 @@ builder.Services
                 });
 builder.Services.AddCors();
 builder.Services.AddScoped<IAccountService,AccountService>();
-builder.Services.AddScoped<IHomeNewsService, HomeNewsService>();
+builder.Services.AddScoped<INewsService, NewsService>();
 
 
 var app = builder.Build();

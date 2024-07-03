@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace CryptоWorld.News.Core.Interfaces
 {
-    public interface IHomeNewsService
+    public interface INewsService
     {
-        public Task <List<HomePageNewsModel>> HomePageNews();
+        public Task <List<PageNewsModel>> HomePageNews(int pagesCount);
     }
 }

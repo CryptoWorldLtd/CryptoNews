@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
-    public class HomeNewsController : BaseApiController
+    public class NewsController : BaseApiController
     {
         private readonly ILogger logger;
-        private readonly IHomeNewsService homeNewsService;
+        private readonly INewsService homeNewsService;
 
-        public HomeNewsController(IHomeNewsService _homeNewsService)
+        public NewsController(INewsService _homeNewsService)
         {
             homeNewsService = _homeNewsService;
         }
@@ -18,12 +18,11 @@ namespace CryptoWorld.Application.Server.Controllers
         [AllowAnonymous]
         public async Task <IActionResult> HomeNews()
         {
-            var model = await homeNewsService.HomePageNews();
-
+            int pagesCount = 7;
+            var model = await homeNewsService.HomePageNews(pagesCount);
             if (!ModelState.IsValid) 
             {
                 return BadRequest();
-            
             }
 
             return Ok(model);

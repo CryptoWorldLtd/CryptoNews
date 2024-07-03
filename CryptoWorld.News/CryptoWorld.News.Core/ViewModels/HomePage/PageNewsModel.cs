@@ -1,8 +1,8 @@
 ﻿namespace CryptоWorld.News.Core.ViewModels.Home_Page
 {
-    public class HomePageNewsModel
+    public class PageNewsModel
     {
-        public HomePageNewsModel(string title, string content, string imageUrl, string datePublished)
+        public PageNewsModel(string title, string content, string imageUrl, string datePublished)
         {
            this.Title= title; 
             this.Content= content;
