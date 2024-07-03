@@ -26,9 +26,6 @@ namespace CryptоWorld.News.Core.Services.News
 
         public async Task<List<PageNewsModel>> HomePageNews(int pagesCount = 7)
         {
-            
-            // да махна home навсякъде
-            // ако документа е null да хвърля exception
 
             for (int i = 1; i <= pagesCount; i++)
             {
@@ -103,8 +100,6 @@ namespace CryptоWorld.News.Core.Services.News
             }
             return homeNews;
         }
-
-        //global Constant for date? and add in source and category
         private async Task<Source> GetOrCreateSource (string sourceName , string sourceUrl)
         {
             Source source = new()
