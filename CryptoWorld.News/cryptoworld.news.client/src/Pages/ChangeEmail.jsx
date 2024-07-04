@@ -18,7 +18,7 @@ const ChangeEmail = () => {
     setError(null); 
     try {
       console.log('Submitting:', { email, password, confirmPassword });
-      const response = await axios.post('https://localhost:7249/account/register', {
+      const response = await axios.post('https://localhost:7249/account/edit', {
         email,
         newEmail,
         confirmNewEmail

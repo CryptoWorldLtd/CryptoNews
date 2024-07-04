@@ -22,7 +22,7 @@ const ChangePassword = () => {
     setError(null); 
     try {
       console.log('Submitting:', { password, newPassword, confirmNewPassword });
-      const response = await axios.post('https://localhost:7249/account/register', {
+      const response = await axios.post('https://localhost:7249/account/edit', {
         password,
         newPassword,
         confirmNewPassword
@@ -36,7 +36,7 @@ const ChangePassword = () => {
         
     } catch (error) {
       console.error('Error:', error.response ? error.response.data : error.message);
-      setError(error.response?.data?.message || "Registration failed");
+      setError(error.response?.data?.message || "Password change failed");
     }
   };
 
