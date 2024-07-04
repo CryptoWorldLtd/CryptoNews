@@ -12,5 +12,7 @@ namespace CryptоWorld.News.Core.Interfaces
     public interface IUserProfileService
     {
         Task<ApplicationUser> EditProfileAsync(UserProfileModel model);
+        Task<ApplicationUser> ChangeEmailAsync(ChangeEmailModel model);
+        //Task<ApplicationUser> ChangePasswordAsync(ApplicationUser model);
     }
 }

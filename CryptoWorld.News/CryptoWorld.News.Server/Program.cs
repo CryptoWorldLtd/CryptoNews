@@ -34,6 +34,20 @@ builder.Services
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+    .AddJwtBearer(option =>
+                {
+                    option.SaveToken = true;
+                    option.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        SaveSigninToken = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:secretKey"]))
+                    };
                 });
 builder.Services.AddCors();
 builder.Services.AddScoped<IAccountService,AccountService>();

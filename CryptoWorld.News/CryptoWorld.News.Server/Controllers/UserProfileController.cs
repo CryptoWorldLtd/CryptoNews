@@ -5,6 +5,7 @@ using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.ViewModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
@@ -52,5 +53,21 @@ namespace CryptoWorld.Application.Server.Controllers
 
             return Ok();
         }
+
+        [HttpPost("changeEmail")]
+        public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailModel model)
+        {
+            try
+            {
+                var user = await profileService.ChangeEmailAsync(model);
+            }
+            catch (Exception)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok();
+        }
+        
     }
 }
