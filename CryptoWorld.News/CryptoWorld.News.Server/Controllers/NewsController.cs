@@ -19,7 +19,15 @@ namespace CryptoWorld.Application.Server.Controllers
         public async Task <IActionResult> HomeNews()
         {
             int pagesCount = 7;
-            var model = await homeNewsService.HomePageNews(pagesCount);
+            var urls = await homeNewsService.GetNewsUrlsAsync(pagesCount);
+
+            if (urls == null)
+            {
+                return BadRequest();
+            }
+
+            var model = await homeNewsService.GetPageNewsModelAsync(urls);
+
             if (!ModelState.IsValid) 
             {
                 return BadRequest();

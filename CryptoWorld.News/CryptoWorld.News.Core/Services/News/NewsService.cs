@@ -24,29 +24,20 @@ namespace CryptоWorld.News.Core.Services.News
             dbContext = _dbContext;
         }
 
-        public async Task<List<PageNewsModel>> HomePageNews(int pagesCount = 7)
+     
+        
+
+            
+
+        public async Task<List<PageNewsModel>> GetPageNewsModelAsync(List<string> urls)
         {
+            int pagesCount = 7;
+            var newsUrls = await GetNewsUrlsAsync(pagesCount);
 
-            for (int i = 1; i <= pagesCount; i++)
-            {
-                var document = await context.OpenAsync($"https://money.bg/finance?page={i}");
-                var newsUrl = document.QuerySelectorAll(".topic > a");
-
-                if (document == null) { throw new Exception(); }
-              
-                foreach (var item in newsUrl)
-                {
-                    if (item.GetAttribute("href").Contains("kripto"))
-                    {
-                        urls.Add(item.GetAttribute("href"));
-                    }
-                }
-            }
-
-            if (urls != null)
+            if (newsUrls != null)
             {
 
-                foreach (var url in urls)
+                foreach (var url in newsUrls)
                 {
                     var documentForNews = await context.OpenAsync(url);
                     var title = documentForNews.QuerySelector("header > h1").TextContent;
@@ -63,43 +54,68 @@ namespace CryptоWorld.News.Core.Services.News
                     PageNewsModel model = new PageNewsModel(title, contentInString, imageUrl, dateOfPublish);
                     homeNews.Add(model);
                 }
-                var category = await GetOrCreateCategory("Crypto");
-                var source = await GetOrCreateSource("Money.bg", "https://money.bg/finance/");
-
-                List<Article> articles = new List<Article>();
-                foreach (var article in homeNews)
-                {
-                    var articleModel = new Article();
-                    articleModel.Title = article.Title;
-                    articleModel.Content = article.Content;
-                    articleModel.ImageUrl = article.ImageUrl;
-                    DateTime publicationDate;
-                    string format = "dd.MM.yyyy HH:mm:ss";
-                    bool isValidDate = DateTime.TryParseExact(article.DatePublished, format, CultureInfo.InvariantCulture
-                        , DateTimeStyles.None, out publicationDate
-                    );
-
-                    if (isValidDate)
-                    {
-                        articleModel.PublicationDate = publicationDate;
-                    }
-                    else
-                    {
-                        articleModel.PublicationDate = DateTime.MinValue;
-                    }
-                    articleModel.SourceId = source.Id;
-                    articleModel.CategoryId = category.Id;
-                    if (!articles.Any(a => a.Title == articleModel.Title) && 
-                        !articles.Any(a => a.PublicationDate == articleModel.PublicationDate))
-                    {
-                        articles.Add(articleModel); 
-                    }
-                }
-                await dbContext.AddRangeAsync(articles);
-                await dbContext.SaveChangesAsync();
             }
+            var newsForDb = AddArticleInDbAsync(homeNews);
+
             return homeNews;
         }
+        public async Task<List<string>> GetNewsUrlsAsync(int pagesCount)
+        {
+            for (int i = 1; i <= pagesCount; i++)
+            {
+                var document = await context.OpenAsync($"https://money.bg/finance?page={i}");
+                var newsUrl = document.QuerySelectorAll(".topic > a");
+
+                if (document == null) { throw new Exception(); }
+
+                foreach (var item in newsUrl)
+                {
+                    if (item.GetAttribute("href").Contains("kripto"))
+                    {
+                        urls.Add(item.GetAttribute("href"));
+                    }
+                }
+            }
+            return urls;
+        }
+        private async Task AddArticleInDbAsync(List<PageNewsModel> models)
+        {
+            var category = await GetOrCreateCategory("Crypto");
+            var source = await GetOrCreateSource("Money.bg", "https://money.bg/finance/");
+
+            List<Article> articles = new List<Article>();
+            foreach (var article in homeNews)
+            {
+                var articleModel = new Article();
+                articleModel.Title = article.Title;
+                articleModel.Content = article.Content;
+                articleModel.ImageUrl = article.ImageUrl;
+                DateTime publicationDate;
+                string format = "dd.MM.yyyy HH:mm:ss";
+                bool isValidDate = DateTime.TryParseExact(article.DatePublished, format, CultureInfo.InvariantCulture
+                    , DateTimeStyles.None, out publicationDate
+                );
+
+                if (isValidDate)
+                {
+                    articleModel.PublicationDate = publicationDate;
+                }
+                else
+                {
+                    articleModel.PublicationDate = DateTime.MinValue;
+                }
+                articleModel.SourceId = source.Id;
+                articleModel.CategoryId = category.Id;
+                if (!articles.Any(a => a.Title == articleModel.Title) &&
+                    !articles.Any(a => a.PublicationDate == articleModel.PublicationDate))
+                {
+                    articles.Add(articleModel);
+                }
+            }
+            await dbContext.AddRangeAsync(articles);
+            await dbContext.SaveChangesAsync();
+        }
+
         private async Task<Source> GetOrCreateSource (string sourceName , string sourceUrl)
         {
             Source source = new()
@@ -124,5 +140,10 @@ namespace CryptоWorld.News.Core.Services.News
 
             return category;
         }
+
+      
+           
     }
 }
+    
+
