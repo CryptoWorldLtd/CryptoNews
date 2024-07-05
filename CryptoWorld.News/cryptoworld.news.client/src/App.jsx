@@ -7,7 +7,6 @@ import Login from './Pages/Login';
 import Register from './Pages/Register';
 import Profile from './Pages/Profile';
 import MyNews from './Pages/MyNews';
-import Logout from './Pages/Logout';
 import EditProfile from './Pages/EditProfile';
 
 function App() {
@@ -24,7 +23,6 @@ function App() {
                     <Route path="/ChangeEmail" element={<EditProfile formType="email" />} />
                     <Route path="/ChangePassword" element={<EditProfile formType="password" />} />
                     <Route path="/MyNews" element={<MyNews />} />
-                    <Route path="/Logout" element={<Logout />} />
                 </Routes>
             </Router>
         </div>
