@@ -1,4 +1,3 @@
-using AngleSharp;
 using CryptoWorld.News.Core.Contracts;
 using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Data;
@@ -9,7 +8,6 @@ using CryptîWorld.News.Core.ViewModels.HomePage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Data.SqlTypes;
 
 var builder = WebApplication.CreateBuilder(args);
 

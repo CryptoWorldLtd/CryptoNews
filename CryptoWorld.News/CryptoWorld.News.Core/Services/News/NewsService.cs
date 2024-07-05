@@ -3,6 +3,8 @@ using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.ViewModels.Home_Page;
+using CryptоWorld.News.Core.ViewModels.HomePage;
+using Microsoft.Extensions.Options;
 using System.Globalization;
 using System.Text;
 
@@ -15,13 +17,16 @@ namespace CryptоWorld.News.Core.Services.News
         private List<PageNewsModel> homeNews;
         private List<string> urls;
         private readonly ApplicationDbContext dbContext;
-        public NewsService( ApplicationDbContext _dbContext)
+        private readonly UrlForNews urlForNews;
+        public NewsService( ApplicationDbContext _dbContext, IOptions<UrlForNews> urlForNewsOptions)
         {
             config = Configuration.Default.WithDefaultLoader();
             context = BrowsingContext.New(config);
             homeNews = new List<PageNewsModel>();
             urls = new List<string>();
             dbContext = _dbContext;
+            urlForNews = urlForNewsOptions.Value;
+
         }
 
      
@@ -61,9 +66,10 @@ namespace CryptоWorld.News.Core.Services.News
         }
         public async Task<List<string>> GetNewsUrlsAsync(int pagesCount)
         {
+            
             for (int i = 1; i <= pagesCount; i++)
             {
-                var document = await context.OpenAsync($"https://money.bg/finance?page={i}");
+                var document = await context.OpenAsync($"{urlForNews.MoneyBgUrl}?page={i}");
                 var newsUrl = document.QuerySelectorAll(".topic > a");
 
                 if (document == null) { throw new Exception(); }
@@ -81,19 +87,23 @@ namespace CryptоWorld.News.Core.Services.News
         private async Task AddArticleInDbAsync(List<PageNewsModel> models)
         {
             var category = await GetOrCreateCategory("Crypto");
-            var source = await GetOrCreateSource("Money.bg", "https://money.bg/finance/");
+            var source = await GetOrCreateSource("Money.bg", $"{urlForNews.MoneyBgUrl}");
 
             List<Article> articles = new List<Article>();
             foreach (var article in homeNews)
             {
-                var articleModel = new Article();
-                articleModel.Title = article.Title;
-                articleModel.Content = article.Content;
-                articleModel.ImageUrl = article.ImageUrl;
-                DateTime publicationDate;
-                string format = "dd.MM.yyyy HH:mm:ss";
-                bool isValidDate = DateTime.TryParseExact(article.DatePublished, format, CultureInfo.InvariantCulture
-                    , DateTimeStyles.None, out publicationDate
+                var articleModel = new Article()
+                {
+                    Title = article.Title,
+                    Content = article.Content,
+                    ImageUrl = article.ImageUrl,
+                    SourceId = source.Id,
+                    CategoryId = category.Id
+                };
+                         
+                string formatDate = "dd.MM.yyyy HH:mm:ss";
+                bool isValidDate = DateTime.TryParseExact(article.DatePublished, formatDate, CultureInfo.InvariantCulture
+                    , DateTimeStyles.None, out DateTime publicationDate
                 );
 
                 if (isValidDate)
