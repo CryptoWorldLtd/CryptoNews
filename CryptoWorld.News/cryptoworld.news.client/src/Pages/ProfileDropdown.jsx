@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Profile.css';
+import './ProfileDropdown.css';
 import user from '../assets/user.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faLock, faSignOut, faNewspaper } from '@fortawesome/free-solid-svg-icons';

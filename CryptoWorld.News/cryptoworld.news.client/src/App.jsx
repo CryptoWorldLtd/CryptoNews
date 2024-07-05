@@ -5,7 +5,7 @@ import Navbar from './Components/Navbar.jsx';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
-import Profile from './Pages/Profile';
+import Profile from './Pages/ProfileDropdown.jsx';
 import MyNews from './Pages/MyNews';
 import EditProfile from './Pages/EditProfile';
 
