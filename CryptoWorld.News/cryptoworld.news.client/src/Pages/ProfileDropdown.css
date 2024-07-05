@@ -1,29 +1,8 @@
-﻿#root {
-    max-width: 1280px;
-    margin: 10 auto;
-    flex: auto;
-    padding: 2rem;
-    text-align: center;
-}
-
-tr:nth-child(even) {
-    background: #F2F2F2;
-}
-
-tr:nth-child(odd) {
-    background: #FFF;
-}
-
-th, td {
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
 .menu-trigger img{
     position: absolute;
-    top: 10px;
+    top: 5px;
     right: 20px;
-    height: 40px;
+    height: 45px;
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
@@ -31,7 +10,7 @@ th, td {
 
 .dropdown-menu{
     position: absolute;
-    top: 100px;
+    top: 80px;
     right: 20px;
     background-color: #8dadc7;
     border-radius: 5%;
@@ -48,20 +27,6 @@ th, td {
     width: 20px;
     background-color: #8dadc7;
     transform: rotate(45deg);
-}
-
-.dropdown-menu.active{
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    transition: var(--speed) ease;
-}
-
-.dropdown-menu.inactive{
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-20px);
-    transition: var(--speed) ease;
 }
 
 h3{
@@ -81,13 +46,14 @@ h3{
 }
 
 .dropdown-menu ul li:hover a{
-    color:rgb(94, 89, 89);
+    color: rgb(240, 116, 33);
     cursor: pointer;
 }
 
-.dropdown-item{
+.dropdownItem{
     display: flex;
     margin: 10px auto;
+    cursor: pointer;
 }
 
 .dropdownItem img{
@@ -96,9 +62,16 @@ h3{
     opacity: 0.5;
     transition: var(--speed);
     background-color: #8dadc7;
+    cursor: pointer;
 }
 
-.dropdown-item a{
+.dropdownItem i{
+    margin: 0 20px;
+    margin-left: 0%;
+    color:rgb(94, 89, 89);
+}
+
+.dropdownItem a{
     max-width: 100px;
     margin-left: 10px;
     transition: var(--speed);
