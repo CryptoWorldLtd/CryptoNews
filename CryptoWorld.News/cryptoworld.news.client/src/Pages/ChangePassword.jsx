@@ -21,7 +21,6 @@ const ChangePassword = () => {
   const handleSubmit = async () => {
     setError(null); 
     try {
-      console.log('Submitting:', { password, newPassword, confirmNewPassword });
       const response = await axios.post('https://localhost:7249/account/edit', {
         password,
         newPassword,
@@ -31,7 +30,6 @@ const ChangePassword = () => {
           'Content-Type': 'application/json'
         }
       });
-        console.log('Response:', response.data);
         navigate("/Login");
         
     } catch (error) {
