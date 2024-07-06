@@ -42,7 +42,8 @@ namespace CryptoWorld.News.Core.Services
 
             var confirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
             confirmationToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(confirmationToken));
-            var emailBody = GenerateEmailConfirmationLink(confirmationToken, model.Email);
+            string action = "confirmemail";
+            var emailBody = GenerateConfirmationLink(action, confirmationToken, model.Email);
 
             if (result.Succeeded)
             {
@@ -87,7 +88,6 @@ namespace CryptoWorld.News.Core.Services
 
             var decodedTokenBytes = WebEncoders.Base64UrlDecode(token);
             var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
-
             var result = await userManager.ConfirmEmailAsync(user, decodedToken);
 
             if (!result.Succeeded)
@@ -96,6 +96,41 @@ namespace CryptoWorld.News.Core.Services
             }
 
             return result;
+        }
+
+        public async Task<IdentityResult> PasswordResetAsync(string token, string email, string newPassword)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new ArgumentException("There is no such user.");
+            }
+            //  var decodedTokenBytes = WebEncoders.Base64UrlDecode(token);
+            //  var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);  incorrect email error
+            var result = await userManager.ResetPasswordAsync(user, token, newPassword);
+
+            if (!result.Succeeded)
+            {
+                throw new ArgumentException("Password reset failed.");
+            }
+
+            return (result);
+        }
+
+        public async Task<IdentityResult> GeneratePasswordResetToken(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                throw new ArgumentException("There is no such user.");
+            }
+            var resetPassToken = await userManager.GeneratePasswordResetTokenAsync(user);
+            string action = "passwordreset";
+            var passwordResetLink = GenerateConfirmationLink(action, resetPassToken, email);
+            await emailSenderService.SendEmailAsync(user.Email, user.UserName, passwordResetLink);
+
+            return IdentityResult.Success;
         }
 
         private string GenerateJwtToken(ApplicationUser user)
@@ -128,9 +163,9 @@ namespace CryptoWorld.News.Core.Services
             return Regex.IsMatch(email, emailPattern);
         }
 
-        private string GenerateEmailConfirmationLink(string token, string email)
+        private string GenerateConfirmationLink(string action, string token, string email)
         {
-            var confirmationLink = $"https://localhost:7249/Account/confirmemail?token={token}&email={email}";
+            var confirmationLink = $"https://localhost:7249/Account/{action}?token={token}&email={email}";
             return confirmationLink;
         }
     }

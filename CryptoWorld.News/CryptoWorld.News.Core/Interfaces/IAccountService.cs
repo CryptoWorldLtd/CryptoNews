@@ -8,5 +8,7 @@ namespace CryptoWorld.News.Core.Contracts
         Task<LoginResponseModel> LoginAsync(LoginRequestModel model);
         Task<IdentityResult> RegisterAsync(RegisterRequestModel model);
         Task<IdentityResult> VerifyEmailAsync(string token, string email);
+        Task<IdentityResult> PasswordResetAsync(string token, string email, string newPassword);
+        Task<IdentityResult> GeneratePasswordResetToken(string email);
     }
 }
