@@ -81,12 +81,12 @@ namespace CryptoWorld.Application.Server.Controllers
 
         [HttpPost("forgotpassword")]
         [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword([Required] string email)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequestModel model)
         {
-            if (string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(model.Email))
                 return BadRequest(new { Message = "Email is required." });
 
-            var result = await accountService.GeneratePasswordResetToken(email);
+            var result = await accountService.GeneratePasswordResetToken(model.Email);
 
             if (!result.Succeeded)
             {

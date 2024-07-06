@@ -5,6 +5,7 @@ import Navbar from './Components/Navbar';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
+import ForgotPassword from './Pages/ForgotPassword';
 
 
 function App() {
@@ -16,7 +17,9 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/Login" element={<Login />} />
                     <Route path="/Register" element={<Register />} />
+                    <Route path="/ForgotPassword" element={<ForgotPassword />} />
                 </Routes>
+                
             </Router>
         </div>
     ); 
