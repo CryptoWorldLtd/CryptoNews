@@ -126,8 +126,9 @@ namespace CryptoWorld.News.Core.Services
                 throw new ArgumentException("There is no such user.");
             }
             var resetPassToken = await userManager.GeneratePasswordResetTokenAsync(user);
-            string action = "passwordreset";
-            var passwordResetLink = GenerateConfirmationLink(action, resetPassToken, email);
+            var encodedToken = Uri.EscapeDataString(resetPassToken);
+            string action = "resetpassword";
+            var passwordResetLink = GenerateConfirmationLink(action, encodedToken, email);
             await emailSenderService.SendEmailAsync(user.Email, user.UserName, passwordResetLink);
 
             return IdentityResult.Success;
@@ -165,7 +166,15 @@ namespace CryptoWorld.News.Core.Services
 
         private string GenerateConfirmationLink(string action, string token, string email)
         {
-            var confirmationLink = $"https://localhost:7249/Account/{action}?token={token}&email={email}";
+            var confirmationLink = string.Empty;
+
+            if (action == "resetpassword")
+            {
+                confirmationLink = $"https://localhost:5173/{action}/{token}/{email}";
+                return confirmationLink;
+            }
+
+            confirmationLink = $"https://localhost:7249/Account/{action}?token={token}&email={email}";
             return confirmationLink;
         }
     }

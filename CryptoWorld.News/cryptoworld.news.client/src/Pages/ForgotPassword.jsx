@@ -63,7 +63,7 @@ const ForgotPassword = () => {
             </div>
             <div className="submit-container">
               <button type="submit" className="submit">
-                Reset Password
+                Send Reset Password Email
               </button>
             </div>
           </form>

@@ -93,7 +93,7 @@ namespace CryptoWorld.Application.Server.Controllers
                 return BadRequest(new { Message = "Unable to reset password of this email!" });
             }
 
-            return Redirect("https://localhost:5173/resetpassword");
+            return Ok(result.Succeeded);
         }
 
         [HttpPost("resetpassword")]
