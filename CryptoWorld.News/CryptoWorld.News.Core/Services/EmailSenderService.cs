@@ -25,10 +25,10 @@ namespace CryptоWorld.News.Core.Services
             var apiKey = sendGridSettings.ApiKey;
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress(sender, "CryptoNews");
-            var subject = "CryptoNews Registration";
+            var subject = "CryptoNews Automated Email";
             var to = new EmailAddress(reciever, username);
-            var plainTextContent = $"Dear {username} you can click the link to confirm your registration! {body}";
-            var htmlContent = $"Dear {username} you can click the link to confirm your registration! {body}";
+            var plainTextContent = $"Dear {username} you can click the link to confirm your action! <a href=\"{body}\" class=\"email-button\">Get Started</a>";
+            var htmlContent = $"Dear {username} you can click the link to confirm your action! <a href=\"{body}\" class=\"email-button\">Get Started</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
             return client.SendEmailAsync(msg);
