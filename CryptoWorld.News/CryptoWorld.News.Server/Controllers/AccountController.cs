@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using CryptoWorld.News.Core.ViewModels;
-using CryptoWorld.News.Core.Contracts;
+using CryptoWorld.News.Core.Interfaces;
 
 
 namespace CryptoWorld.Application.Server.Controllers

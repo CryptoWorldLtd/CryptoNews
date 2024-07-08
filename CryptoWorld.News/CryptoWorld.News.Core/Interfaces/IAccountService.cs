@@ -1,7 +1,7 @@
 ﻿using CryptoWorld.News.Core.ViewModels;
 using Microsoft.AspNetCore.Identity;
 
-namespace CryptoWorld.News.Core.Contracts
+namespace CryptoWorld.News.Core.Interfaces
 {
     public interface IAccountService
     {

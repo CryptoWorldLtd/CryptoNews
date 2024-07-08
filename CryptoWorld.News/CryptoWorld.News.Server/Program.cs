@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
 using CryptoWorld.News.Core.Interfaces;
-using CryptoWorld.News.Core.Contracts;
 using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Data.Models;
 using CryptoWorld.News.Data;

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 
 using CryptoWorld.News.Core.Interfaces;
 using CryptoWorld.News.Core.ViewModels;
-using CryptoWorld.News.Core.Contracts;
 using CryptoWorld.News.Data.Models;
 
 using System.IdentityModel.Tokens.Jwt;
