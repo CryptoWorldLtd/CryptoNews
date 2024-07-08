@@ -8,6 +8,9 @@ import Register from './Pages/Register';
 import Profile from './Pages/ProfileDropdown.jsx';
 import MyNews from './Pages/MyNews';
 import EditProfile from './Pages/EditProfile';
+import ForgotPassword from './Pages/ForgotPassword';
+import ResetPassword from './Pages/ResetPassword';
+
 
 function App() {
     return (
@@ -23,7 +26,10 @@ function App() {
                     <Route path="/ChangeEmail" element={<EditProfile formType="email" />} />
                     <Route path="/ChangePassword" element={<EditProfile formType="password" />} />
                     <Route path="/MyNews" element={<MyNews />} />
+                    <Route path="/ForgotPassword" element={<ForgotPassword />} />
+                    <Route path="/ResetPassword/:id/:email" element={<ResetPassword />} />
                 </Routes>
+                
             </Router>
         </div>
     ); 

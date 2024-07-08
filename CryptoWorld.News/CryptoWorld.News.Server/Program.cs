@@ -6,11 +6,15 @@ using CryptîWorld.News.Core.Interfaces;
 using CryptîWorld.News.Core.Services.News;
 using CryptîWorld.News.Core.ViewModels.HomePage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+
+using CryptoWorld.News.Core.Interfaces;
+using CryptoWorld.News.Core.Services;
+using CryptoWorld.News.Data.Models;
+using CryptoWorld.News.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -21,7 +25,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequiredLength = 8;
-    options.Password.RequireNonAlphanumeric = true; 
+    options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
@@ -34,7 +38,6 @@ builder.Services
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-   
                 });
 builder.Services.AddCors();
 builder.Services.AddScoped<IAccountService,AccountService>();
@@ -42,6 +45,9 @@ builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddScoped<UrlForNews>();
 builder.Services.Configure<UrlForNews>(builder.Configuration.GetSection("MoneyBgUrl"));
 
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGrid"));
+builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
 
 var app = builder.Build();
 

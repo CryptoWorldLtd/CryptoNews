@@ -20,13 +20,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    <PackageReference Include="SendGrid" Version="9.29.3" />
+    <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\cryptoworld.news.client\CryptoWorld.News.Client.esproj" />
     <ProjectReference Include="..\cryptoworld.news.client\cryptoworld.news.client.esproj" />
-    <ProjectReference Include="..\CryptoWorld.News.Core\CryptоWorld.News.Core.csproj" />
+    <ProjectReference Include="..\CryptoWorld.News.Core\CryptoWorld.News.Core.csproj" />
     <ProjectReference Include="..\CryptoWorld.News.Data\CryptoWorld.News.Data.csproj" />
   </ItemGroup>
 

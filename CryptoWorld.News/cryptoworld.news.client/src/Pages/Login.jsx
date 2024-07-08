@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { NavLink as Link } from 'react-router-dom';
 import axios from 'axios';
 import {  faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -94,7 +95,7 @@ const Login = () => {
           />
           <label htmlFor="lsRememberMe"> Remember me</label>
         </div>
-        <div className="forgot-password">Forgot Password? <span>Click Here!</span></div>
+        <div className="forgot-password">Forgot Password? <Link to={'/Forgotpassword'}>Click Here!</Link></div>
         <div className="submit-container">
           <button type="submit" className="submit">Login</button>
         </div>
