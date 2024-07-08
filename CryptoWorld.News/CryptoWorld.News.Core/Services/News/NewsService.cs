@@ -28,12 +28,6 @@ namespace CryptоWorld.News.Core.Services.News
             urlForNews = urlForNewsOptions.Value;
 
         }
-
-     
-        
-
-            
-
         public async Task<List<PageNewsModel>> GetPageNewsModelAsync(List<string> urls)
         {
             int pagesCount = 7;
@@ -125,7 +119,6 @@ namespace CryptоWorld.News.Core.Services.News
             await dbContext.AddRangeAsync(articles);
             await dbContext.SaveChangesAsync();
         }
-
         private async Task<Source> GetOrCreateSource (string sourceName , string sourceUrl)
         {
             Source source = new()
@@ -149,10 +142,7 @@ namespace CryptоWorld.News.Core.Services.News
             await dbContext.SaveChangesAsync();
 
             return category;
-        }
-
-      
-           
+        }  
     }
 }
     
