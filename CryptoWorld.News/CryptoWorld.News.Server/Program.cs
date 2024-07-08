@@ -2,6 +2,9 @@ using CryptoWorld.News.Core.Contracts;
 using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
+using CryptîWorld.News.Core.Interfaces;
+using CryptîWorld.News.Core.Services.News;
+using CryptîWorld.News.Core.ViewModels.HomePage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequiredLength = 8;
@@ -30,9 +34,14 @@ builder.Services
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+   
                 });
 builder.Services.AddCors();
 builder.Services.AddScoped<IAccountService,AccountService>();
+builder.Services.AddScoped<INewsService, NewsService>();
+builder.Services.AddScoped<UrlForNews>();
+builder.Services.Configure<UrlForNews>(builder.Configuration.GetSection("MoneyBgUrl"));
+
 
 var app = builder.Build();
 
