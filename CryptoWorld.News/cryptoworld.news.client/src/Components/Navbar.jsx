@@ -1,5 +1,6 @@
 import React from "react";
 import { Nav, NavLink, NavMenu } from "./NavbarElements";
+import Profile from "../Pages/ProfileDropdown.jsx";
 
 const Navbar = () => {
     return (
@@ -15,6 +16,7 @@ const Navbar = () => {
                 <NavLink to="/Register" className={({ isActive }) => isActive ? "active" : ""}>
                     Register
                 </NavLink>
+                <Profile/>
             </NavMenu>
         </Nav>
     );
