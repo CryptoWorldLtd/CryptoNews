@@ -5,11 +5,14 @@ import Navbar from './Components/Navbar';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
+import ParticlesComponent from './Components/Particles';
+
 
 
 function App() {
     return (
-        <div>
+        <div className='App'>
+            <ParticlesComponent id='particles' />
             <Router>
                 <Navbar />
                 <Routes>
@@ -23,3 +26,4 @@ function App() {
 }
 
 export default App;
+

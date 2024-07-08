@@ -22,6 +22,7 @@ body div{
 .text{
     font-size: 40px;
     font-weight: 700;
+    color: black;
 }
 .underline{
     width: 100px;

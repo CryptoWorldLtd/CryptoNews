@@ -1,23 +1,33 @@
-import React from "react";
-import { Nav, NavLink, NavMenu } from "./NavbarElements";
+import React, { useState } from 'react';
+import { Nav, NavLink, NavMenu } from './NavbarElements';
+import Logo from '/logo.jpg'
+import './Navbar.css';
 
 const Navbar = () => {
-    return (
+    const[menuOpen, setMenuOpen] = useState(false)
+    return(
         <Nav>
-            <NavMenu>
-                <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>
-                    Home
-                </NavLink>
-               
-                <NavLink to="/Login" className={({ isActive }) => isActive ? "active" : ""}>
-                    Login
-                </NavLink>
-                <NavLink to="/Register" className={({ isActive }) => isActive ? "active" : ""}>
-                    Register
-                </NavLink>
-            </NavMenu>
+            <NavLink to="/" className="logo">
+                  <img alt='logo' src={Logo}></img>
+            </NavLink>
+            <div className="menu" onClick={() => {
+                setMenuOpen(!menuOpen)
+            }}>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul className={menuOpen ? 'open' : ""}>
+            <li>
+                <NavLink to="/Login">Login</NavLink>
+            </li>
+            <li>
+                <NavLink to="/Register">Register</NavLink>
+            </li>
+            </ul>
         </Nav>
-    );
-};
+    )
+}
 
 export default Navbar;
+

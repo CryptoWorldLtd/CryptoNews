@@ -6,12 +6,14 @@ export const Nav = styled.nav`
     position: fixed;
     top: 0;
     right: 1px;
-    width: 65%;
+    width: 100%;
     height: 45px;
     display: flex;
     justify-content: space-between;
-    padding: 0.2rem calc((100vw - 1000px) / 2);
-    z-index: 12;
+    padding: 9px;
+    @media screen and (max-width: 768px) {
+        width: 100%;
+    }
 `;
 
 export const NavLink = styled(Link)`
@@ -19,7 +21,6 @@ export const NavLink = styled(Link)`
     display: flex;
     align-items: center;
     text-decoration: none;
-    padding: 0 1rem;
     height: 100%;
     cursor: pointer;
     &.active {
