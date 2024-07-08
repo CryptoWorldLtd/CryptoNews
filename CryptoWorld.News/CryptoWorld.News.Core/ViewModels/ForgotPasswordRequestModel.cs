@@ -6,6 +6,5 @@ namespace CryptоWorld.News.Core.ViewModels
     {
         [Required]
         public string Email { get; set; }
-
     }
 }

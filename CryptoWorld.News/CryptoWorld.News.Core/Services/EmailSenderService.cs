@@ -1,11 +1,8 @@
 ﻿using CryptoWorld.Application.Server.Settings;
 using CryptоWorld.News.Core.Interfaces;
 using Microsoft.Extensions.Options;
-using SendGrid;
 using SendGrid.Helpers.Mail;
-using System;
-using System.Threading.Tasks;
-
+using SendGrid;
 
 namespace CryptоWorld.News.Core.Services
 {

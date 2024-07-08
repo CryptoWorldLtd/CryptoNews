@@ -1,20 +1,14 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using CryptoWorld.Application.Server.Settings;
+using CryptîWorld.News.Core.Interfaces;
 using CryptoWorld.News.Core.Contracts;
 using CryptoWorld.News.Core.Services;
-using CryptoWorld.News.Data;
-using CryptoWorld.News.Data.Models;
-using CryptîWorld.News.Core.Interfaces;
-using CryptîWorld.News.Core.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using SendGrid;
-using SendGrid.Extensions.DependencyInjection;
-using System.Text;
+using Microsoft.AspNetCore.Identity;
+using CryptoWorld.News.Data.Models;
+using CryptoWorld.News.Data;
+using CryptîWorld.News.Core.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.

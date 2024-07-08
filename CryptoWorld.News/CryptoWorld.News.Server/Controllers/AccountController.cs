@@ -1,12 +1,8 @@
-﻿using CryptoWorld.News.Core.Contracts;
-using CryptoWorld.News.Core.ViewModels;
-using CryptоWorld.News.Core.Interfaces;
+﻿using Microsoft.AspNetCore.Authorization;
 using CryptоWorld.News.Core.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+using CryptoWorld.News.Core.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+using CryptoWorld.News.Core.ViewModels;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
@@ -29,7 +25,6 @@ namespace CryptoWorld.Application.Server.Controllers
             try
             {
                 var result = await accountService.RegisterAsync(model);
-
 
                 if (!result.Succeeded)
                 {

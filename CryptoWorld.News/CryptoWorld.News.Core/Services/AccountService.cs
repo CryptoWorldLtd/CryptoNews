@@ -1,16 +1,14 @@
-﻿using CryptoWorld.News.Core.Contracts;
-using CryptoWorld.News.Core.ViewModels;
-using CryptoWorld.News.Data.Models;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using CryptоWorld.News.Core.Interfaces;
-using CryptоWorld.News.Core.Services;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.IdentityModel.Tokens;
+using CryptoWorld.News.Core.ViewModels;
+using CryptoWorld.News.Core.Contracts;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Identity;
+using CryptoWorld.News.Data.Models;
 using System.Security.Claims;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace CryptoWorld.News.Core.Services
 {
@@ -79,34 +77,33 @@ namespace CryptoWorld.News.Core.Services
 
         public async Task<IdentityResult> VerifyEmailAsync(string token, string email)
         {
+            if (!IsValidEmail(email))
+                throw new ArgumentException("Invalid email address format.");
+
             var user = await userManager.FindByEmailAsync(email);
 
             if (user == null)
-            {
                 throw new ArgumentException("There is no such user.");
-            }
 
             var decodedTokenBytes = WebEncoders.Base64UrlDecode(token);
             var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
             var result = await userManager.ConfirmEmailAsync(user, decodedToken);
 
             if (!result.Succeeded)
-            {
                 throw new ArgumentException("Incorrect email.");
-            }
 
-            return result;
+            return (result);
         }
 
         public async Task<IdentityResult> PasswordResetAsync(string token, string email, string newPassword)
         {
+            if (!IsValidEmail(email))
+                throw new ArgumentException("Invalid email address format.");
+
             var user = await userManager.FindByEmailAsync(email);
             if (user == null)
-            {
                 throw new ArgumentException("There is no such user.");
-            }
-            //  var decodedTokenBytes = WebEncoders.Base64UrlDecode(token);
-            //  var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);  incorrect email error
+
             var result = await userManager.ResetPasswordAsync(user, token, newPassword);
 
             if (!result.Succeeded)
@@ -119,12 +116,14 @@ namespace CryptoWorld.News.Core.Services
 
         public async Task<IdentityResult> GeneratePasswordResetToken(string email)
         {
+            if (!IsValidEmail(email))
+                throw new ArgumentException("Invalid email address format.");
+
             var user = await userManager.FindByEmailAsync(email);
 
             if (user == null)
-            {
                 throw new ArgumentException("There is no such user.");
-            }
+
             var resetPassToken = await userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = Uri.EscapeDataString(resetPassToken);
             string action = "resetpassword";
