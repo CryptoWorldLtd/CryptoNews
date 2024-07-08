@@ -1,4 +1,4 @@
-﻿namespace CryptоWorld.News.Core.Interfaces
+﻿namespace CryptoWorld.News.Core.Interfaces
 {
     public interface IEmailSenderService
     {        

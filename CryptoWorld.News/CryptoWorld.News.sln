@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoWorld.News.Data", "Cr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CryptoWorld.News.Data", "CryptoWorld.News.Data", "{AAC2EADA-EE45-4597-BA0B-BD9853690E02}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptоWorld.News.Core", "CryptoWorld.News.Core\CryptоWorld.News.Core.csproj", "{629AFE0D-8C51-4109-B8E3-8745619ECF07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoWorld.News.Core", "CryptoWorld.News.Core\CryptoWorld.News.Core.csproj", "{629AFE0D-8C51-4109-B8E3-8745619ECF07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

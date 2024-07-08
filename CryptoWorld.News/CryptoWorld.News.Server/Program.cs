@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using CryptoWorld.Application.Server.Settings;
-using CryptîWorld.News.Core.Interfaces;
-using CryptoWorld.News.Core.Contracts;
-using CryptoWorld.News.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+
+using CryptoWorld.News.Core.Interfaces;
+using CryptoWorld.News.Core.Contracts;
+using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Data.Models;
 using CryptoWorld.News.Data;
-using CryptîWorld.News.Core.Services;
-
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.

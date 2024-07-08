@@ -1,10 +1,9 @@
-﻿using CryptoWorld.Application.Server.Settings;
-using CryptоWorld.News.Core.Interfaces;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using CryptoWorld.News.Core.Interfaces;
 using SendGrid.Helpers.Mail;
 using SendGrid;
 
-namespace CryptоWorld.News.Core.Services
+namespace CryptoWorld.News.Core.Services
 {
     public class EmailSenderService : IEmailSenderService
     {

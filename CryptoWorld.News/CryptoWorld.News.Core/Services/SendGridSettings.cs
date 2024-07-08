@@ -1,4 +1,4 @@
-﻿namespace CryptoWorld.Application.Server.Settings
+﻿namespace CryptoWorld.News.Core.Services
 {
     public class SendGridSettings
     {

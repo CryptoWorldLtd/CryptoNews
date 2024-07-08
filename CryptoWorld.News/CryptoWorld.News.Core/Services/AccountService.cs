@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using CryptоWorld.News.Core.Interfaces;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
+
+using CryptoWorld.News.Core.Interfaces;
 using CryptoWorld.News.Core.ViewModels;
 using CryptoWorld.News.Core.Contracts;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Identity;
 using CryptoWorld.News.Data.Models;
+
+using System.IdentityModel.Tokens.Jwt;
+using System.Text.RegularExpressions;
 using System.Security.Claims;
 using System.Text;
 

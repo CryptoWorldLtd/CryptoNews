@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CryptоWorld.News.Core.ViewModels
+namespace CryptoWorld.News.Core.ViewModels
 {
     public class ForgotPasswordRequestModel
     {
