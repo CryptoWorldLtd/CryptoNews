@@ -51,6 +51,7 @@ namespace CryptoWorld.Application.Server.Controllers
                 return BadRequest(ModelState);
             }
 
+
             return Ok();
         }
 
@@ -59,15 +60,33 @@ namespace CryptoWorld.Application.Server.Controllers
         {
             try
             {
-                var user = await profileService.ChangeEmailAsync(model);
+                var response = await profileService.ChangeEmailAsync(model);
             }
             catch (Exception)
             {
                 return BadRequest(ModelState);
             }
 
-            return Ok();
+            return Ok(new { Message = "The user email was changed successfully!" });
         }
-        
+
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+        {
+            
+            try
+            {
+                var userId = userManager.GetUserId(User);
+                var userProfile = await context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+                var response = await profileService.ChangePasswordAsync(model,userProfile);
+            }
+            catch (Exception)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok(new { Message = "The user password was changed successfully!" });
+        }
+
     }
 }
