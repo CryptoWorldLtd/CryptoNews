@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Nav, NavLink, NavMenu } from './NavbarElements';
 import Logo from '/logo.jpg'
 import './Navbar.css';
+import { Nav, NavLink, NavMenu } from "./NavbarElements";
+import Profile from "../Pages/ProfileDropdown.jsx";
+
 
 const Navbar = () => {
     const[menuOpen, setMenuOpen] = useState(false)
@@ -24,10 +26,10 @@ const Navbar = () => {
             <li>
                 <NavLink to="/Register">Register</NavLink>
             </li>
+            <Profile/>
             </ul>
         </Nav>
-    )
-}
+    );
+};
 
 export default Navbar;
-
