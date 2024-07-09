@@ -1,18 +1,14 @@
-using CryptoWorld.News.Core.Contracts;
-using CryptoWorld.News.Core.Services;
+ï»¿using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
-using CryptîWorld.News.Core.Interfaces;
-using CryptîWorld.News.Core.Services.News;
-using CryptîWorld.News.Core.ViewModels.HomePage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
 using CryptoWorld.News.Core.Interfaces;
-using CryptoWorld.News.Core.Services;
-using CryptoWorld.News.Data.Models;
-using CryptoWorld.News.Data;
+using CryptÐ¾World.News.Core.Interfaces;
+using CryptÐ¾World.News.Core.Services.News;
+using CryptÐ¾World.News.Core.ViewModels.HomePage;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
