@@ -1,5 +1,4 @@
 ﻿using CryptoWorld.News.Core.Enumerations;
-using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.ViewModels.Home_Page;
 
 namespace CryptоWorld.News.Core.Interfaces

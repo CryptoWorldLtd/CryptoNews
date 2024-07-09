@@ -1,9 +1,7 @@
 ﻿using CryptoWorld.News.Core.ViewModels.HomePage;
 using CryptоWorld.News.Core.Interfaces;
-using CryptоWorld.News.Core.ViewModels.Home_Page;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
