@@ -1,5 +1,4 @@
-﻿using CryptoWorld.News.Core.Contracts;
-using CryptoWorld.News.Core.Services;
+﻿using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Core.ViewModels;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;

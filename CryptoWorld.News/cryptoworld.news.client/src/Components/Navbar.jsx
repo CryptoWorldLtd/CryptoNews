@@ -1,6 +1,7 @@
 import React from "react";
 import { Nav, NavLink, NavMenu } from "./NavbarElements";
-import Profile from "../Pages/Profile.jsx";
+import Profile from "../Pages/ProfileDropdown.jsx";
+
 
 const Navbar = () => {
     return (

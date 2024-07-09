@@ -1,27 +1,31 @@
-﻿using CryptoWorld.News.Core.Contracts;
 using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
+using CryptoWorld.News.Core.Interfaces;
+using CryptоWorld.News.Core.Interfaces;
+using CryptоWorld.News.Core.Services.News;
+using CryptоWorld.News.Core.ViewModels.HomePage;
+
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequiredLength = 8;
-    options.Password.RequireNonAlphanumeric = true; 
+    options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
@@ -52,6 +56,13 @@ builder.Services
 builder.Services.AddCors();
 builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IUserProfileService,UserProfileService>();
+builder.Services.AddScoped<INewsService, NewsService>();
+builder.Services.AddScoped<UrlForNews>();
+builder.Services.Configure<UrlForNews>(builder.Configuration.GetSection("MoneyBgUrl"));
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGrid"));
+builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
+
 var app = builder.Build();
 
 //Apply migrations after project run
