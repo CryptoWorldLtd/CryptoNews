@@ -1,6 +1,9 @@
-﻿using CryptоWorld.News.Core.Interfaces;
+﻿using CryptoWorld.News.Core.ViewModels.HomePage;
+using CryptоWorld.News.Core.Interfaces;
+using CryptоWorld.News.Core.ViewModels.Home_Page;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
@@ -16,7 +19,7 @@ namespace CryptoWorld.Application.Server.Controllers
 
         [HttpGet("home")]
         [AllowAnonymous]
-        public async Task <IActionResult> HomeNews()
+        public async Task<IActionResult> HomeNews()
         {
             int pagesCount = 7;
             var urls = await homeNewsService.GetNewsUrlsAsync(pagesCount);
@@ -28,12 +31,25 @@ namespace CryptoWorld.Application.Server.Controllers
 
             var model = await homeNewsService.GetPageNewsModelAsync(urls);
 
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
             return Ok(model);
+        }
+
+        [HttpGet("filtered")]
+        public async Task<IActionResult> GetSortedNewsAsync([FromQuery] FilteredNewsModel news)
+        {
+            var queryResult = await homeNewsService.GetSortedNewsAsync(
+                news.Category,
+                news.SearchTerm,
+                news.Sorting,
+                news.CurrentPage,
+                FilteredNewsModel.NewsPerPage);
+
+            return Ok(queryResult);
         }
     }
 }

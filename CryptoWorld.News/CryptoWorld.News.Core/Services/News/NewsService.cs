@@ -1,9 +1,11 @@
 ﻿using AngleSharp;
+using CryptoWorld.News.Core.Enumerations;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.ViewModels.Home_Page;
 using CryptоWorld.News.Core.ViewModels.HomePage;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Globalization;
 using System.Text;
@@ -11,14 +13,15 @@ using System.Text;
 namespace CryptоWorld.News.Core.Services.News
 {
     public class NewsService : INewsService
-    {    
+    {
         private readonly AngleSharp.IConfiguration config;
         private readonly IBrowsingContext context;
         private List<PageNewsModel> homeNews;
         private List<string> urls;
         private readonly ApplicationDbContext dbContext;
         private readonly UrlForNews urlForNews;
-        public NewsService( ApplicationDbContext _dbContext, IOptions<UrlForNews> urlForNewsOptions)
+
+        public NewsService(ApplicationDbContext _dbContext, IOptions<UrlForNews> urlForNewsOptions)
         {
             config = Configuration.Default.WithDefaultLoader();
             context = BrowsingContext.New(config);
@@ -26,8 +29,8 @@ namespace CryptоWorld.News.Core.Services.News
             urls = new List<string>();
             dbContext = _dbContext;
             urlForNews = urlForNewsOptions.Value;
-
         }
+
         public async Task<List<PageNewsModel>> GetPageNewsModelAsync(List<string> urls)
         {
             int pagesCount = 7;
@@ -35,13 +38,13 @@ namespace CryptоWorld.News.Core.Services.News
 
             if (newsUrls != null)
             {
-
                 foreach (var url in newsUrls)
                 {
                     var documentForNews = await context.OpenAsync(url);
                     var title = documentForNews.QuerySelector("header > h1").TextContent;
                     var content = new StringBuilder();
                     var allContentOfNews = documentForNews.QuerySelectorAll(".article-text > p");
+                    var rating = 0;
                     foreach (var item in allContentOfNews)
                     {
                         content.AppendLine(item.TextContent);
@@ -50,7 +53,7 @@ namespace CryptоWorld.News.Core.Services.News
                     var imageUrl = documentForNews.QuerySelector(".img-wrapper > .img > img").GetAttribute("src");
                     var dateOfPublish = documentForNews.QuerySelector(".article-info > .time").TextContent.Trim();
                     var contentInString = content.ToString().TrimEnd();
-                    PageNewsModel model = new PageNewsModel(title, contentInString, imageUrl, dateOfPublish);
+                    PageNewsModel model = new PageNewsModel(title, contentInString, imageUrl, dateOfPublish, rating);
                     homeNews.Add(model);
                 }
             }
@@ -58,9 +61,10 @@ namespace CryptоWorld.News.Core.Services.News
 
             return homeNews;
         }
+
         public async Task<List<string>> GetNewsUrlsAsync(int pagesCount)
         {
-            
+
             for (int i = 1; i <= pagesCount; i++)
             {
                 var document = await context.OpenAsync($"{urlForNews.MoneyBgUrl}?page={i}");
@@ -76,8 +80,67 @@ namespace CryptоWorld.News.Core.Services.News
                     }
                 }
             }
+
             return urls;
         }
+
+        public async Task<List<PageNewsModel>> GetSortedNewsAsync(
+           string? category = null,
+           string? searchTerm = null,
+           NewsSorting sorting = NewsSorting.Soonest,
+           int currentPage = 1,
+           int newsPerPage = 2)
+        {
+            var newsQuery = dbContext.Articles.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                newsQuery = newsQuery.Where(n => n.Category.Name == category);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                newsQuery = newsQuery
+                    .Where(n =>
+                    n.Title.ToLower().Contains(searchTerm.ToLower()) ||
+                    n.Content.ToLower().Contains(searchTerm.ToLower()) ||
+                    n.Source.Name.ToLower().Contains(searchTerm.ToLower()) ||
+                    n.Category.Name.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            newsQuery = sorting switch
+            {
+                NewsSorting.MostPopular => newsQuery.OrderByDescending(n => n.Rating),
+                NewsSorting.Soonest or _ => newsQuery.OrderByDescending(n => n.PublicationDate)
+            };
+
+           var totalNewsCount = await dbContext.Articles.CountAsync();
+
+            var news = await newsQuery
+                 .Skip((currentPage - 1) * newsPerPage)
+                 .Take(newsPerPage)
+                 .Select(n => new PageNewsModel(
+                     n.Title,
+                     n.Content,
+                     n.ImageUrl,
+                     n.PublicationDate.ToString(),
+                     n.Rating
+                 ))
+                 .ToListAsync();
+
+            return news;
+        }
+
+        public async Task<List<string>> GetCategoriesAsync()
+        {
+            var categories = await dbContext
+                .Categories
+                .Select(c => c.Name)
+                .ToListAsync();
+
+            return categories;
+        }
+
         private async Task AddArticleInDbAsync(List<PageNewsModel> models)
         {
             var category = await GetOrCreateCategory("Crypto");
@@ -94,7 +157,7 @@ namespace CryptоWorld.News.Core.Services.News
                     SourceId = source.Id,
                     CategoryId = category.Id
                 };
-                         
+
                 string formatDate = "dd.MM.yyyy HH:mm:ss";
                 bool isValidDate = DateTime.TryParseExact(article.DatePublished, formatDate, CultureInfo.InvariantCulture
                     , DateTimeStyles.None, out DateTime publicationDate
@@ -116,34 +179,37 @@ namespace CryptоWorld.News.Core.Services.News
                     articles.Add(articleModel);
                 }
             }
-            await dbContext.AddRangeAsync(articles);
+            await dbContext.Articles.AddRangeAsync(articles);
             await dbContext.SaveChangesAsync();
         }
-        private async Task<Source> GetOrCreateSource (string sourceName , string sourceUrl)
+
+        private async Task<Source> GetOrCreateSource(string sourceName, string sourceUrl)
         {
             Source source = new()
             {
                 Name = sourceName,
                 Url = sourceUrl
             };
-            dbContext.Add(source);
+            dbContext.Sources.Add(source);
             await dbContext.SaveChangesAsync();
 
             return source;
-        }   
+        }
+
         private async Task<Category> GetOrCreateCategory(string categoryName)
         {
-            Category category = new()
+            var category = dbContext.Categories.FirstOrDefault(c => c.Name == categoryName);
+            if (category == null) 
             {
-                Name = categoryName ,
-                
+                category = new()
+                {
+                    Name = categoryName
+                };
+                dbContext.Categories.Add(category);
+                await dbContext.SaveChangesAsync();
             };
-            dbContext.Categories.Add(category);
-            await dbContext.SaveChangesAsync();
 
             return category;
-        }  
+        }
     }
 }
-    
-
