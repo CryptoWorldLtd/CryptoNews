@@ -67,8 +67,7 @@ const CreateNews = () => {
         
         <div className='input-group'>
           <div className='input'>
-            <input className='content'
-              type='text' 
+            <textarea
               placeholder='Content' 
               value={content} 
               onChange={handleContentChange} 

@@ -14,7 +14,6 @@ body div{
     display: flex;
     flex-direction: column;
     text-align: center;
-    gap: 9px;
     width: 100%;
     margin-top: 20px;
     align-content: center;
@@ -35,12 +34,13 @@ body div{
     margin-top: 20px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 0.5em;
 }
 .input{
     display: flex;
     align-items: center;
     margin:auto;
+    height: auto;
     width: initial;
     padding: 1px 1em;
     background: lightgray;
@@ -48,11 +48,23 @@ body div{
 }
 
 .inputs :nth-child(2){
-    height: 20em;
+    height: auto;
     background: lightgray;
+    border-radius: 6px;
 }
-.inputs :nth-child(2) .input {
-    height: 100%;
+
+.input input,
+.input textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #797979;
+    font-size: 19px;
+}
+.inputs textarea {
+    height: auto;
+    
 }
 .input input{
     height: 50px;
@@ -63,6 +75,11 @@ body div{
     color: #797979;
     font-size: 19px;
     
+}
+.input input::placeholder,
+.input textarea::placeholder {
+    font-size: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif, sans-serif;
 }
 .forgot-password{
     padding-left: 62px;
