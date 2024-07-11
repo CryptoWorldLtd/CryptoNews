@@ -64,7 +64,7 @@ body div{
 }
 .inputs textarea {
     height: auto;
-    
+    padding-top: 0.5em;
 }
 .input input{
     height: 50px;
