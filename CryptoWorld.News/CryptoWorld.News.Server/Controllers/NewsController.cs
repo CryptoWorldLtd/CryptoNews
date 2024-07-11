@@ -37,7 +37,7 @@ namespace CryptoWorld.Application.Server.Controllers
             return Ok(model);
         }
 
-        [HttpGet("filtered")]
+        [HttpGet("filter")]
         public async Task<IActionResult> GetSortedNewsAsync([FromQuery] FilteredNewsModel news)
         {
             var queryResult = await homeNewsService.GetSortedNewsAsync(
