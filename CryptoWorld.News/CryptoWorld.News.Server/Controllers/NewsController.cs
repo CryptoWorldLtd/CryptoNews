@@ -1,6 +1,8 @@
-﻿using CryptоWorld.News.Core.Interfaces;
+﻿using CryptoWorld.News.Data.Models;
+using CryptоWorld.News.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
@@ -34,6 +36,48 @@ namespace CryptoWorld.Application.Server.Controllers
             }
 
             return Ok(model);
+        }
+
+        [HttpGet("news")]
+        [AllowAnonymous]
+        public async Task<IActionResult> NewsSevenDaysAgo()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {   
+               var result = await this.homeNewsService.GetAllNewsFromTheLastSevenDays();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet("pastNews")]
+        [AllowAnonymous]
+        public async Task<IActionResult> NewsTwentyDaysAgo()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var result = await this.homeNewsService.GetAllNewsFromTheLastTwentyDays();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }

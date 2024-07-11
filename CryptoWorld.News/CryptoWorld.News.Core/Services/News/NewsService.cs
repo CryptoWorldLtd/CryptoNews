@@ -4,7 +4,9 @@ using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.ViewModels.Home_Page;
 using CryptоWorld.News.Core.ViewModels.HomePage;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using SendGrid.Helpers.Mail;
 using System.Globalization;
 using System.Text;
 
@@ -142,7 +144,33 @@ namespace CryptоWorld.News.Core.Services.News
             await dbContext.SaveChangesAsync();
 
             return category;
-        }  
+        }
+        public async Task<List<Article>> GetAllNewsFromTheLastSevenDays()
+        {
+            var daysAgo = DateTime.Now.AddDays(-7);
+
+            var latestNews = await this.dbContext
+                .Articles
+                .Where(c => c.PublicationDate >= daysAgo)
+                .GroupBy(y => y.Id)
+                .Select(x => x.First())
+                .ToListAsync();
+
+            return latestNews;
+        }
+        public async Task<List<Article>> GetAllNewsFromTheLastTwentyDays()
+        {
+            var daysAgo = DateTime.Now.AddDays(-15);
+
+            var latestNews = await this.dbContext
+                .Articles
+                .Where(c => c.PublicationDate <= daysAgo)
+                .GroupBy(y => y.Id)
+                .Select(x => x.First())
+                .ToListAsync();
+
+            return latestNews;
+        }
     }
 }
     

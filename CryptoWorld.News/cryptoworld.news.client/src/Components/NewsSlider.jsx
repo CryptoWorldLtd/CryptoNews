@@ -3,9 +3,8 @@ import {FaArrowAltCircleRight, FaArrowAltCircleLeft} from 'react-icons/fa';
 import axios from 'axios';
 
 const NewsSlider = () => {
-    const url = 'https://localhost:7249/HomeNews/home';
+    const url = 'https://localhost:7249/News/news';
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [current, setCurrent] = useState(0);
 
     const nextSlide = () => {
@@ -16,19 +15,17 @@ const NewsSlider = () => {
         setCurrent(current === 0 ? data.length - 1 : current - 1)
     }
 
-    
     useEffect(() => {
         const FetchData = async () => {
             try{
                 const response = await axios.get(url)
-                setData(response.data);
+                setData(response.data)
             }
             catch{
-            console.error('Error fetching data:', error);
-           }
+            console.error('Error fetching data:', error)
+           };
         };
         FetchData();
-    
     }, []);
 
 return (
@@ -42,29 +39,24 @@ return (
                    {index === current && (
                        <img src={item.imageUrl} alt='news' className='image'></img> 
                    )}
-                              <div className='content'>
-                                     <ul>
-                                       <li key={index}>
-                                        <h1>{item.title}</h1>
-                                       </li>
-                                       <li key={index}>
-                                         <h5>{(item.content).substr(0,330) + '....'}</h5>
-                                        <h6 key={index} className='date'>
-                                           {item.datePublished}
-                                        </h6>
-                                       <button type='submit' className='button'>Read More</button>
-                                       </li>
-                                    </ul>
-                               </div>
+                    <div className='content'>
+                        <ul>
+                            <li key={index}>
+                               <h1>{item.title}</h1>
+                            </li>
+                            <li key={index}>
+                               <h5>{(item.content).substr(0,330) + '....'}</h5>
+                               <h6 key={index} className='date'>
+                                     {item.datePublished}
+                              </h6>
+                            <button type='submit' className='button'>Read More</button>
+                            </li>
+                        </ul>
+                     </div>
                    </div>
             )
         })}
         <FaArrowAltCircleRight className='arrow right-side' onClick={nextSlide}/>
-        <span className='indicators'>
-            {data.map((_, index) => {
-                return <button key={index} className={current === index ? 'indicator' : 'indicator indicator-inactive'} onClick={() => setCurrent(index)}></button>
-            })}
-        </span>
     </div>
     );
 };

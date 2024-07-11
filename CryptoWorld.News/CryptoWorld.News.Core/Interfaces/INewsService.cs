@@ -7,6 +7,8 @@ namespace CryptоWorld.News.Core.Interfaces
     {
         public Task <List<string>> GetNewsUrlsAsync(int pagesCount);
         public Task <List<PageNewsModel>> GetPageNewsModelAsync(List<string> urls);
+        public Task<List<Article>> GetAllNewsFromTheLastSevenDays();
+        public Task<List<Article>> GetAllNewsFromTheLastTwentyDays();
 
         
     }
