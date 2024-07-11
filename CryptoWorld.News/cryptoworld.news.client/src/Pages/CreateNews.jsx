@@ -29,7 +29,7 @@ const CreateNews = () => {
     setError(null);
     try {
       console.log('Submitting:', { title, content, imageUrl, datePublished });
-      const response = await axios.post('https://localhost:5173/createNews', {
+      const response = await axios.post('https://localhost:7249/createNews', {
         title,
         content,
         imageUrl,
