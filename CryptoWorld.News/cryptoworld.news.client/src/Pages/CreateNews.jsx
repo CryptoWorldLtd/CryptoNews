@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './CreateNews.css';
+import './CreateNews.module.css';
 import axios from 'axios';
 
 const CreateNews = () => {

@@ -1,7 +1,7 @@
 body div{
     margin: 0 auto;
    }
-.container{
+.wrapper{
     display: flex;
     flex-direction: column;
     width: 600px;
@@ -10,7 +10,7 @@ body div{
     background: #fff;
     padding-bottom: 10px;
 }
-.header{
+.header-main{
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -18,11 +18,11 @@ body div{
     margin-top: 20px;
     align-content: center;
 }
-.text{
+.text-main{
     font-size: 40px;
     font-weight: 700;
 }
-.underline{
+.underline-main{
     width: 100px;
     height: 6px;
     background:black;
@@ -30,7 +30,7 @@ body div{
     width: auto;
     
 }
-.inputs{
+.input-fields{
     margin-top: 20px;
     display: flex;
     flex-direction: column;
@@ -47,14 +47,14 @@ body div{
     border-radius: 6px;
 }
 
-.inputs :nth-child(2){
+.input-fields :nth-child(2){
     height: auto;
     background: lightgray;
     border-radius: 6px;
 }
 
-.input input,
-.input textarea {
+.input-field input,
+.input-field textarea {
     width: 100%;
     background: transparent;
     border: none;
@@ -62,11 +62,11 @@ body div{
     color: #797979;
     font-size: 19px;
 }
-.inputs textarea {
+.input-fields textarea {
     height: auto;
     padding-top: 0.5em;
 }
-.input input{
+.input-field input{
     height: 50px;
     width: 400px;
     background: transparent;
@@ -76,8 +76,8 @@ body div{
     font-size: 19px;
     
 }
-.input input::placeholder,
-.input textarea::placeholder {
+.input-field input::placeholder,
+.input-field textarea::placeholder {
     font-size: 10px;
     font-family: Verdana, Geneva, Tahoma, sans-serif, sans-serif;
 }
