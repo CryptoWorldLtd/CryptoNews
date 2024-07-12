@@ -1,7 +1,4 @@
-body div{
-    margin: 0 auto;
-   }
-.wrapper{
+.wrapper {
     display: flex;
     flex-direction: column;
     width: 600px;
@@ -10,7 +7,7 @@ body div{
     background: #fff;
     padding-bottom: 10px;
 }
-.header-main{
+.headerMain {
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -18,43 +15,29 @@ body div{
     margin-top: 20px;
     align-content: center;
 }
-.text-main{
+.textMain {
     font-size: 40px;
     font-weight: 700;
 }
-.underline-main{
-    width: 100px;
-    height: 6px;
-    background:black;
-    border-radius: 9px;
-    width: auto;
-    
-}
-.input-fields{
+
+.inputFields {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 0.5em;
 }
-.input{
+.inputGroup {
     display: flex;
     align-items: center;
-    margin:auto;
+    margin: auto;
     height: auto;
     width: initial;
     padding: 1px 1em;
     background: lightgray;
     border-radius: 6px;
 }
-
-.input-fields :nth-child(2){
-    height: auto;
-    background: lightgray;
-    border-radius: 6px;
-}
-
-.input-field input,
-.input-field textarea {
+.inputField input,
+.inputField textarea {
     width: 100%;
     background: transparent;
     border: none;
@@ -62,11 +45,11 @@ body div{
     color: #797979;
     font-size: 19px;
 }
-.input-fields textarea {
+.inputFields textarea {
     height: auto;
     padding-top: 0.5em;
 }
-.input-field input{
+.inputField input {
     height: 50px;
     width: 400px;
     background: transparent;
@@ -74,25 +57,18 @@ body div{
     outline: none;
     color: #797979;
     font-size: 19px;
-    
 }
-.input-field input::placeholder,
-.input-field textarea::placeholder {
+.inputField input::placeholder,
+.inputField textarea::placeholder {
     font-size: 10px;
-    font-family: Verdana, Geneva, Tahoma, sans-serif, sans-serif;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-.forgot-password{
-    padding-left: 62px;
-    margin-top: 27px;
-    color: lightgray;
-    font-size: 18px;
-}
-.submit-container{
+.submitContainer {
     display: flex;
     gap: 20px;
     margin: 1rem auto;
 }
-.submit{
+.submit {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -103,9 +79,9 @@ body div{
     border-radius: 50px;
     font-size: 19px;
     font-weight: 700;
-    cursor:pointer
+    cursor: pointer;
 }
-.gray{
-    background: #eaeaea;
-    color: #676767;
+.error {
+    color: red;
+    margin-top: 10px;
 }
