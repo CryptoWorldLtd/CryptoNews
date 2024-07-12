@@ -54,7 +54,7 @@ namespace CryptоWorld.News.Core.Services.News
                     homeNews.Add(model);
                 }
             }
-            var newsForDb = AddArticleInDbAsync(homeNews);
+                    await AddArticleInDbAsync(homeNews);
 
             return homeNews;
         }
@@ -78,7 +78,7 @@ namespace CryptоWorld.News.Core.Services.News
             }
             return urls;
         }
-        private async Task AddArticleInDbAsync(List<PageNewsModel> models)
+        public async Task AddArticleInDbAsync(List<PageNewsModel> models)
         {
             var category = await GetOrCreateCategory("Crypto");
             var source = await GetOrCreateSource("Money.bg", $"{urlForNews.MoneyBgUrl}");
@@ -114,9 +114,10 @@ namespace CryptоWorld.News.Core.Services.News
                     !articles.Any(a => a.PublicationDate == articleModel.PublicationDate))
                 {
                     articles.Add(articleModel);
+                   
                 }
             }
-            await dbContext.AddRangeAsync(articles);
+           await dbContext.AddRangeAsync(articles);
             await dbContext.SaveChangesAsync();
         }
         private async Task<Source> GetOrCreateSource (string sourceName , string sourceUrl)
