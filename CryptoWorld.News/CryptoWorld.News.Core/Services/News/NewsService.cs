@@ -57,7 +57,8 @@ namespace CryptоWorld.News.Core.Services.News
                     homeNews.Add(model);
                 }
             }
-            var newsForDb = AddArticleInDbAsync(homeNews);
+
+            await AddArticleInDbAsync(homeNews);
 
             return homeNews;
         }
@@ -114,7 +115,7 @@ namespace CryptоWorld.News.Core.Services.News
                 NewsSorting.Soonest or _ => newsQuery.OrderByDescending(n => n.PublicationDate)
             };
 
-           var totalNewsCount = await dbContext.Articles.CountAsync();
+            var totalNewsCount = await dbContext.Articles.CountAsync();
 
             var news = await newsQuery
                  .Skip((currentPage - 1) * newsPerPage)
@@ -173,8 +174,8 @@ namespace CryptоWorld.News.Core.Services.News
                 }
                 articleModel.SourceId = source.Id;
                 articleModel.CategoryId = category.Id;
-                if (!articles.Any(a => a.Title == articleModel.Title) &&
-                    !articles.Any(a => a.PublicationDate == articleModel.PublicationDate))
+                if (!dbContext.Articles.Any(a => a.Title == articleModel.Title) &&
+                    !dbContext.Articles.Any(a => a.PublicationDate == articleModel.PublicationDate))
                 {
                     articles.Add(articleModel);
                 }
@@ -185,13 +186,17 @@ namespace CryptоWorld.News.Core.Services.News
 
         private async Task<Source> GetOrCreateSource(string sourceName, string sourceUrl)
         {
-            Source source = new()
+            var source = dbContext.Sources.FirstOrDefault(s => s.Name == sourceName);
+            if (source == null)
             {
-                Name = sourceName,
-                Url = sourceUrl
-            };
-            dbContext.Sources.Add(source);
-            await dbContext.SaveChangesAsync();
+                source = new()
+                {
+                    Name = sourceName,
+                    Url = sourceUrl
+                };
+                dbContext.Sources.Add(source);
+                await dbContext.SaveChangesAsync();
+            }
 
             return source;
         }
@@ -199,7 +204,7 @@ namespace CryptоWorld.News.Core.Services.News
         private async Task<Category> GetOrCreateCategory(string categoryName)
         {
             var category = dbContext.Categories.FirstOrDefault(c => c.Name == categoryName);
-            if (category == null) 
+            if (category == null)
             {
                 category = new()
                 {
