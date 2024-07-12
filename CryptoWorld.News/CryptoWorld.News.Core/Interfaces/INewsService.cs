@@ -1,4 +1,4 @@
-﻿using CryptoWorld.News.Data.Models;
+﻿using CryptoWorld.News.Core.ViewModels.HomePage;
 using CryptоWorld.News.Core.ViewModels.Home_Page;
 
 namespace CryptоWorld.News.Core.Interfaces
@@ -7,8 +7,8 @@ namespace CryptоWorld.News.Core.Interfaces
     {
         public Task <List<string>> GetNewsUrlsAsync(int pagesCount);
         public Task <List<PageNewsModel>> GetPageNewsModelAsync(List<string> urls);
-        public Task<List<Article>> GetAllNewsFromTheLastSevenDays();
-        public Task<List<Article>> GetAllNewsFromTheLastTwentyDays();
+        public Task<List<FilterNewsModel>> GetAllNewsFromTheLastSevenDays();
+        public Task<List<FilterNewsModel>> GetAllNewsFromTheLastTwentyDays();
 
         
     }

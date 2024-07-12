@@ -1,4 +1,5 @@
 ﻿using AngleSharp;
+using CryptoWorld.News.Core.ViewModels.HomePage;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
@@ -145,28 +146,38 @@ namespace CryptоWorld.News.Core.Services.News
 
             return category;
         }
-        public async Task<List<Article>> GetAllNewsFromTheLastSevenDays()
+        public async Task<List<FilterNewsModel>> GetAllNewsFromTheLastSevenDays()
         {
             var daysAgo = DateTime.Now.AddDays(-7);
 
             var latestNews = await this.dbContext
                 .Articles
                 .Where(c => c.PublicationDate >= daysAgo)
-                .GroupBy(y => y.Id)
-                .Select(x => x.First())
+                .Select(x => new FilterNewsModel() { 
+
+                   Title = x.Title,
+                   ImageUrl = x.ImageUrl,
+                   Content = x.Content,
+                   DatePublished = x.PublicationDate
+                })
                 .ToListAsync();
 
             return latestNews;
         }
-        public async Task<List<Article>> GetAllNewsFromTheLastTwentyDays()
+        public async Task<List<FilterNewsModel>> GetAllNewsFromTheLastTwentyDays()
         {
             var daysAgo = DateTime.Now.AddDays(-15);
 
             var latestNews = await this.dbContext
                 .Articles
                 .Where(c => c.PublicationDate <= daysAgo)
-                .GroupBy(y => y.Id)
-                .Select(x => x.First())
+                .Select(x => new FilterNewsModel()
+                {
+                    Title = x.Title,
+                    ImageUrl = x.ImageUrl,
+                    Content = x.Content,
+                    DatePublished = x.PublicationDate
+                })
                 .ToListAsync();
 
             return latestNews;
