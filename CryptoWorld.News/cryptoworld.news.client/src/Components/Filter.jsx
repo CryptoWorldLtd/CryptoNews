@@ -11,9 +11,10 @@ const Filter = ({ onFilterChange }) => {
 
     useEffect(() => {
         // Fetch categories from the backend
-        axios.get('https://localhost:7249/news/categories')
+      let cat =  axios.get('https://localhost:7249/news/categories')
             .then(response => setCategories(response.data))
             .catch(error => console.error('Error fetching categories', error));
+            console.log(cat);
     }, []);
 
     const handleFilterChange = () => {
@@ -27,7 +28,7 @@ const Filter = ({ onFilterChange }) => {
                 <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
             <div className="filter-item">
-                <label>Popularity:</label>
+                <label>News Popularity:</label>
                 <select value={popularity} onChange={(e) => setPopularity(e.target.value)}>
                     <option value="">Select</option>
                     <option value="1">Soonest</option>
@@ -35,7 +36,7 @@ const Filter = ({ onFilterChange }) => {
                 </select>
             </div>
             <div className="filter-item">
-                <label>Category:</label>
+                <label>News Category:</label>
                 <Select
                     options={categories.map(category => ({ value: category.id, label: category.name }))}
                     value={selectedCategory}

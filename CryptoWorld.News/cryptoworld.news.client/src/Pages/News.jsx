@@ -15,7 +15,7 @@ const News = () => {
         axios.get(`https://localhost:7249/News/filter?${params}`)
             .then(response => setNews(response.data))
             .catch(error => console.error('Error fetching news', error));
-            console.log
+            console.log(params);
     };
 
     const handleFilterChange = (newFilters) => {
@@ -28,9 +28,12 @@ const News = () => {
             <div className="news-list">
                 {news.map((article) => (
                     <div key={article.id} className="news-item">
+                        <img src={article.imageUrl} width="600" height="500"></img>
                         <h3>{article.title}</h3>
                         <p>{article.content}</p>
-                    </div>
+                        <p>Date of publication: {article.datePublished}</p>
+                        <p>Rating popularity: {article.rating}</p>
+                     </div>
                 ))}
             </div>
         </div>
