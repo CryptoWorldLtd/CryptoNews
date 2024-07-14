@@ -42,7 +42,11 @@ const Filter = ({ onFilterChange }) => {
                     onChange={(option) => setSelectedCategory(option.value)}
                 />
             </div>
-            <button onClick={handleFilterChange}>Apply Filters</button>
+            <div className="submit-container">
+            <button onClick={handleFilterChange} type="submit" className="submit">
+            Apply Filters
+            </button>
+            </div>            
         </div>
     );
 };
