@@ -50,7 +50,6 @@ namespace CryptoWorld.Application.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-
             return Ok();
         }
 
@@ -72,7 +71,6 @@ namespace CryptoWorld.Application.Server.Controllers
         [HttpPost("changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
         {
-            
             try
             {
                 var userId = userManager.GetUserId(User);

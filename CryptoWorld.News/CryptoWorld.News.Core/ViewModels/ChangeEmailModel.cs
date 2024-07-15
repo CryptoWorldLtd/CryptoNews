@@ -12,7 +12,6 @@ namespace CryptоWorld.News.Core.ViewModels
         [Required]
         [EmailAddress]
         public string CurrentEmail { get; set; }
-
         [Required]
         [EmailAddress]
         [RegularExpression("[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")]

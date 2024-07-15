@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
-
 using CryptoWorld.News.Core.Interfaces;
 using CryptoWorld.News.Core.ViewModels;
 using CryptoWorld.News.Data.Models;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.RegularExpressions;
 using System.Security.Claims;
@@ -20,7 +17,6 @@ namespace CryptoWorld.News.Core.Services
     public class AccountService : IAccountService
     {
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IConfiguration config;
         private string secretKey;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IEmailSenderService emailSenderService;
@@ -33,12 +29,10 @@ namespace CryptoWorld.News.Core.Services
             )
         {
             userManager = _userManager;
-            config = _config;
-            this.secretKey = config["JWT:secretKey"];
+            secretKey = _config["JWT:secretKey"];
             signInManager = _signInManager;
             emailSenderService = _emailSenderService;
         }
-
 
         public async Task<IdentityResult> RegisterAsync(RegisterRequestModel model)
         {
@@ -157,7 +151,7 @@ namespace CryptoWorld.News.Core.Services
                 new Claim(ClaimTypes.Email, user.Email)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.secretKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

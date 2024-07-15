@@ -15,5 +15,6 @@ namespace CryptоWorld.News.Core.Interfaces
         Task<ApplicationUser> EditProfileAsync(UserProfileModel model);
         Task<IdentityResult> ChangeEmailAsync(ChangeEmailModel model);
         Task<IdentityResult> ChangePasswordAsync(ChangePasswordModel model, ApplicationUser userProfile);
+        Task LogoutAsync();
     }
 }

@@ -27,7 +27,11 @@ namespace CryptоWorld.News.Core.Services
 
             if (user == null)
                 throw new ArgumentException("There is no such user.");
-            
+
+            if (String.IsNullOrWhiteSpace(user.FirstName) ||
+                String.IsNullOrWhiteSpace(user.LastName))
+                throw new ArgumentException("Invalid user data");
+
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Img = model.Img;
@@ -72,6 +76,5 @@ namespace CryptоWorld.News.Core.Services
 
             return response;
         }
-
     }
 }
