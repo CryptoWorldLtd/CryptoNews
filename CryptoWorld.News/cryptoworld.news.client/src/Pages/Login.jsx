@@ -5,7 +5,7 @@ import axios from 'axios';
 import {  faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock , faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
-import './Login.css';
+import './Login.module.css';
 
 const Login = () => {
   const [email, setEmail] = useState(() => (localStorage.checkbox ? localStorage.email : ""));

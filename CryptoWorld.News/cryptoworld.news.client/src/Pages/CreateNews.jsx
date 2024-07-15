@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './CreateNews.css';
+import styles from './CreateNews.module.css';
 import axios from 'axios';
 
 const CreateNews = () => {
@@ -40,22 +40,21 @@ const CreateNews = () => {
         }
       });
       console.log('Response:', response.data);
-      navigate("/createNews");
     } catch (error) {
       console.error('Error:', error.response ? error.response.data : error.message);
-      setError(error.response?.data?.message || "Registration failed");
+      setError(error.response?.data?.message || "The news is not submitted");
     }
   };
 
   return (
-    <div className='container'>
-      <div className="header">
-        <div className='text'>Create News</div>
-        <div className='underline'></div>
+    <div className={styles.wrapper}>
+      <div className={styles.headerMain}>
+        <div className={styles.textMain}>Create News</div>
+        <div className={styles.underlineMain}></div>
       </div>
-      <div className='inputs'>
-        <div className='input-group'>
-          <div className='input'>
+      <div className={styles.inputFields}>
+        <div className={styles.inputGroup}>
+          <div className={styles.inputField}>
             <input 
               type='text' 
               placeholder='Title' 
@@ -65,8 +64,8 @@ const CreateNews = () => {
           </div>
         </div>
         
-        <div className='input-group'>
-          <div className='input'>
+        <div className={styles.inputGroup}>
+          <div className={styles.inputField}>
             <textarea
               placeholder='Content' 
               value={content} 
@@ -75,8 +74,8 @@ const CreateNews = () => {
           </div>
         </div>
 
-        <div className='input-group'>
-          <div className='input'>
+        <div className={styles.inputGroup}>
+          <div className={styles.inputField}>
             <input 
               type='text' 
               placeholder='ImageUrl' 
@@ -86,8 +85,8 @@ const CreateNews = () => {
           </div>
         </div>
 
-        <div className='input-group'>
-          <div className='input'>
+        <div className={styles.inputGroup}>
+          <div className={styles.inputField}>
             <input 
               type='text' 
               placeholder='Date format: "dd.MM.yyyy HH:mm:ss"' 
@@ -97,12 +96,12 @@ const CreateNews = () => {
           </div>
         </div>
 
-        <div className='submit-container'>
-          <button onClick={handleSubmit}>
+        <div className={styles.submitContainer}>
+          <button className={styles.submit} onClick={handleSubmit}>
             Submit News
           </button>
         </div>
-        {error && <div className="error">{error}</div>}
+        {error && <div className={styles.error}>{error}</div>}
       </div>
     </div>
   );
