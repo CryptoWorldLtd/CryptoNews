@@ -9,13 +9,13 @@ const Filter = ({ onFilterChange }) => {
     const [date, setDate] = useState('');
     const [popularity, setPopularity] = useState('');
 
-    useEffect(() => {
-        // Fetch categories from the backend
-      let cat =  axios.get('https://localhost:7249/news/categories')
-            .then(response => setCategories(response.data))
-            .catch(error => console.error('Error fetching categories', error));
-            console.log(cat);
-    }, []);
+    // Fetch categories from the backend
+    // useEffect(() => {
+    // let cat =  axios.get('https://localhost:7249/news/categories')
+    // .then(response => setCategories(response.data))
+    //.catch(error => console.error('Error fetching categories', error));
+    //   console.log(cat);//
+    //  }, []);
 
     const handleFilterChange = () => {
         onFilterChange({ date, popularity, category: selectedCategory });
