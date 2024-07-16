@@ -45,8 +45,6 @@ namespace CryptоWorld.News.Core.Services.News
                     var content = new StringBuilder();
                     var allContentOfNews = documentForNews.QuerySelectorAll(".article-text > p");
                     var rating = 0;
-                    var region = string.Empty;
-                    
                     foreach (var item in allContentOfNews)
                     {
                         content.AppendLine(item.TextContent);
@@ -55,7 +53,7 @@ namespace CryptоWorld.News.Core.Services.News
                     var imageUrl = documentForNews.QuerySelector(".img-wrapper > .img > img").GetAttribute("src");
                     var dateOfPublish = documentForNews.QuerySelector(".article-info > .time").TextContent.Trim();
                     var contentInString = content.ToString().TrimEnd();
-                    PageNewsModel model = new PageNewsModel(title, contentInString, imageUrl, dateOfPublish, rating, region);
+                    PageNewsModel model = new PageNewsModel(title, contentInString, imageUrl, dateOfPublish, rating);
                     homeNews.Add(model);
                 }
             }
@@ -88,9 +86,8 @@ namespace CryptоWorld.News.Core.Services.News
         }
 
         public async Task<List<PageNewsModel>> GetSortedNewsAsync(
-           string category = null,
-           string searchTerm = null,
-           string region = null,
+           string? category = null,
+           string? searchTerm = null,
            NewsSorting sorting = NewsSorting.Latest,
            int currentPage = 1,
            int newsPerPage = 2)
@@ -102,11 +99,6 @@ namespace CryptоWorld.News.Core.Services.News
                 newsQuery = newsQuery.Where(n => n.Category.Name == category);
             }
 
-            if (!string.IsNullOrWhiteSpace(region))
-            {
-                newsQuery = newsQuery.Where(n => n.Region == region);
-            }
-
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 newsQuery = newsQuery
@@ -114,8 +106,7 @@ namespace CryptоWorld.News.Core.Services.News
                     n.Title.ToLower().Contains(searchTerm.ToLower()) ||
                     n.Content.ToLower().Contains(searchTerm.ToLower()) ||
                     n.Source.Name.ToLower().Contains(searchTerm.ToLower()) ||
-                    n.Category.Name.ToLower().Contains(searchTerm.ToLower()) ||
-                    n.Region.ToLower().Contains(searchTerm.ToLower()));
+                    n.Category.Name.ToLower().Contains(searchTerm.ToLower()));
             }
 
             newsQuery = sorting switch
@@ -134,8 +125,7 @@ namespace CryptоWorld.News.Core.Services.News
                      n.Content,
                      n.ImageUrl,
                      n.PublicationDate.ToString(),
-                     n.Rating,
-                     n.Region
+                     n.Rating
                  ))
                  .ToListAsync();
 
@@ -166,9 +156,7 @@ namespace CryptоWorld.News.Core.Services.News
                     Content = article.Content,
                     ImageUrl = article.ImageUrl,
                     SourceId = source.Id,
-                    CategoryId = category.Id,
-                    Rating = article.Rating,
-                    Region = article.Region
+                    CategoryId = category.Id
                 };
 
                 string formatDate = "dd.MM.yyyy HH:mm:ss";
@@ -191,7 +179,7 @@ namespace CryptоWorld.News.Core.Services.News
                 {
                     articles.Add(articleModel);
                 }
-           
+            }
             await dbContext.Articles.AddRangeAsync(articles);
             await dbContext.SaveChangesAsync();
         }
