@@ -1,4 +1,5 @@
-﻿using CryptoWorld.News.Core.Services;
+﻿using CryptoWorld.News.Core.Interfaces;
+using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Core.ViewModels;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
@@ -16,21 +17,24 @@ namespace CryptoWorld.Application.Server.Controllers
     [Authorize]
     public class UserProfileController : BaseApiController
     {
-        private readonly IUserProfileService profileService;
-        private readonly ApplicationDbContext context;
-        private readonly UserManager<ApplicationUser> userManager;
-        public UserProfileController(IUserProfileService _profileService, ApplicationDbContext _context, UserManager<ApplicationUser> _userManager)
+        private readonly IUserProfileService _profileService;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public UserProfileController(
+            IUserProfileService profileService,
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager)
         {
-            profileService = _profileService;
-            context = _context;
-            userManager = _userManager;
+            _profileService = profileService;
+            _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet("edit")]
         public async Task<IActionResult> Edit() 
         {
-            var userId = userManager.GetUserId(User);
-            var userProfile = await context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+            var userId = _userManager.GetUserId(User);
+            var userProfile = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
             
             if (userProfile == null)
                 return BadRequest(ModelState);
@@ -43,7 +47,7 @@ namespace CryptoWorld.Application.Server.Controllers
         {
             try 
             {
-                var user = await profileService.EditProfileAsync(model);
+                var user = await _profileService.EditProfileAsync(model);
             }
             catch (Exception)
             {
@@ -58,7 +62,7 @@ namespace CryptoWorld.Application.Server.Controllers
         {
             try
             {
-                var response = await profileService.ChangeEmailAsync(model);
+                var response = await _profileService.ChangeEmailAsync(model);
             }
             catch (Exception)
             {
@@ -73,9 +77,9 @@ namespace CryptoWorld.Application.Server.Controllers
         {
             try
             {
-                var userId = userManager.GetUserId(User);
-                var userProfile = await context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
-                var response = await profileService.ChangePasswordAsync(model,userProfile);
+                var userId = _userManager.GetUserId(User);
+                var userProfile = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+                var response = await _profileService.ChangePasswordAsync(model,userProfile);
             }
             catch (Exception)
             {
@@ -83,6 +87,13 @@ namespace CryptoWorld.Application.Server.Controllers
             }
 
             return Ok(new { Message = "The user password was changed successfully!" });
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _profileService.LogoutAsync();
+            return Ok(new { message = "Successfully logged out" });
         }
 
     }

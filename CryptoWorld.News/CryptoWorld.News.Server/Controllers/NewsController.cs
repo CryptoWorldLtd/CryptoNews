@@ -7,11 +7,11 @@ namespace CryptoWorld.Application.Server.Controllers
     public class NewsController : BaseApiController
     {
         private readonly ILogger logger;
-        private readonly INewsService homeNewsService;
+        private readonly INewsService _homeNewsService;
 
-        public NewsController(INewsService _homeNewsService)
+        public NewsController(INewsService homeNewsService)
         {
-            homeNewsService = _homeNewsService;
+            _homeNewsService = homeNewsService;
         }
 
         [HttpGet("home")]
@@ -19,14 +19,14 @@ namespace CryptoWorld.Application.Server.Controllers
         public async Task <IActionResult> HomeNews()
         {
             int pagesCount = 7;
-            var urls = await homeNewsService.GetNewsUrlsAsync(pagesCount);
+            var urls = await _homeNewsService.GetNewsUrlsAsync(pagesCount);
 
             if (urls == null)
             {
                 return BadRequest();
             }
 
-            var model = await homeNewsService.GetPageNewsModelAsync(urls);
+            var model = await _homeNewsService.GetPageNewsModelAsync(urls);
 
             if (!ModelState.IsValid) 
             {

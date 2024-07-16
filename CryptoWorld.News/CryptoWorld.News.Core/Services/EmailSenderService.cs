@@ -7,18 +7,18 @@ namespace CryptoWorld.News.Core.Services
 {
     public class EmailSenderService : IEmailSenderService
     {
-        private readonly SendGridSettings sendGridSettings;
+        private readonly SendGridSettings _sendGridSettings;
 
-        public EmailSenderService(IOptions<SendGridSettings> _sendGridSettings)
+        public EmailSenderService(IOptions<SendGridSettings> sendGridSettings)
         {
-            sendGridSettings = _sendGridSettings.Value;
+            _sendGridSettings = sendGridSettings.Value;
         }
 
         public Task SendEmailAsync(string reciever , string username, string body)
         {
             var sender = "test.2010@abv.bg";
 
-            var apiKey = sendGridSettings.ApiKey;
+            var apiKey = _sendGridSettings.ApiKey;
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress(sender, "CryptoNews");
             var subject = "CryptoNews Automated Email";
