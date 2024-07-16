@@ -43,6 +43,7 @@ namespace CryptoWorld.Application.Server.Controllers
             var queryResult = await homeNewsService.GetSortedNewsAsync(
                 news.Category,
                 news.SearchTerm,
+                news.Region,
                 news.Sorting,
                 news.CurrentPage,
                 FilteredNewsModel.NewsPerPage);
