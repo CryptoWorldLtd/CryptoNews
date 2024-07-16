@@ -12,6 +12,8 @@ namespace CryptоWorld.News.Core.Interfaces
            string category = null,
            string searchTerm = null,
            string region = null,
+           DateTime? startDate = null,
+           DateTime? endDate = null,
            NewsSorting sorting = NewsSorting.Latest,
            int currentPage = 1,
            int newsPerPage = 5);

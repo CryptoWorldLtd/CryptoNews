@@ -44,6 +44,8 @@ namespace CryptoWorld.Application.Server.Controllers
                 news.Category,
                 news.SearchTerm,
                 news.Region,
+                news.StartDate,
+                news.EndDate,
                 news.Sorting,
                 news.CurrentPage,
                 FilteredNewsModel.NewsPerPage);

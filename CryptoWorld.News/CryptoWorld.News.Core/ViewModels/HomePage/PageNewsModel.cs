@@ -2,10 +2,18 @@
 {
     public class PageNewsModel
     {
-        public PageNewsModel(string title, string content, string imageUrl, string datePublished, int rating, string region)
+        public PageNewsModel(
+            string title, 
+            string content, 
+            string category,
+            string imageUrl, 
+            string datePublished, 
+            int rating, 
+            string region)
         {
             this.Title= title; 
             this.Content= content;
+            this.Category= category;
             this.ImageUrl= imageUrl;
             this.DatePublished= datePublished;
             this.Rating = rating;
