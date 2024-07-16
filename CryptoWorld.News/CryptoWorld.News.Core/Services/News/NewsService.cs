@@ -119,6 +119,12 @@ namespace CryptоWorld.News.Core.Services.News
 
             newsQuery = sorting switch
             {
+                NewsSorting.PublishedPastWeek => newsQuery.Where(n => 
+                    n.PublicationDate.Date >= DateTime.Now.Date.AddDays(-7))
+                    .OrderByDescending(n => n.PublicationDate),
+                NewsSorting.PublishedPastMonth => newsQuery.Where(n =>
+                    n.PublicationDate.Date >= DateTime.Now.Date.AddDays(-30))
+                    .OrderByDescending(n => n.PublicationDate),
                 NewsSorting.MostPopular => newsQuery.OrderByDescending(n => n.Rating),
                 NewsSorting.Latest or _ => newsQuery.OrderByDescending(n => n.PublicationDate)
             };
