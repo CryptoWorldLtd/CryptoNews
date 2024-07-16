@@ -11,7 +11,7 @@ namespace CryptоWorld.News.Core.Interfaces
         public Task<List<PageNewsModel>> GetSortedNewsAsync(
            string? category = null,
            string? searchTerm = null,
-           NewsSorting sorting = NewsSorting.Soonest,
+           NewsSorting sorting = NewsSorting.Latest,
            int currentPage = 1,
            int newsPerPage = 5);
     }

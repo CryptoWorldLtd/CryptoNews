@@ -88,7 +88,7 @@ namespace CryptоWorld.News.Core.Services.News
         public async Task<List<PageNewsModel>> GetSortedNewsAsync(
            string? category = null,
            string? searchTerm = null,
-           NewsSorting sorting = NewsSorting.Soonest,
+           NewsSorting sorting = NewsSorting.Latest,
            int currentPage = 1,
            int newsPerPage = 2)
         {
@@ -112,7 +112,7 @@ namespace CryptоWorld.News.Core.Services.News
             newsQuery = sorting switch
             {
                 NewsSorting.MostPopular => newsQuery.OrderByDescending(n => n.Rating),
-                NewsSorting.Soonest or _ => newsQuery.OrderByDescending(n => n.PublicationDate)
+                NewsSorting.Latest or _ => newsQuery.OrderByDescending(n => n.PublicationDate)
             };
 
             var totalNewsCount = await dbContext.Articles.CountAsync();

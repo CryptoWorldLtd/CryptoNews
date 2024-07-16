@@ -2,7 +2,7 @@
 {
     public enum NewsSorting
     {
-        Soonest = 1,
+        Latest = 1,
         MostPopular = 2
     }
 }
