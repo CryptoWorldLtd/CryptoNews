@@ -2,12 +2,13 @@
 using CryptоWorld.News.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
     public class NewsController : BaseApiController
     {
-        private readonly ILogger logger;
+       
         private readonly INewsService homeNewsService;
 
         public NewsController(INewsService _homeNewsService)
@@ -29,11 +30,13 @@ namespace CryptoWorld.Application.Server.Controllers
 
             var model = await homeNewsService.GetPageNewsModelAsync(urls);
 
+            
+
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-
+            Log.Information("HomeNewsService => HomeNews action => HomeNews action works normally!" );
             return Ok(model);
         }
 
@@ -50,6 +53,7 @@ namespace CryptoWorld.Application.Server.Controllers
                 news.CurrentPage,
                 FilteredNewsModel.NewsPerPage);
 
+            Log.Information("HomeNewsService => GetSortedNewsAsync action works normally!");
             return Ok(queryResult);
         }
     }
