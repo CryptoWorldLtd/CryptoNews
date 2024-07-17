@@ -199,6 +199,7 @@ namespace CryptоWorld.News.Core.Services.News
                     !dbContext.Articles.Any(a => a.PublicationDate == articleModel.PublicationDate))
                 {
                     articles.Add(articleModel);
+                   
                 }
             }
 
