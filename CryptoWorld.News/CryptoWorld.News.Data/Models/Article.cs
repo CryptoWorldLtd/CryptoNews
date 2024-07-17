@@ -1,4 +1,6 @@
 ﻿using CryptoWorld.News.Data.Models.Common;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Security.AccessControl;
 
 namespace CryptoWorld.News.Data.Models
 {
@@ -8,6 +10,8 @@ namespace CryptoWorld.News.Data.Models
         public string Content { get; set; }
         public string ImageUrl { get; set; }
         public DateTime PublicationDate { get; set; }
+        public int Rating { get; set; }
+        public string Region { get; set; }
         public Guid CategoryId { get; set; }
         public virtual Category Category { get; set; }
         public Guid SourceId { get; set; }
