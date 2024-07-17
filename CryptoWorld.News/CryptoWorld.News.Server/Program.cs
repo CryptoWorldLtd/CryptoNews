@@ -48,6 +48,7 @@ builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
     Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.Console()
+    .WriteTo.File("logs/CryptoNewsLogsFromSerilog-.txt",rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
 var app = builder.Build();
