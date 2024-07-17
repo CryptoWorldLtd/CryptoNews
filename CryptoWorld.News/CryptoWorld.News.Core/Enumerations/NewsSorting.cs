@@ -2,9 +2,9 @@
 {
     public enum NewsSorting
     {
-        Latest = 1,
-        MostPopular = 2,
-        PublishedPastWeek = 3,
-        PublishedPastMonth = 4
+        Latest = 0,
+        MostPopular = 1,
+        PublishedPastWeek = 2,
+        PublishedPastMonth = 3
     }
 }
