@@ -43,8 +43,11 @@ namespace CryptоWorld.News.Core.Services.News
                     var documentForNews = await context.OpenAsync(url);
                     var title = documentForNews.QuerySelector("header > h1").TextContent;
                     var content = new StringBuilder();
+                    var category = string.Empty;
                     var allContentOfNews = documentForNews.QuerySelectorAll(".article-text > p");
                     var rating = 0;
+                    var region = string.Empty;
+
                     foreach (var item in allContentOfNews)
                     {
                         content.AppendLine(item.TextContent);
@@ -53,7 +56,7 @@ namespace CryptоWorld.News.Core.Services.News
                     var imageUrl = documentForNews.QuerySelector(".img-wrapper > .img > img").GetAttribute("src");
                     var dateOfPublish = documentForNews.QuerySelector(".article-info > .time").TextContent.Trim();
                     var contentInString = content.ToString().TrimEnd();
-                    PageNewsModel model = new PageNewsModel(title, contentInString, imageUrl, dateOfPublish, rating);
+                    PageNewsModel model = new PageNewsModel(title, contentInString, category, imageUrl, dateOfPublish, rating, region);
                     homeNews.Add(model);
                 }
             }
@@ -65,7 +68,6 @@ namespace CryptоWorld.News.Core.Services.News
 
         public async Task<List<string>> GetNewsUrlsAsync(int pagesCount)
         {
-
             for (int i = 1; i <= pagesCount; i++)
             {
                 var document = await context.OpenAsync($"{urlForNews.MoneyBgUrl}?page={i}");
@@ -86,18 +88,22 @@ namespace CryptоWorld.News.Core.Services.News
         }
 
         public async Task<List<PageNewsModel>> GetSortedNewsAsync(
-           string? category = null,
-           string? searchTerm = null,
-           NewsSorting sorting = NewsSorting.Soonest,
+           string category = null,
+           string searchTerm = null,
+           string region = null,
+           DateTime? startDate = null,
+           DateTime? endDate = null,
+           NewsSorting sorting = NewsSorting.Latest,
            int currentPage = 1,
            int newsPerPage = 2)
         {
             var newsQuery = dbContext.Articles.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(category))
-            {
                 newsQuery = newsQuery.Where(n => n.Category.Name == category);
-            }
+
+            if (!string.IsNullOrWhiteSpace(region))
+                newsQuery = newsQuery.Where(n => n.Region == region);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -106,13 +112,26 @@ namespace CryptоWorld.News.Core.Services.News
                     n.Title.ToLower().Contains(searchTerm.ToLower()) ||
                     n.Content.ToLower().Contains(searchTerm.ToLower()) ||
                     n.Source.Name.ToLower().Contains(searchTerm.ToLower()) ||
-                    n.Category.Name.ToLower().Contains(searchTerm.ToLower()));
+                    n.Category.Name.ToLower().Contains(searchTerm.ToLower()) ||
+                    n.Region.ToLower().Contains(searchTerm.ToLower()));
             }
+
+            if (startDate.HasValue)
+                newsQuery = newsQuery.Where(n => n.PublicationDate.Date >= startDate.Value);
+
+            if (endDate.HasValue)
+                newsQuery = newsQuery.Where(n => n.PublicationDate.Date <= endDate.Value);
 
             newsQuery = sorting switch
             {
+                NewsSorting.PublishedPastWeek => newsQuery.Where(n => 
+                    n.PublicationDate.Date >= DateTime.Now.Date.AddDays(-7))
+                    .OrderByDescending(n => n.PublicationDate),
+                NewsSorting.PublishedPastMonth => newsQuery.Where(n =>
+                    n.PublicationDate.Date >= DateTime.Now.Date.AddDays(-30))
+                    .OrderByDescending(n => n.PublicationDate),
                 NewsSorting.MostPopular => newsQuery.OrderByDescending(n => n.Rating),
-                NewsSorting.Soonest or _ => newsQuery.OrderByDescending(n => n.PublicationDate)
+                NewsSorting.Latest or _ => newsQuery.OrderByDescending(n => n.PublicationDate)
             };
 
             var totalNewsCount = await dbContext.Articles.CountAsync();
@@ -123,9 +142,11 @@ namespace CryptоWorld.News.Core.Services.News
                  .Select(n => new PageNewsModel(
                      n.Title,
                      n.Content,
+                     n.Category.Name,
                      n.ImageUrl,
                      n.PublicationDate.ToString(),
-                     n.Rating
+                     n.Rating,
+                     n.Region
                  ))
                  .ToListAsync();
 
@@ -178,8 +199,10 @@ namespace CryptоWorld.News.Core.Services.News
                     !dbContext.Articles.Any(a => a.PublicationDate == articleModel.PublicationDate))
                 {
                     articles.Add(articleModel);
+                   
                 }
             }
+
             await dbContext.Articles.AddRangeAsync(articles);
             await dbContext.SaveChangesAsync();
         }
