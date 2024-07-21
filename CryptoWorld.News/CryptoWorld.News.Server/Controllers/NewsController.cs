@@ -40,28 +40,7 @@ namespace CryptoWorld.Application.Server.Controllers
 
         [HttpGet("news")]
         [AllowAnonymous]
-        public async Task<IActionResult> NewsSevenDaysAgo()
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            try
-            {   
-               var result = await this.homeNewsService.GetAllNewsFromTheLastSevenDays();
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-        }
-
-        [HttpGet("pastNews")]
-        [AllowAnonymous]
-        public async Task<IActionResult> NewsTwentyDaysAgo()
+        public async Task<IActionResult> NewsForCertainPeriod(int days)
         {
             if (!ModelState.IsValid)
             {
@@ -70,14 +49,13 @@ namespace CryptoWorld.Application.Server.Controllers
 
             try
             {
-                var result = await this.homeNewsService.GetAllNewsFromTheLastTwentyDays();
+                var result = await this.homeNewsService.GetAllNewsForCertainPeriodOfTime(days);
                 return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
         }
     }
 }

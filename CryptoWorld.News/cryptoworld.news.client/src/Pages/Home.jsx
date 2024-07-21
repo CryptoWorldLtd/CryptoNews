@@ -9,7 +9,6 @@ const Home = () => {
             <NewsSlider/>
             <div>
             <CardSlider/>
-
             </div>
         </div>
     )

@@ -2,7 +2,7 @@ import React, { useEffect, useState, } from 'react';
 import axios from 'axios';
 
 const CardSlider = () => {
-const url = 'https://localhost:7249/News/pastNews';
+const url = 'https://localhost:7249/News/news';
     const [data, setData] = useState([]);
 
     useEffect(() => {

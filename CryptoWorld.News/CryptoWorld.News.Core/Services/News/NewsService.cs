@@ -14,14 +14,14 @@ using System.Text;
 namespace CryptоWorld.News.Core.Services.News
 {
     public class NewsService : INewsService
-    {    
+    {
         private readonly AngleSharp.IConfiguration config;
         private readonly IBrowsingContext context;
         private List<PageNewsModel> homeNews;
         private List<string> urls;
         private readonly ApplicationDbContext dbContext;
         private readonly UrlForNews urlForNews;
-        public NewsService( ApplicationDbContext _dbContext, IOptions<UrlForNews> urlForNewsOptions)
+        public NewsService(ApplicationDbContext _dbContext, IOptions<UrlForNews> urlForNewsOptions)
         {
             config = Configuration.Default.WithDefaultLoader();
             context = BrowsingContext.New(config);
@@ -63,7 +63,7 @@ namespace CryptоWorld.News.Core.Services.News
         }
         public async Task<List<string>> GetNewsUrlsAsync(int pagesCount)
         {
-            
+
             for (int i = 1; i <= pagesCount; i++)
             {
                 var document = await context.OpenAsync($"{urlForNews.MoneyBgUrl}?page={i}");
@@ -97,7 +97,7 @@ namespace CryptоWorld.News.Core.Services.News
                     SourceId = source.Id,
                     CategoryId = category.Id
                 };
-                         
+
                 string formatDate = "dd.MM.yyyy HH:mm:ss";
                 bool isValidDate = DateTime.TryParseExact(article.DatePublished, formatDate, CultureInfo.InvariantCulture
                     , DateTimeStyles.None, out DateTime publicationDate
@@ -119,10 +119,10 @@ namespace CryptоWorld.News.Core.Services.News
                     articles.Add(articleModel);
                 }
             }
-            await dbContext.AddRangeAsync(articles);
+            await dbContext.Articles.AddRangeAsync(articles);
             await dbContext.SaveChangesAsync();
         }
-        private async Task<Source> GetOrCreateSource (string sourceName , string sourceUrl)
+        private async Task<Source> GetOrCreateSource(string sourceName, string sourceUrl)
         {
             Source source = new()
             {
@@ -133,44 +133,27 @@ namespace CryptоWorld.News.Core.Services.News
             await dbContext.SaveChangesAsync();
 
             return source;
-        }   
+        }
         private async Task<Category> GetOrCreateCategory(string categoryName)
         {
             Category category = new()
             {
-                Name = categoryName ,
-                
+
+                Name = categoryName,
+
             };
             dbContext.Categories.Add(category);
             await dbContext.SaveChangesAsync();
 
             return category;
         }
-        public async Task<List<FilterNewsModel>> GetAllNewsFromTheLastSevenDays()
+        public async Task<List<FilterNewsModel>> GetAllNewsForCertainPeriodOfTime(int days)
         {
-            var daysAgo = DateTime.Now.AddDays(-7);
+            var daysAgo = DateTime.Now.AddDays(-days);
 
             var latestNews = await this.dbContext
                 .Articles
                 .Where(c => c.PublicationDate >= daysAgo)
-                .Select(x => new FilterNewsModel() { 
-
-                   Title = x.Title,
-                   ImageUrl = x.ImageUrl,
-                   Content = x.Content,
-                   DatePublished = x.PublicationDate
-                })
-                .ToListAsync();
-
-            return latestNews;
-        }
-        public async Task<List<FilterNewsModel>> GetAllNewsFromTheLastTwentyDays()
-        {
-            var daysAgo = DateTime.Now.AddDays(-15);
-
-            var latestNews = await this.dbContext
-                .Articles
-                .Where(c => c.PublicationDate <= daysAgo)
                 .Select(x => new FilterNewsModel()
                 {
                     Title = x.Title,
