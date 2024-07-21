@@ -11,6 +11,7 @@ import EditProfile from './Pages/EditProfile';
 import ForgotPassword from './Pages/ForgotPassword';
 import ResetPassword from './Pages/ResetPassword';
 import News from './Pages/News';
+import CreateNews from './Pages/CreateNews.jsx';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
                     <Route path="/ForgotPassword" element={<ForgotPassword />} />
                     <Route path="/ResetPassword/:id/:email" element={<ResetPassword />} />
                     <Route path="/News" element={<News />} />                    
+                    <Route path="/CreateNews" element={<CreateNews />} />
                 </Routes>
                 
             </Router>

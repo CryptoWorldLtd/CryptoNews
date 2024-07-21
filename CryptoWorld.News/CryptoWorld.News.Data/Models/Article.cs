@@ -11,6 +11,7 @@ namespace CryptoWorld.News.Data.Models
         public string ImageUrl { get; set; }
         public DateTime PublicationDate { get; set; }
         public int Rating { get; set; }
+        public string Region { get; set; }
         public Guid CategoryId { get; set; }
         public virtual Category Category { get; set; }
         public Guid SourceId { get; set; }
