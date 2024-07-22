@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Filter from '../Components/Filter';
+import  '../Pages/News.css';
 
 const News = () => {
     const [news, setNews] = useState([]);
