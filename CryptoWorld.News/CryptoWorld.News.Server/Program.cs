@@ -4,12 +4,12 @@ using CryptoWorld.News.Data.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-
 using CryptoWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.Services.News;
 using CryptоWorld.News.Core.ViewModels.HomePage;
 using Serilog;
+using CryptoWorld.News.Core.ExceptionHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -45,6 +45,8 @@ builder.Services.Configure<UrlForNews>(builder.Configuration.GetSection("MoneyBg
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGrid"));
 builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
     Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.Console()
@@ -72,6 +74,8 @@ using (var serviceScope = app.Services.CreateScope())
 }
 app.UseDefaultFiles();
 app.UseStaticFiles();
+//Middleware will work fine with this code
+app.UseExceptionHandler(_ => { });
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
