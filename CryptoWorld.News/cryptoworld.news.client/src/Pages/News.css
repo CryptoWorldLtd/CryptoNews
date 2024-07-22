@@ -19,7 +19,7 @@
     padding: 5px;
 }
 
-button {
+.pagination button {
     padding: 10px;
     background-color: #8a2be2;
     color: white;
@@ -31,6 +31,6 @@ button {
     box-sizing: border-box; 
 }
 
-button:hover {
+.pagination button:hover {
     background-color: #0056b3;
 }
