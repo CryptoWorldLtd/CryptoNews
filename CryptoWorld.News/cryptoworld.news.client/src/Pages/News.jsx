@@ -19,6 +19,7 @@ const News = () => {
     const validFilters = Object.fromEntries(
         Object.entries(filters).filter(([key, value]) => value !== null && value !== '')
     );
+
     const fetchNews = (page) => {
         const query = new URLSearchParams({
             CurrentPage: page,
