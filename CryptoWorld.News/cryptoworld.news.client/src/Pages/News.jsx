@@ -5,56 +5,78 @@ import  '../Pages/News.css';
 
 const News = () => {
     const [news, setNews] = useState([]);
-    //const [filters, setFilters] = useState({ date: '', popularity: '', category: '' });
     const [filters, setFilters] = useState({ Category: '', Region: '', StartDate: '', EndDate: '', SearchTerm: '', Sorting: '' });
-    const [page, setPage] = useState(1);
-    const [pageSize] = useState(5);
-    const [totalItems, setTotalItems] = useState(0);
-    const [totalPages, setTotalPages] = useState(10);
+    const [page, setPage] = useState(1);    
+    const [hasMore, setHasMore] = useState(true);
+    const [initialized, setInitialized] = useState(false); 
 
+ 
+   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const queryPage = parseInt(params.get('CurrentPage')) || 1;
+    const queryFilters = {
+        Category: params.get('category') || '',
+        Region: params.get('region') || '',
+        StartDate: params.get('startDate') || '',
+        EndDate: params.get('endDate') || '',
+        SearchTerm: decodeURIComponent(params.get('searchTerm') || ''),
+        Sorting: params.get('sorting') || ''
+    };
+    
+    setPage(queryPage);
+    setFilters(queryFilters);
+
+    setInitialized(true);
+}, []);
 
     useEffect(() => {
-        fetchNews(page);
+       if (initialized) {
+            fetchNews(page, filters);
+        }
     }, [filters, page]);
 
     const validFilters = Object.fromEntries(
         Object.entries(filters).filter(([key, value]) => value !== null && value !== '')
     );
 
-    const fetchNews = (page) => {
+    const fetchNews = (page, filters) => {
         const query = new URLSearchParams({
-            CurrentPage: page,
+            CurrentPage: page,            
             ...validFilters
         }).toString();
         window.history.pushState(null, '', `?${query}`);
 
         axios.get(`https://localhost:7249/News/filter?${query}`)
-            .then(response =>
-                setNews(response.data))
+            .then(response => {
+                const fetchedNews = response.data;
+                if (fetchedNews.length < 1) {
+                    setHasMore(false);                                        
+                }
+                else{
+                    setHasMore(true);
+                }
+                setNews(fetchedNews);
+            })
             .catch(error => console.error('Error fetching news', error));
     };
 
     const handleFilterChange = (newFilters) => {
         setFilters(newFilters);
+        setPage(1); 
+        setHasMore(true);
     };
 
-    const handlePageChange = (newPage) => {
-        if (news.length === 0) {
-            setPage(newPage - 1);
-            fetchNews(page - 1);
-        }
-        fetchNews(newPage);
-        setPage(newPage);
+    const handlePageChange = (page) => {
+        setPage(page);
     };
-
 
     return (
         <div className="news-page">
             <Filter onFilterChange={handleFilterChange} />
             <div className="pagination">
                 <button onClick={() => handlePageChange(page - 1)} disabled={page === 1}>Previous</button>
-                <span>Page {page}</span>
-                <button onClick={() => handlePageChange(page + 1)} disabled={page === totalPages}>Next</button>
+                <span>{hasMore ? page : 'No More Pages'}</span>
+                <button onClick={() => handlePageChange(page + 1)} disabled={!hasMore}>Next</button>
             </div>
             <div className="news-list">
                 {news.map((article) => (
