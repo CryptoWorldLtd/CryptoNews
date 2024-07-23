@@ -11,6 +11,7 @@ import EditProfile from './Pages/EditProfile';
 import ForgotPassword from './Pages/ForgotPassword';
 import ResetPassword from './Pages/ResetPassword';
 import ParticlesComponent from './Components/Particles';
+import CreateNews from './Pages/CreateNews.jsx';
 
 
 
@@ -31,6 +32,7 @@ function App() {
                     <Route path="/MyNews" element={<MyNews />} />
                     <Route path="/ForgotPassword" element={<ForgotPassword />} />
                     <Route path="/ResetPassword/:id/:email" element={<ResetPassword />} />
+                    <Route path="/CreateNews" element={<CreateNews />} />
                 </Routes>
                 
             </Router>
