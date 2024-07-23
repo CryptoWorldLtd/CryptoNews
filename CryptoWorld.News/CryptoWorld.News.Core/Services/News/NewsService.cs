@@ -7,6 +7,7 @@ using CryptоWorld.News.Core.ViewModels.Home_Page;
 using CryptоWorld.News.Core.ViewModels.HomePage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Serilog;
 using System.Globalization;
 using System.Text;
 
@@ -68,22 +69,33 @@ namespace CryptоWorld.News.Core.Services.News
 
         public async Task<List<string>> GetNewsUrlsAsync(int pagesCount)
         {
+            var urls = new List<string>();
             for (int i = 1; i <= pagesCount; i++)
             {
-                var document = await context.OpenAsync($"{urlForNews.MoneyBgUrl}?page={i}");
-                var newsUrl = document.QuerySelectorAll(".topic > a");
 
-                if (document == null) { throw new Exception(); }
-
-                foreach (var item in newsUrl)
+                try
                 {
-                    if (item.GetAttribute("href").Contains("kripto"))
+
+                    var document = await context.OpenAsync($"{urlForNews.MoneyBgUrl}?page={i}");
+                    var newsUrl = document.QuerySelectorAll(".topic > a");
+                    if (document == null)
                     {
-                        urls.Add(item.GetAttribute("href"));
+                        Log.Warning("Problem with document for scrapping");
                     }
+                    foreach (var item in newsUrl)
+                    {
+                        if (item.GetAttribute("href").Contains("kripto"))
+                        {
+                            urls.Add(item.GetAttribute("href"));
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Error occurred while processing page {i}: {ex.Message}");
                 }
             }
-
             return urls;
         }
 
@@ -97,69 +109,85 @@ namespace CryptоWorld.News.Core.Services.News
            int currentPage = 1,
            int newsPerPage = 2)
         {
-            var newsQuery = dbContext.Articles.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(category))
-                newsQuery = newsQuery.Where(n => n.Category.Name == category);
-
-            if (!string.IsNullOrWhiteSpace(region))
-                newsQuery = newsQuery.Where(n => n.Region == region);
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            try
             {
-                newsQuery = newsQuery
-                    .Where(n =>
-                    n.Title.ToLower().Contains(searchTerm.ToLower()) ||
-                    n.Content.ToLower().Contains(searchTerm.ToLower()) ||
-                    n.Source.Name.ToLower().Contains(searchTerm.ToLower()) ||
-                    n.Category.Name.ToLower().Contains(searchTerm.ToLower()) ||
-                    n.Region.ToLower().Contains(searchTerm.ToLower()));
+                var newsQuery = dbContext.Articles.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(category))
+                    newsQuery = newsQuery.Where(n => n.Category.Name == category);
+
+                if (!string.IsNullOrWhiteSpace(region))
+                    newsQuery = newsQuery.Where(n => n.Region == region);
+
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    newsQuery = newsQuery
+                        .Where(n =>
+                        n.Title.ToLower().Contains(searchTerm.ToLower()) ||
+                        n.Content.ToLower().Contains(searchTerm.ToLower()) ||
+                        n.Source.Name.ToLower().Contains(searchTerm.ToLower()) ||
+                        n.Category.Name.ToLower().Contains(searchTerm.ToLower()) ||
+                        n.Region.ToLower().Contains(searchTerm.ToLower()));
+                }
+
+                if (startDate.HasValue)
+                    newsQuery = newsQuery.Where(n => n.PublicationDate.Date >= startDate.Value);
+
+                if (endDate.HasValue)
+                    newsQuery = newsQuery.Where(n => n.PublicationDate.Date <= endDate.Value);
+
+                newsQuery = sorting switch
+                {
+                    NewsSorting.PublishedPastWeek => newsQuery.Where(n =>
+                        n.PublicationDate.Date >= DateTime.Now.Date.AddDays(-7))
+                        .OrderByDescending(n => n.PublicationDate),
+                    NewsSorting.PublishedPastMonth => newsQuery.Where(n =>
+                        n.PublicationDate.Date >= DateTime.Now.Date.AddDays(-30))
+                        .OrderByDescending(n => n.PublicationDate),
+                    NewsSorting.MostPopular => newsQuery.OrderByDescending(n => n.Rating),
+                    NewsSorting.Latest or _ => newsQuery.OrderByDescending(n => n.PublicationDate)
+                };
+
+                var totalNewsCount = await dbContext.Articles.CountAsync();
+
+                var news = await newsQuery
+                     .Skip((currentPage - 1) * newsPerPage)
+                     .Take(newsPerPage)
+                     .Select(n => new PageNewsModel(
+                         n.Title,
+                         n.Content,
+                         n.Category.Name,
+                         n.ImageUrl,
+                         n.PublicationDate.ToString(),
+                         n.Rating,
+                         n.Region
+                     ))
+                     .ToListAsync();
+
+                return news;
             }
-
-            if (startDate.HasValue)
-                newsQuery = newsQuery.Where(n => n.PublicationDate.Date >= startDate.Value);
-
-            if (endDate.HasValue)
-                newsQuery = newsQuery.Where(n => n.PublicationDate.Date <= endDate.Value);
-
-            newsQuery = sorting switch
+            catch (Exception ex)
             {
-                NewsSorting.PublishedPastWeek => newsQuery.Where(n => 
-                    n.PublicationDate.Date >= DateTime.Now.Date.AddDays(-7))
-                    .OrderByDescending(n => n.PublicationDate),
-                NewsSorting.PublishedPastMonth => newsQuery.Where(n =>
-                    n.PublicationDate.Date >= DateTime.Now.Date.AddDays(-30))
-                    .OrderByDescending(n => n.PublicationDate),
-                NewsSorting.MostPopular => newsQuery.OrderByDescending(n => n.Rating),
-                NewsSorting.Latest or _ => newsQuery.OrderByDescending(n => n.PublicationDate)
-            };
-
-            var totalNewsCount = await dbContext.Articles.CountAsync();
-
-            var news = await newsQuery
-                 .Skip((currentPage - 1) * newsPerPage)
-                 .Take(newsPerPage)
-                 .Select(n => new PageNewsModel(
-                     n.Title,
-                     n.Content,
-                     n.Category.Name,
-                     n.ImageUrl,
-                     n.PublicationDate.ToString(),
-                     n.Rating,
-                     n.Region
-                 ))
-                 .ToListAsync();
-
-            return news;
+                Log.Error("An error occurred while getting sorted news.", ex);
+                return new List<PageNewsModel>();
+            }
+           
         }
 
         public async Task<List<string>> GetCategoriesAsync()
         {
-            var categories = await dbContext
-                .Categories
-                .Select(c => c.Name)
-                .ToListAsync();
-
+            var categories = new List<string>();
+            try
+            {
+                categories = await dbContext
+               .Categories
+               .Select(c => c.Name)
+               .ToListAsync();
+            }
+            catch (Exception)
+            {
+                Log.Error("Problem with method GetCategoriesAsync()");
+            }
             return categories;
         }
 
@@ -210,32 +238,47 @@ namespace CryptоWorld.News.Core.Services.News
         private async Task<Source> GetOrCreateSource(string sourceName, string sourceUrl)
         {
             var source = dbContext.Sources.FirstOrDefault(s => s.Name == sourceName);
-            if (source == null)
+            try
             {
-                source = new()
+                if (source == null)
                 {
-                    Name = sourceName,
-                    Url = sourceUrl
-                };
-                dbContext.Sources.Add(source);
-                await dbContext.SaveChangesAsync();
+                    source = new()
+                    {
+                        Name = sourceName,
+                        Url = sourceUrl
+                    };
+                    dbContext.Sources.Add(source);
+                    await dbContext.SaveChangesAsync();
+                }
             }
-
+            catch (Exception ex)
+            {
+                Log.Error("Problem with settings of source!");
+                
+            }
             return source;
         }
 
         private async Task<Category> GetOrCreateCategory(string categoryName)
         {
             var category = dbContext.Categories.FirstOrDefault(c => c.Name == categoryName);
-            if (category == null)
+            try
             {
-                category = new()
+                if (category == null)
                 {
-                    Name = categoryName
+                    category = new()
+                    {
+                        Name = categoryName
+                    };
+                    dbContext.Categories.Add(category);
+                    await dbContext.SaveChangesAsync();
                 };
-                dbContext.Categories.Add(category);
-                await dbContext.SaveChangesAsync();
-            };
+            }
+            catch (Exception)
+            {
+
+                Log.Error("Problem with settings of category!");
+            }
 
             return category;
         }

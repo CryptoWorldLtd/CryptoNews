@@ -40,7 +40,6 @@ namespace CryptoWorld.Application.Server.Controllers
                     Log.Information("News from home page are loaded successfully!");
                     return Ok(model);
                 }
-
             }
 
             catch (Exception ex)
