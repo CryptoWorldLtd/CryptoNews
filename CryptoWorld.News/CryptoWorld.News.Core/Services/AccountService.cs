@@ -57,7 +57,7 @@ namespace CryptoWorld.News.Core.Services
             }
             catch (Exception ex)
             {
-                Log.Error("An error occurred during user registration.");
+                Log.Error($"An error occurred during user registration. {ex}");
                 return IdentityResult.Failed(new IdentityError
                 {
                     Description =
@@ -71,11 +71,7 @@ namespace CryptoWorld.News.Core.Services
         {
             try
             {
-                var user = await userManager.FindByEmailAsync(model.Email);
-
-                if (user == null)
-                    throw new ArgumentException("There is no such user.");
-
+                var user = await userManager.FindByEmailAsync(model.Email) ?? throw new ArgumentException("There is no such user.");
                 var result = await this.signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
 
                 if (!result.Succeeded)
@@ -99,7 +95,7 @@ namespace CryptoWorld.News.Core.Services
             }
             catch (Exception ex)
             {
-                Log.Error("Problem occurred during user login", ex);
+                Log.Error($"Problem occurred during user login! {ex}");
                 throw new InvalidOperationException("An error occurred during login. Please try again later.");
             }
         }
@@ -127,8 +123,8 @@ namespace CryptoWorld.News.Core.Services
             }
             catch (Exception ex)
             {
-                Log.Error("An error occurred during verification of mail!");
-                throw;
+                Log.Error($"An error occurred during verification of mail! {ex}");
+                throw new Exception($"Error in VerifyEmailAsync {ex}");
             }
         }
 
@@ -139,10 +135,7 @@ namespace CryptoWorld.News.Core.Services
                 if (!IsValidEmail(email))
                     throw new ArgumentException("Invalid email address format.");
 
-                var user = await userManager.FindByEmailAsync(email);
-                if (user == null)
-                    throw new ArgumentException("There is no such user.");
-
+                var user = await userManager.FindByEmailAsync(email) ?? throw new ArgumentException("There is no such user.");
                 var result = await userManager.ResetPasswordAsync(user, token, newPassword);
 
                 if (!result.Succeeded)
@@ -154,8 +147,8 @@ namespace CryptoWorld.News.Core.Services
             }
             catch (Exception ex)
             {
-                Log.Error("An error occurred during reset password");
-                throw;
+                Log.Error($"An error occurred during reset password {ex}");
+                throw new Exception($"Error in PasswordResetAsync {ex}");
             }
         }
 
@@ -166,11 +159,7 @@ namespace CryptoWorld.News.Core.Services
                 if (!IsValidEmail(email))
                     throw new ArgumentException("Invalid email address format.");
 
-                var user = await userManager.FindByEmailAsync(email);
-
-                if (user == null)
-                    throw new ArgumentException("There is no such user.");
-
+                var user = await userManager.FindByEmailAsync(email) ?? throw new ArgumentException("There is no such user.");
                 var resetPassToken = await userManager.GeneratePasswordResetTokenAsync(user);
                 var encodedToken = Uri.EscapeDataString(resetPassToken);
                 string action = "resetpassword";
@@ -181,7 +170,7 @@ namespace CryptoWorld.News.Core.Services
             }
             catch (Exception ex)
             {
-                Log.Error("An error occurred during generating of password reset token", ex);
+                Log.Error($"An error occurred during generating of password reset token! {ex}");
                 return IdentityResult.Failed(new IdentityError
                 {
                     Description =
@@ -214,8 +203,8 @@ namespace CryptoWorld.News.Core.Services
             }
             catch (Exception ex)
             {
-                Log.Error("An error occured during generating Jwt token");
-                throw;
+                Log.Error($"An error occured during generating Jwt token! {ex}");
+                throw new Exception($"Error in GenerateJwtToken {ex}");
             }
         }
 
@@ -231,8 +220,8 @@ namespace CryptoWorld.News.Core.Services
             }
             catch (Exception ex)
             {
-                Log.Error("An error occurred during during validation of mail!");
-                throw;
+                Log.Error($"An error occurred during during validation of mail! {ex}");
+                throw new Exception($"Error in IsValidEmail {ex}");
             }
         }
 
@@ -253,8 +242,8 @@ namespace CryptoWorld.News.Core.Services
             }
             catch (Exception ex)
             {
-                Log.Error("An error occurred during generating confirmation link");
-                throw;
+                Log.Error($"An error occurred during generating confirmation link! {ex}");
+                throw new Exception($"Error in GenerateConfirmationLink {ex}");
             }
         }
     }

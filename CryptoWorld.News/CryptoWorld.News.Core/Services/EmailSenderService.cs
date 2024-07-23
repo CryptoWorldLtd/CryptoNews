@@ -34,8 +34,8 @@ namespace CryptoWorld.News.Core.Services
             }
             catch (Exception ex)
             {
-                Log.Error("An error occurred during sending email");
-                throw;
+                Log.Error($"An error occurred during sending email {ex}");
+                throw new Exception($"Error in SendEmailAsync {ex}");
             }
         }
     }

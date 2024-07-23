@@ -20,15 +20,16 @@ namespace CryptoWorld.Application.Server.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> HomeNews()
         {
-            int pagesCount = 7;
-            var urls = await homeNewsService.GetNewsUrlsAsync(pagesCount);
-
-            if (urls == null)
-            {
-                return BadRequest();
-            }
             try
             {
+                int pagesCount = 7;
+                var urls = await homeNewsService.GetNewsUrlsAsync(pagesCount);
+
+                if (urls == null)
+                {
+                    return BadRequest();
+                }
+
                 var model = await homeNewsService.GetPageNewsModelAsync(urls);
                 if (model == null)
                 {
@@ -44,10 +45,9 @@ namespace CryptoWorld.Application.Server.Controllers
 
             catch (Exception ex)
             {
-                Log.Error("Problem with home page!");
+                Log.Error($"Error loading home page! {ex}");
                 return BadRequest();
             }
-
         }
 
 
@@ -78,12 +78,9 @@ namespace CryptoWorld.Application.Server.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error("Problem with loading of news with searched criteria",ex);
+                Log.Error($"Error loading news with search criteria! {ex}");
                 return BadRequest();
             }
-
-
-            
         }
     }
 }

@@ -42,8 +42,8 @@ namespace CryptoWorld.Application.Server.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error("Unsuccessfully registered user!");
-                return BadRequest(ex.Message);
+                Log.Error($"Error while registerig user! {ex}");
+                return BadRequest(ex);
             }
         }
 
@@ -69,7 +69,7 @@ namespace CryptoWorld.Application.Server.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error("Unsuccessfully logged user!",ex);
+                Log.Error($"Error while logging in user! {ex}");
                 return BadRequest(ex.Message);
             }
         }
@@ -97,7 +97,7 @@ namespace CryptoWorld.Application.Server.Controllers
             catch (Exception ex)
             {
 
-                Log.Error("Unable to verify email!", ex);
+                Log.Error($"Unable to verify email! {ex}");
                 return BadRequest(ex.Message);
             }
                
@@ -125,7 +125,7 @@ namespace CryptoWorld.Application.Server.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error("Problem with sending of mail for changing password",ex);
+                Log.Error($"Error sending email for changing password! {ex}");
                 return BadRequest();
             }
             
@@ -156,7 +156,7 @@ namespace CryptoWorld.Application.Server.Controllers
             }
             catch ( Exception ex)
             {
-                Log.Error("Problem with setting of new password!");
+                Log.Error($"Error setting new password! {ex}");
                 return BadRequest();
             }
             
