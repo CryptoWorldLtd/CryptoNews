@@ -21,7 +21,7 @@
     display: flex;
   }
   
-  nav ul li {
+  nav .isActive {
     list-style: none;
     padding: 0 1.5rem;
     text-align: right;

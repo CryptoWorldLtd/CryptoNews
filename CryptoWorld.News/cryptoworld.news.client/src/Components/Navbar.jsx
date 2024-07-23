@@ -8,12 +8,8 @@ import Profile from "../Pages/ProfileDropdown.jsx";
 const Navbar = () => {
     return (
         <Nav>
-            <NavMenu>
                 <NavLink to="/" className="logo">
                     <img alt='logo' src={Logo}></img>
-                </NavLink>
-                <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>
-                    Home
                 </NavLink>
                 <NavLink to="/News" className={({ isActive }) => isActive ? "active" : ""}>
                     News
@@ -25,7 +21,6 @@ const Navbar = () => {
                     Register
                 </NavLink>
                 <Profile/>
-            </NavMenu>
         </Nav>
     );
 };
