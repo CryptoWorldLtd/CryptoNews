@@ -1,7 +1,6 @@
 import '../Components/Filter.css'
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
-import axios from 'axios';
 
 const Filter = ({ onFilterChange }) => {
     const [category, setCategory] = useState(null);
@@ -10,15 +9,6 @@ const Filter = ({ onFilterChange }) => {
     const [endDate, setEndDate] = useState(null);
     const [searchTerm, setSearchTerm] = useState(null);
     const [sorting, setSorting] = useState(null);
-
-    // Fetch categories from the backend
-    // useEffect(() => {
-    // let cat =  axios.get('https://localhost:7249/news/categories')
-    // .then(response => setCategories(response.data))
-    // .catch(error => console.error('Error fetching categories', error));
-    //   console.log(cat);//
-    //  }, []);
-    //const [filters, setFilters] = useState({ Category: '', Region: '', StartDate: '', EndDate: '', SearchTerm: '', Sorting: '' });
 
     const handleFilterChange = () => {
         onFilterChange({ category, region, startDate, endDate, searchTerm, sorting });
