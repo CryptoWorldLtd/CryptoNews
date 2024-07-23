@@ -3,6 +3,7 @@ using CryptоWorld.News.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
@@ -50,8 +51,27 @@ namespace CryptoWorld.Application.Server.Controllers
             }
         }
 
+		[HttpGet("news")]
+		[AllowAnonymous]
+		public async Task<IActionResult> NewsForCertainPeriod(int days)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest();
+			}
 
-        [HttpGet("filter")]
+			try
+			{
+				var result = await this.homeNewsService.GetAllNewsForCertainPeriodOfTime(days);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpGet("filter")]
         public async Task<IActionResult> GetSortedNewsAsync([FromQuery] FilteredNewsModel news)
         {
             try

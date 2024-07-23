@@ -11,12 +11,15 @@ import EditProfile from './Pages/EditProfile';
 import ForgotPassword from './Pages/ForgotPassword';
 import ResetPassword from './Pages/ResetPassword';
 import News from './Pages/News';
+import ParticlesComponent from './Components/Particles';
 import CreateNews from './Pages/CreateNews.jsx';
+
 
 
 function App() {
     return (
-        <div>
+        <div className='App'>
+            <ParticlesComponent id='particles' />
             <Router>
                 <Navbar />
                 <Routes>
@@ -40,3 +43,4 @@ function App() {
 }
 
 export default App;
+

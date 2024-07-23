@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from 'react';
+import Logo from '/logo.jpg'
+import './Navbar.css';
 import { Nav, NavLink, NavMenu } from "./NavbarElements";
 import Profile from "../Pages/ProfileDropdown.jsx";
+
 
 const Navbar = () => {
     return (
         <Nav>
-            <NavMenu>
-                <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>
-                    Home
+                <NavLink to="/" className="logo">
+                    <img alt='logo' src={Logo}></img>
                 </NavLink>
                 <NavLink to="/News" className={({ isActive }) => isActive ? "active" : ""}>
                     News
@@ -19,7 +21,6 @@ const Navbar = () => {
                     Register
                 </NavLink>
                 <Profile/>
-            </NavMenu>
         </Nav>
     );
 };

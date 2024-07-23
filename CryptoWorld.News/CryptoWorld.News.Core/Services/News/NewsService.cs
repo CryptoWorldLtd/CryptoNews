@@ -1,5 +1,6 @@
 ﻿using AngleSharp;
 using CryptoWorld.News.Core.Enumerations;
+using CryptoWorld.News.Core.ViewModels.HomePage;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
@@ -8,6 +9,7 @@ using CryptоWorld.News.Core.ViewModels.HomePage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
+using SendGrid.Helpers.Mail;
 using System.Globalization;
 using System.Text;
 
@@ -292,5 +294,23 @@ namespace CryptоWorld.News.Core.Services.News
                 throw new Exception($"Error in GetOrCreateCategory {ex}");
             }
         }
-    }
+		public async Task<List<FilterNewsModel>> GetAllNewsForCertainPeriodOfTime(int days)
+		{
+			var daysAgo = DateTime.Now.AddDays(-days);
+
+			var latestNews = await this.dbContext
+				.Articles
+				.Where(c => c.PublicationDate >= daysAgo)
+				.Select(x => new FilterNewsModel()
+				{
+					Title = x.Title,
+					ImageUrl = x.ImageUrl,
+					Content = x.Content,
+					DatePublished = x.PublicationDate
+				})
+				.ToListAsync();
+
+			return latestNews;
+		}
+	}
 }
