@@ -1,5 +1,6 @@
 ﻿using AngleSharp;
 using CryptoWorld.News.Core.Enumerations;
+using CryptoWorld.News.Core.ViewModels.HomePage;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
