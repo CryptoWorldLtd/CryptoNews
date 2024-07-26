@@ -4,6 +4,7 @@ import './Register.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const ChangeEmail = () => {
   const [action] = useState("Change Email");
@@ -30,7 +31,8 @@ const ChangeEmail = () => {
         
     } catch (error) {
       console.error('Error:', error.response ? error.response.data : error.message);
-      setError(error.response?.data?.message || "Email change failed");
+      const errorMessage = error.response?.data?.detail || 'Email change failed';
+      toast.error(errorMessage);
     }
   };
 
