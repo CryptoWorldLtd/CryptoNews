@@ -4,6 +4,7 @@ import {  faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from "react-router-dom";
 import './ForgotPassword.css';
+import { toast } from 'react-hot-toast';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -31,8 +32,9 @@ const ForgotPassword = () => {
               navigate("/");              
             alert('If the email is registered in our system you will receive reser passowrd link on this email!')
         } catch (error) {
-            console.log(error.message);
-            alert('An error occurred while requesting the password reset.');
+          console.error('Error:', error.response ? error.response.data : error.message);
+          const errorMessage = error.response?.data?.detail || 'An error occurred while requesting the password reset.';
+          toast.error(errorMessage);            
         }
     }
     

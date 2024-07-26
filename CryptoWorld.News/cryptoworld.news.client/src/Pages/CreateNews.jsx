@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './CreateNews.module.css';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const CreateNews = () => {
   const [title, setTitle] = useState("");
@@ -42,7 +43,8 @@ const CreateNews = () => {
       console.log('Response:', response.data);
     } catch (error) {
       console.error('Error:', error.response ? error.response.data : error.message);
-      setError(error.response?.data?.message || "The news is not submitted");
+      const errorMessage = error.response?.data?.detail || 'The news is not submitted.';
+      toast.error(errorMessage);
     }
   };
 
