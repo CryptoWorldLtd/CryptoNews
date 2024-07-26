@@ -1,17 +1,14 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity;
-
-using CryptoWorld.News.Core.Interfaces;
+﻿using CryptoWorld.News.Core.Interfaces;
 using CryptoWorld.News.Core.ViewModels;
 using CryptoWorld.News.Data.Models;
-
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text.RegularExpressions;
 using System.Security.Claims;
 using System.Text;
-using Serilog;
-using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace CryptoWorld.News.Core.Services
 {
@@ -47,11 +44,13 @@ namespace CryptoWorld.News.Core.Services
                 confirmationToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(confirmationToken));
                 string action = "confirmemail";
                 var emailBody = GenerateConfirmationLink(action, confirmationToken, model.Email);
+                var plainTextContent = $"Dear {model.Username} you can click the link to confirm your action! <a href=\"{emailBody}\" class=\"email-button\">Get Started</a>";
+                var htmlContent = $"Dear {model.Username} you can click the link to confirm your action! <a href=\"{emailBody}\" class=\"email-button\">Get Started</a>";
 
                 if (result.Succeeded)
                 {
                     await this.signInManager.SignInAsync(user, false);
-                    await emailSenderService.SendEmailAsync(model.Email, model.Username, emailBody);
+                    await emailSenderService.SendEmailAsync(model.Email, model.Username, plainTextContent, htmlContent);
                 }
                 return result;
             }
@@ -164,7 +163,9 @@ namespace CryptoWorld.News.Core.Services
                 var encodedToken = Uri.EscapeDataString(resetPassToken);
                 string action = "resetpassword";
                 var passwordResetLink = GenerateConfirmationLink(action, encodedToken, email);
-                await emailSenderService.SendEmailAsync(user.Email, user.UserName, passwordResetLink);
+                var plainTextContent = $"Dear {user.UserName} you can click the link to confirm your action! <a href=\"{passwordResetLink}\" class=\"email-button\">Get Started</a>";
+                var htmlContent = $"Dear {user.UserName} you can click the link to confirm your action! <a href=\"{passwordResetLink}\" class=\"email-button\">Get Started</a>";
+                await emailSenderService.SendEmailAsync(user.Email, user.UserName, plainTextContent, htmlContent);
 
                 return IdentityResult.Success;
             }

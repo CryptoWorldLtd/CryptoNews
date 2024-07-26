@@ -15,7 +15,11 @@ namespace CryptoWorld.News.Core.Services
             sendGridSettings = _sendGridSettings.Value;
         }
 
-        public Task SendEmailAsync(string reciever , string username, string body)
+        public Task SendEmailAsync(
+             string reciever,
+             string username,
+             string plainTextContent,
+             string htmlContent)
         {
             try
             {
@@ -26,8 +30,6 @@ namespace CryptoWorld.News.Core.Services
                 var from = new EmailAddress(sender, "CryptoNews");
                 var subject = "CryptoNews Automated Email";
                 var to = new EmailAddress(reciever, username);
-                var plainTextContent = $"Dear {username} you can click the link to confirm your action! <a href=\"{body}\" class=\"email-button\">Get Started</a>";
-                var htmlContent = $"Dear {username} you can click the link to confirm your action! <a href=\"{body}\" class=\"email-button\">Get Started</a>";
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
                 return client.SendEmailAsync(msg);
