@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Navbar from './Components/Navbar.jsx'; 
+import Navbar from './Components/Navbar.jsx';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
@@ -10,10 +10,14 @@ import MyNews from './Pages/MyNews';
 import EditProfile from './Pages/EditProfile';
 import ForgotPassword from './Pages/ForgotPassword';
 import ResetPassword from './Pages/ResetPassword';
-
+import News from './Pages/News';
+import ParticlesComponent from './Components/Particles';
+import CreateNews from './Pages/CreateNews.jsx';
+import { Toaster } from 'react-hot-toast';
 function App() {
     return (
-        <div>
+        <div className='App'>
+            <ParticlesComponent id='particles' />
             <Router>
                 <Navbar />
                 <Routes>
@@ -27,11 +31,13 @@ function App() {
                     <Route path="/MyNews" element={<MyNews />} />
                     <Route path="/ForgotPassword" element={<ForgotPassword />} />
                     <Route path="/ResetPassword/:id/:email" element={<ResetPassword />} />
+                    <Route path="/News" element={<News />} />
+                    <Route path="/CreateNews" element={<CreateNews />} />
                 </Routes>
-                
             </Router>
+            <Toaster />
         </div>
-    ); 
+    );
 }
 
 export default App;

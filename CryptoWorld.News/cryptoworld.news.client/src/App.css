@@ -1,8 +1,4 @@
 ﻿#root {
-    max-width: 1280px;
-    margin: 10 auto;
-    flex: auto;
-    padding: 2rem;
     text-align: center;
 }
 
@@ -105,3 +101,12 @@ h3{
     margin-left: 10px;
     transition: var(--speed);
 }
+
+
+#particles canvas {
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
