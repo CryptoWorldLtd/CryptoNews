@@ -10,6 +10,8 @@ using CryptоWorld.News.Core.Services.News;
 using CryptоWorld.News.Core.ViewModels.HomePage;
 using Serilog;
 using CryptoWorld.News.Core.ExceptionHandler;
+using CryptoWorld.News.Data.Seeding;
+using CryptoWorld.News.Data.Models.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -28,7 +30,9 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.Password.RequireUppercase = true;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddRoles<ApplicationRole>();
+    
 builder.Services
     .AddAuthentication(
                 options =>
@@ -58,12 +62,14 @@ var app = builder.Build();
 //Apply migrations after project run
 using (var serviceScope = app.Services.CreateScope())
 {
+    var services = serviceScope.ServiceProvider;
     if (app.Environment.IsDevelopment())
     {
-        try
+        try 
         {
             var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             dbContext.Database.Migrate();
+            await Seeder.SeedAsync(serviceScope.ServiceProvider);
         }
         catch (Exception ex)
         {
