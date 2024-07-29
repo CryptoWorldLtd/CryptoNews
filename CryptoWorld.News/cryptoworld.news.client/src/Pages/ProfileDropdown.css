@@ -16,6 +16,7 @@
     border-radius: 5%;
     padding: 10px 20px;
     width: 200px;
+    display: block;
 }
 
 .dropdown-menu::before{
@@ -40,9 +41,17 @@ h3{
     line-height: 1.2rem;
 }
 
+.dropdown-menu ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    display: inline;
+}
+
 .dropdown-menu ul li{
     padding: 10px 0;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
+    
 }
 
 .dropdown-menu ul li:hover a{
@@ -50,10 +59,11 @@ h3{
     cursor: pointer;
 }
 
-.dropdownItem{
-    display: flex;
-    margin: 10px auto;
+.dropdownItem {
+    display: flex; /* Flex layout for icon and text */
+    align-items: center; /* Center items vertically */
     cursor: pointer;
+    margin: 10px 0; /* Adjust margin for spacing between items */
 }
 
 .dropdownItem img{
