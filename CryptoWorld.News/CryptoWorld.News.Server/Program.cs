@@ -10,6 +10,7 @@ using CryptоWorld.News.Core.Services.News;
 using CryptоWorld.News.Core.ViewModels.HomePage;
 using Serilog;
 using CryptoWorld.News.Core.ExceptionHandler;
+using CryptoWorld.News.Data.Extension;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -42,10 +43,12 @@ builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddScoped<UrlForNews>();
 builder.Services.Configure<UrlForNews>(builder.Configuration.GetSection("MoneyBgUrl"));
 
+
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGrid"));
 builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddScoped<IRepository , Repository>();
 
     Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
