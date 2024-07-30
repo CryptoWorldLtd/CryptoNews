@@ -56,7 +56,7 @@ builder.Services
                         IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:secretKey"]))
                     };
                 });
-builder.Services.AddCors();
+builder.Services.AddCors()
 builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IUserProfileService,UserProfileService>();
 builder.Services.AddScoped<INewsService, NewsService>();
