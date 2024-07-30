@@ -42,9 +42,9 @@ h3{
 }
 
 .dropdown-menu ul {
-    list-style-type: none; /* Remove bullet points */
-    padding: 0; /* Remove default padding */
-    margin: 0; /* Remove default margin */
+    list-style-type: none; 
+    padding: 0;
+    margin: 0;
     display: inline;
 }
 
@@ -60,10 +60,10 @@ h3{
 }
 
 .dropdownItem {
-    display: flex; /* Flex layout for icon and text */
-    align-items: center; /* Center items vertically */
+    display: flex; 
+    align-items: center; 
     cursor: pointer;
-    margin: 10px 0; /* Adjust margin for spacing between items */
+    margin: 10px 0; 
 }
 
 .dropdownItem img{
