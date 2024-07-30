@@ -13,9 +13,7 @@ import ResetPassword from './Pages/ResetPassword';
 import News from './Pages/News';
 import ParticlesComponent from './Components/Particles';
 import CreateNews from './Pages/CreateNews.jsx';
-
-
-
+import { Toaster } from 'react-hot-toast';
 function App() {
     return (
         <div className='App'>
@@ -36,11 +34,10 @@ function App() {
                     <Route path="/News" element={<News />} />
                     <Route path="/CreateNews" element={<CreateNews />} />
                 </Routes>
-
             </Router>
+            <Toaster />
         </div>
     );
 }
 
 export default App;
-

@@ -4,6 +4,7 @@ import './Register.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const ChangePassword = () => {
   const [action] = useState("Change Password");
@@ -34,7 +35,8 @@ const ChangePassword = () => {
         
     } catch (error) {
       console.error('Error:', error.response ? error.response.data : error.message);
-      setError(error.response?.data?.message || "Password change failed");
+      const errorMessage = error.response?.data?.detail || 'Password change failed';
+      toast.error(errorMessage);
     }
   };
 

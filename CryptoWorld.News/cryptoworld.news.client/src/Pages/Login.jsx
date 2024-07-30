@@ -6,6 +6,7 @@ import {  faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock , faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import './Login.module.css';
+import { toast } from 'react-hot-toast';
 
 const Login = () => {
   const [email, setEmail] = useState(() => (localStorage.checkbox ? localStorage.email : ""));
@@ -43,10 +44,11 @@ const Login = () => {
       });
       console.log('Response:', response.data);
       navigate("/");
-      alert('Login successful!');
+      toast.success('Login successful!');
     } catch (error) {
       console.error(error);
-      alert('Login failed. Please try again.');
+      const errorMessage = error.response?.data?.detail || 'Login failed. Please try again.';
+      toast.error(errorMessage);
     }
   };
 

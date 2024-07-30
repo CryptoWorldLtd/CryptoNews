@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const Register = () => {
   const [action] = useState("Register");
@@ -48,10 +49,11 @@ const Register = () => {
       });
         console.log('Response:', response.data);
         navigate("/Login");
-        
+        toast.success('Successful registration!');
     } catch (error) {
       console.error('Error:', error.response ? error.response.data : error.message);
-      setError(error.response?.data?.message || "Registration failed");
+      const errorMessage = error.response?.data?.detail || 'Registration failed. Please try again.';
+      toast.error(errorMessage);
     }
   };
 

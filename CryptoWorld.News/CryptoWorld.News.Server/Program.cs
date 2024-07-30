@@ -1,8 +1,12 @@
-﻿using CryptoWorld.News.Core.Services;
+using CryptoWorld.News.Core.Services;
 using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
+using CryptоWorld.News.Core.Interfaces;
+using CryptоWorld.News.Core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Microsoft.AspNetCore.Identity;
 using CryptoWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.Interfaces;
@@ -11,6 +15,7 @@ using CryptоWorld.News.Core.ViewModels.HomePage;
 using Serilog;
 using CryptoWorld.News.Core.ExceptionHandler;
 using CryptoWorld.News.Data.Extension;
+
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -27,6 +32,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
+    options.SignIn.RequireConfirmedAccount = false;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
@@ -36,21 +42,35 @@ builder.Services
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+    .AddJwtBearer(option =>
+                {
+                    option.SaveToken = true;
+                    option.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        SaveSigninToken = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:secretKey"]))
+                    };
                 });
 builder.Services.AddCors();
 builder.Services.AddScoped<IAccountService,AccountService>();
+builder.Services.AddScoped<IUserProfileService,UserProfileService>();
 builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddScoped<UrlForNews>();
 builder.Services.Configure<UrlForNews>(builder.Configuration.GetSection("MoneyBgUrl"));
-
-
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGrid"));
 builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
-builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddExceptionHandler<CustomExceptionHandler>()
 builder.Services.AddScoped<IRepository , Repository>();
+builder.Services.AddTransient<IAlertService, AlertService>();
 
-    Log.Logger = new LoggerConfiguration()
+Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.Console()
     .WriteTo.File("logs/CryptoNewsLogsFromSerilog-.txt",rollingInterval: RollingInterval.Day)
