@@ -13,7 +13,7 @@ const News = () => {
  
    useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const queryPage = parseInt(params.get('CurrentPage')) || 1;
+    const queryPage = parseInt(params.get('currentPage')) || 1;
     const queryFilters = {
         Category: params.get('category') || '',
         Region: params.get('region') || '',
@@ -41,7 +41,7 @@ const News = () => {
 
     const fetchNews = (page, filters) => {
         const query = new URLSearchParams({
-            CurrentPage: page,            
+            currentPage: page,            
             ...validFilters
         }).toString();
         window.history.pushState(null, '', `?${query}`);
