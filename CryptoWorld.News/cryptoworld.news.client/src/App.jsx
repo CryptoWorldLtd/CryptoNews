@@ -22,17 +22,17 @@ function App() {
                 <Navbar />
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/Login" element={<Login />} />
-                    <Route path="/Register" element={<Register />} />
-                    <Route path="/Profile" element={<Profile />} />
-                    <Route path="/EditProfile" element={<Profile />} />
-                    <Route path="/ChangeEmail" element={<EditProfile formType="email" />} />
-                    <Route path="/ChangePassword" element={<EditProfile formType="password" />} />
-                    <Route path="/MyNews" element={<MyNews />} />
-                    <Route path="/ForgotPassword" element={<ForgotPassword />} />
-                    <Route path="/ResetPassword/:id/:email" element={<ResetPassword />} />
-                    <Route path="/News" element={<News />} />
-                    <Route path="/CreateNews" element={<CreateNews />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/editProfile" element={<Profile />} />
+                    <Route path="/changeEmail" element={<EditProfile formType="email" />} />
+                    <Route path="/changePassword" element={<EditProfile formType="password" />} />
+                    <Route path="/myNews" element={<MyNews />} />
+                    <Route path="/forgotPassword" element={<ForgotPassword />} />
+                    <Route path="/resetPassword/:id/:email" element={<ResetPassword />} />
+                    <Route path="/news" element={<News />} />
+                    <Route path="/createNews" element={<CreateNews />} />
                 </Routes>
             </Router>
             <Toaster />

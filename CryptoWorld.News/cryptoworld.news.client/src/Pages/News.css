@@ -29,6 +29,7 @@
     margin: 0 10px; 
     width: 150px; /* Set a fixed width */
     box-sizing: border-box; 
+    margin-bottom: 40px;
 }
 
 .pagination button:hover {

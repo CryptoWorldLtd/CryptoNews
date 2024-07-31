@@ -39,10 +39,10 @@ const Profile = () => {
 
                 <div className={`dropdown-menu ${open ? 'active' : 'inactive'}`}>
                     <ul>
-                        <DropdownItem icon={faNewspaper} text="My news" onClick={() => handleNavigation('/MyNews')} />
-                        <DropdownItem icon={faEnvelope} text="Change e-mail" onClick={() => handleNavigation('/ChangeEmail')} />
-                        <DropdownItem icon={faLock} text="Change password" onClick={() => handleNavigation('/ChangePassword')} />
-                        <DropdownItem icon={faSignOut} text="Logout" onClick={() => handleNavigation('/Logout')} />
+                        <DropdownItem icon={faNewspaper} text="My news" onClick={() => handleNavigation('/myNews')} />
+                        <DropdownItem icon={faEnvelope} text="Change e-mail" onClick={() => handleNavigation('/changeEmail')} />
+                        <DropdownItem icon={faLock} text="Change password" onClick={() => handleNavigation('/changePassword')} />
+                        <DropdownItem icon={faSignOut} text="Logout" onClick={() => handleNavigation('/logout')} />
                     </ul>
                 </div>
             </div>
