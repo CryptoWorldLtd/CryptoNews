@@ -1,9 +1,10 @@
-﻿using CryptoWorld.News.Core.Interfaces;
-using CryptoWorld.News.Core.ViewModels;
-using CryptoWorld.News.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
+using CryptoWorld.News.Core.Interfaces;
+using CryptoWorld.News.Core.ViewModels;
+using CryptoWorld.News.Data.Models;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -14,23 +15,29 @@ namespace CryptoWorld.News.Core.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly IEmailSenderService emailSenderService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailSenderService _emailSenderService;
+        private string _secretKey;
+
         public AccountService(
-            UserManager<ApplicationUser> _userManager, SignInManager<ApplicationUser> _signInManager, IEmailSenderService _emailSenderService)
+                UserManager<ApplicationUser> userManager,
+                SignInManager<ApplicationUser> signInManager,
+                IConfiguration config,
+                IEmailSenderService emailSenderService
+            )
         {
-            userManager = _userManager;
-            signInManager = _signInManager;
-            emailSenderService = _emailSenderService;
+            _userManager = userManager;
+            _secretKey = config["JWT:secretKey"];
+            _signInManager = signInManager;
+            _emailSenderService = emailSenderService;
         }
 
         public async Task<IdentityResult> RegisterAsync(RegisterRequestModel model)
         {
             try
             {
-                var userExists = await userManager.FindByEmailAsync(model.Email);
-
+                var userExists = await _userManager.FindByEmailAsync(model.Email);
                 if (userExists != null)
                     throw new ArgumentException("User with such email already exists.");
 
@@ -38,9 +45,9 @@ namespace CryptoWorld.News.Core.Services
                     throw new ArgumentException("Invalid email address format.");
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await userManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user, model.Password);
 
-                var confirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 confirmationToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(confirmationToken));
                 string action = "confirmemail";
                 var emailBody = GenerateConfirmationLink(action, confirmationToken, model.Email);
@@ -49,8 +56,8 @@ namespace CryptoWorld.News.Core.Services
 
                 if (result.Succeeded)
                 {
-                    await this.signInManager.SignInAsync(user, false);
-                    await emailSenderService.SendEmailAsync(model.Email, model.Username, plainTextContent, htmlContent);
+                    await this._signInManager.SignInAsync(user, false);
+                    await _emailSenderService.SendEmailAsync(model.Email, model.Username, plainTextContent, htmlContent);
                 }
                 return result;
             }
@@ -63,15 +70,13 @@ namespace CryptoWorld.News.Core.Services
                     "An error occurred during registration. Please try again later."
                 });
             }
-
         }
-
         public async Task<LoginResponseModel> LoginAsync(LoginRequestModel model)
         {
             try
             {
-                var user = await userManager.FindByEmailAsync(model.Email) ?? throw new ArgumentException("There is no such user.");
-                var result = await this.signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                var user = await _userManager.FindByEmailAsync(model.Email) ?? throw new ArgumentException("There is no such user.");
+                var result = await this._signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
 
                 if (!result.Succeeded)
                     throw new ArgumentException("There was a error while loggin you in! Please try again later or contact an administrator.");
@@ -98,7 +103,6 @@ namespace CryptoWorld.News.Core.Services
                 throw new InvalidOperationException("An error occurred during login. Please try again later.");
             }
         }
-
         public async Task<IdentityResult> VerifyEmailAsync(string token, string email)
         {
             try
@@ -106,14 +110,14 @@ namespace CryptoWorld.News.Core.Services
                 if (!IsValidEmail(email))
                     throw new ArgumentException("Invalid email address format.");
 
-                var user = await userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
 
                 if (user == null)
                     throw new ArgumentException("There is no such user.");
 
-                var decodedTokenBytes = WebEncoders.Base64UrlDecode(token);
-                var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
-                var result = await userManager.ConfirmEmailAsync(user, decodedToken);
+            var decodedTokenBytes = WebEncoders.Base64UrlDecode(token);
+            var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
 
                 if (!result.Succeeded)
                     throw new ArgumentException("Incorrect email.");
@@ -134,8 +138,8 @@ namespace CryptoWorld.News.Core.Services
                 if (!IsValidEmail(email))
                     throw new ArgumentException("Invalid email address format.");
 
-                var user = await userManager.FindByEmailAsync(email) ?? throw new ArgumentException("There is no such user.");
-                var result = await userManager.ResetPasswordAsync(user, token, newPassword);
+                var user = await _userManager.FindByEmailAsync(email) ?? throw new ArgumentException("There is no such user.");
+                var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
 
                 if (!result.Succeeded)
                 {
@@ -150,7 +154,6 @@ namespace CryptoWorld.News.Core.Services
                 throw new Exception($"Error in PasswordResetAsync {ex}");
             }
         }
-
         public async Task<IdentityResult> GeneratePasswordResetToken(string email)
         {
             try
@@ -158,14 +161,14 @@ namespace CryptoWorld.News.Core.Services
                 if (!IsValidEmail(email))
                     throw new ArgumentException("Invalid email address format.");
 
-                var user = await userManager.FindByEmailAsync(email) ?? throw new ArgumentException("There is no such user.");
-                var resetPassToken = await userManager.GeneratePasswordResetTokenAsync(user);
+                var user = await _userManager.FindByEmailAsync(email) ?? throw new ArgumentException("There is no such user.");
+                var resetPassToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var encodedToken = Uri.EscapeDataString(resetPassToken);
                 string action = "resetpassword";
                 var passwordResetLink = GenerateConfirmationLink(action, encodedToken, email);
                 var plainTextContent = $"Dear {user.UserName} you can click the link to confirm your action! <a href=\"{passwordResetLink}\" class=\"email-button\">Get Started</a>";
                 var htmlContent = $"Dear {user.UserName} you can click the link to confirm your action! <a href=\"{passwordResetLink}\" class=\"email-button\">Get Started</a>";
-                await emailSenderService.SendEmailAsync(user.Email, user.UserName, plainTextContent, htmlContent);
+                await _emailSenderService.SendEmailAsync(user.Email, user.UserName, plainTextContent, htmlContent);
 
                 return IdentityResult.Success;
             }
@@ -189,9 +192,9 @@ namespace CryptoWorld.News.Core.Services
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email)
-              };
-                var secretKey = "abcdefghijklmnopqrstuvwxyzabcdef";
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
 
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

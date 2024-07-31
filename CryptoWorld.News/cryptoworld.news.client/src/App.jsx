@@ -14,7 +14,6 @@ import News from './Pages/News';
 import ParticlesComponent from './Components/Particles';
 import CreateNews from './Pages/CreateNews.jsx';
 import { Toaster } from 'react-hot-toast';
-
 function App() {
     return (
         <div className='App'>
