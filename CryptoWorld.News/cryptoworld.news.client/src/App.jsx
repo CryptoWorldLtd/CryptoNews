@@ -14,6 +14,7 @@ import News from './Pages/News';
 import ParticlesComponent from './Components/Particles';
 import CreateNews from './Pages/CreateNews.jsx';
 import { Toaster } from 'react-hot-toast';
+import RssFeed from './Pages/RssFeed.jsx';
 
 function App() {
     return (
@@ -34,6 +35,7 @@ function App() {
                     <Route path="/resetPassword/:id/:email" element={<ResetPassword />} />
                     <Route path="/news" element={<News />} />
                     <Route path="/createNews" element={<CreateNews />} />
+                    <Route path="/RssFeed" element={<RssFeed />} />
                 </Routes>
             </Router>
             <Toaster />
