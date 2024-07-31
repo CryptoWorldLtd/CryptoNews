@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using CryptoWorld.News.Data.Models.Common;
-using System;
 
 namespace CryptoWorld.News.Data.Seeding
 {
