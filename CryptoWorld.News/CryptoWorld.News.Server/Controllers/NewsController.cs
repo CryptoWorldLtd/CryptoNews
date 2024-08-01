@@ -106,16 +106,12 @@ namespace CryptoWorld.Application.Server.Controllers
         }
 
         [HttpGet("rssFeed")]
-        public async Task<IActionResult> GetRssFeed([FromQuery] string url)
+        public async Task<IActionResult> GetRssFeed()
         {
-            if (string.IsNullOrWhiteSpace(url))
-            {
-                return BadRequest("URL is requred");
-            }
-
+            
             try
             {
-                var items = await rssFeedService.GetFeedItemsAsync(url);
+                var items = await rssFeedService.GetFeedItemsAsync();
                 var result = items.Select(item => new {
                     item.Title,
                     item.Link,

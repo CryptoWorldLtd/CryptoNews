@@ -21,6 +21,12 @@ namespace CryptoWorld.News.Core.Services.News
             "www.youtube.com",
             "player.vimeo.com"
         };
+        private readonly List<string> rssFeedUrls = new List<string>
+        {
+            "https://cointelegraph.com/rss",
+            "https://feeds.feedburner.com/nigeriabitcoincommunity",
+            "https://bitcoincore.org/en/rss.xml"
+        };
         private readonly ApplicationDbContext dbContext;
         private readonly INewsService newsService;
 
@@ -30,58 +36,58 @@ namespace CryptoWorld.News.Core.Services.News
             newsService = _newsService;
         }
 
-        public async Task<List<RssResponseModel>> GetFeedItemsAsync(string url)
+        public async Task<List<RssResponseModel>> GetFeedItemsAsync()
         {
-            var sanitizer = new HtmlSanitizer();
-            sanitizer.AllowedTags.Add("iframe");
+             var feedItems = new List<RssResponseModel>();
 
-            try
+            foreach (var url in rssFeedUrls)
             {
-                using var httpClient = new HttpClient();
-                var response = await httpClient.GetStringAsync(url);
-
-                using var stringReader = new System.IO.StringReader(response);
-
-                using var reader = XmlReader.Create(url);
-                var feed = SyndicationFeed.Load(reader);
-
-                if (feed == null)
+                try
                 {
-                    return new List<RssResponseModel>();
-                }
+                    using var httpClient = new HttpClient();
+                    var response = await httpClient.GetStringAsync(url);
 
-                var feedItems = new List<RssResponseModel>();
+                    using var stringReader = new System.IO.StringReader(response);
 
-                foreach (var item in feed.Items)
-                {
-                    string contentEncoded = item.ElementExtensions
-                                               .ReadElementExtensions<string>("encoded", "http://purl.org/rss/1.0/modules/content/")
-                                               .FirstOrDefault() ?? string.Empty;
+                    using var reader = XmlReader.Create(url);
+                    var feed = SyndicationFeed.Load(reader);
 
-                    string link = item.Links.FirstOrDefault()?.Uri.ToString();
-                    string copyright = GetHostFromLink(link);
-                    string sanitizedContent = SanitizeAndFilterIframes(contentEncoded);
-                    string sanitizedDescription = SanitizeAndFilterIframes(item.Summary.Text);
-
-                    feedItems.Add(new RssResponseModel
+                    if (feed == null)
                     {
-                        Title = item.Title.Text,
-                        Link = link,
-                        Description = sanitizedDescription,
-                        Content = sanitizedContent,
-                        PublishDate = item.PublishDate.ToString("dd.MM.yyyy"),
-                        Copyright = copyright
-                    });
-                }
+                        continue;
+                    }
 
-                await CreateNewsFromRssFeedAsync(feedItems);
-                return feedItems;
+                    foreach (var item in feed.Items)
+                    {
+                        string contentEncoded = item.ElementExtensions
+                                                   .ReadElementExtensions<string>("encoded", "http://purl.org/rss/1.0/modules/content/")
+                                                   .FirstOrDefault() ?? string.Empty;
+
+                        string link = item.Links.FirstOrDefault()?.Uri.ToString();
+                        string copyright = GetHostFromLink(link);
+                        string sanitizedContent = SanitizeAndFilterIframes(contentEncoded);
+                        string sanitizedDescription = SanitizeAndFilterIframes(item.Summary.Text);
+                        
+                        feedItems.Add(new RssResponseModel
+                        {
+                            Title = item.Title.Text,
+                            Link = link,
+                            Description = sanitizedDescription,
+                            Content = sanitizedContent,
+                            PublishDate = item.PublishDate.ToString("dd.MM.yyyy"),
+                            Copyright = copyright
+                        });
+                    }
+
+                    await CreateNewsFromRssFeedAsync(feedItems);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Error fetching RSS feed: {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                Log.Error($"Error fetching RSS feed: {ex.Message}");
-                return new List<RssResponseModel>();
-            }
+
+            return feedItems;
         }
 
         public async Task CreateNewsFromRssFeedAsync(List<RssResponseModel> models)
