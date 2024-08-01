@@ -48,7 +48,7 @@ builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("S
 builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddTransient<IAlertService, AlertService>();
-builder.Services.AddScoped<RssFeedService>();
+builder.Services.AddScoped<IRssFeedService, RssFeedService>();
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()

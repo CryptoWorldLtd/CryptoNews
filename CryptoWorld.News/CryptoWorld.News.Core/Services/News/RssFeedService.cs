@@ -1,23 +1,27 @@
-﻿using CryptoWorld.News.Core.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
+﻿using CryptoWorld.News.Core.Interfaces;
+using CryptoWorld.News.Core.ViewModels;
+using Ganss.Xss;
+using Serilog;
 using System.ServiceModel.Syndication;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace CryptoWorld.News.Core.Services.News
 {
-    public class RssFeedService
+    public class RssFeedService : IRssFeedService
     {
         public List<RssFeedViewModel> GetFeedItems(string url)
         {
+            var sanitizer = new HtmlSanitizer();
+
             try
             {
                 using var reader = XmlReader.Create(url);
                 var feed = SyndicationFeed.Load(reader);
+
+                if (feed == null)
+                {
+                    return new List<RssFeedViewModel>();
+                }
 
                 var feedItems = new List<RssFeedViewModel>();
 
@@ -31,8 +35,8 @@ namespace CryptoWorld.News.Core.Services.News
                     {
                         Title = item.Title.Text,
                         Link = item.Links.FirstOrDefault()?.Uri.ToString(),
-                        Description = item.Summary.Text,
-                        Content = contentEncoded,
+                        Description = sanitizer.Sanitize(item.Summary.Text),
+                        Content = sanitizer.Sanitize(contentEncoded),
                         PublishDate = item.PublishDate.ToString("o")
                     });
                 }
@@ -41,8 +45,7 @@ namespace CryptoWorld.News.Core.Services.News
             }
             catch (Exception ex)
             {
-                // Log the exception (for production use a logging framework)
-                Console.WriteLine($"Error fetching RSS feed: {ex.Message}");
+                Log.Error($"Error fetching RSS feed: {ex.Message}");
                 return new List<RssFeedViewModel>();
             }
         }

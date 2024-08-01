@@ -35,7 +35,7 @@ function App() {
                     <Route path="/resetPassword/:id/:email" element={<ResetPassword />} />
                     <Route path="/news" element={<News />} />
                     <Route path="/createNews" element={<CreateNews />} />
-                    <Route path="/RssFeed" element={<RssFeed />} />
+                    <Route path="news/rssFeed" element={<RssFeed />} />
                 </Routes>
             </Router>
             <Toaster />

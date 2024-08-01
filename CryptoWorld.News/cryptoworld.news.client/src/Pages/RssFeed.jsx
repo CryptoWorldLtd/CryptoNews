@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -19,7 +17,7 @@ const RssFeed = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get('https://localhost:7249/RssFeed/rssFeed', {
+            const response = await axios.get('https://localhost:7249/news/rssFeed', {
                 params: { url }
             });
             console.log("Response data:", response.data);
@@ -56,7 +54,7 @@ const RssFeed = () => {
                     <li key={index}>
                         <h3><a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a></h3>
                         <p><strong>Published on: </strong>{new Date(item.publishDate).toLocaleString()}</p>
-                        <p>{item.description}</p>
+                        {item.description && <div dangerouslySetInnerHTML={{ __html: item.description }} />}
                         {item.content && <div dangerouslySetInnerHTML={{ __html: item.content }} />}
                     </li>
                 ))}

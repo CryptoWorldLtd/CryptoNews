@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using CryptoWorld.News.Core.Services.News;
+using CryptoWorld.News.Core.Interfaces;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
@@ -11,10 +13,12 @@ namespace CryptoWorld.Application.Server.Controllers
     {
 
         private readonly INewsService homeNewsService;
+        private readonly IRssFeedService rssFeedService;
 
-        public NewsController(INewsService _homeNewsService)
+        public NewsController(INewsService _homeNewsService, IRssFeedService _rssFeedService)
         {
             homeNewsService = _homeNewsService;
+            rssFeedService = _rssFeedService;
         }
 
         [HttpGet("home")]
@@ -100,6 +104,34 @@ namespace CryptoWorld.Application.Server.Controllers
             {
                 Log.Error($"Error loading news with search criteria! {ex}");
                 return BadRequest();
+            }
+        }
+
+        [HttpGet("rssFeed")]
+        public IActionResult GetRssFeed([FromQuery] string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return BadRequest("URL is requred");
+            }
+
+            try
+            {
+                var items = rssFeedService.GetFeedItems(url);
+                var result = items.Select(item => new {
+                    item.Title,
+                    item.Link,
+                    item.Description,
+                    item.Content,
+                    item.PublishDate
+                }).ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetFeed: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
     }
