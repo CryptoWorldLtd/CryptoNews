@@ -38,6 +38,11 @@ const RssFeed = () => {
         }
     };
 
+    const parseDate = (dateString) => {
+        const [day, month, year] = dateString.split('.');
+        return new Date(`${year}-${month}-${day}`).toLocaleDateString();
+    };
+
     return (
         <div>
             <input
@@ -53,9 +58,10 @@ const RssFeed = () => {
                 {feedItems.map((item, index) => (
                     <li key={index}>
                         <h3><a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a></h3>
-                        <p><strong>Published on: </strong>{new Date(item.publishDate).toLocaleString()}</p>
+                        <p><strong>Published on: </strong>{parseDate(item.publishDate)}</p>
                         {item.description && <div dangerouslySetInnerHTML={{ __html: item.description }} />}
-                        {item.content && <div dangerouslySetInnerHTML={{ __html: item.content }} />}
+                        {item.link && <div dangerouslySetInnerHTML={{ __html: item.content }} />}
+                        {item.copyright && <p><strong>Source: </strong>{item.copyright}</p>}
                     </li>
                 ))}
             </ul>

@@ -1,17 +1,18 @@
 ﻿using CryptoWorld.News.Data.Models.Common;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Security.AccessControl;
 
 namespace CryptoWorld.News.Data.Models
 {
     public class Article : BaseEntity
     {
         public string Title { get; set; }
+        public string Description { get; set; }
         public string Content { get; set; }
         public string ImageUrl { get; set; }
         public DateTime PublicationDate { get; set; }
         public int Rating { get; set; }
         public string Region { get; set; }
+        //Link to original article 
+        public string Link { get; set; }
         public Guid CategoryId { get; set; }
         public virtual Category Category { get; set; }
         public Guid SourceId { get; set; }

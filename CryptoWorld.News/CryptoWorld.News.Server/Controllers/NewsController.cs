@@ -1,11 +1,9 @@
-﻿using CryptoWorld.News.Core.ViewModels.HomePage;
+﻿using CryptoWorld.News.Core.Interfaces;
+using CryptoWorld.News.Core.ViewModels.HomePage;
 using CryptоWorld.News.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using CryptoWorld.News.Core.Services.News;
-using CryptoWorld.News.Core.Interfaces;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
@@ -108,7 +106,7 @@ namespace CryptoWorld.Application.Server.Controllers
         }
 
         [HttpGet("rssFeed")]
-        public IActionResult GetRssFeed([FromQuery] string url)
+        public async Task<IActionResult> GetRssFeed([FromQuery] string url)
         {
             if (string.IsNullOrWhiteSpace(url))
             {
@@ -117,13 +115,14 @@ namespace CryptoWorld.Application.Server.Controllers
 
             try
             {
-                var items = rssFeedService.GetFeedItems(url);
+                var items = await rssFeedService.GetFeedItemsAsync(url);
                 var result = items.Select(item => new {
                     item.Title,
                     item.Link,
                     item.Description,
                     item.Content,
-                    item.PublishDate
+                    item.PublishDate,
+                    item.Copyright
                 }).ToList();
 
                 return Ok(result);

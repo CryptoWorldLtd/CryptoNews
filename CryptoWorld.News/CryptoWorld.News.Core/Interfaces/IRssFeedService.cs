@@ -4,6 +4,6 @@ namespace CryptoWorld.News.Core.Interfaces
 {
     public interface IRssFeedService
     {
-        public List<RssFeedViewModel> GetFeedItems(string url);
+        public Task<List<RssResponseModel>> GetFeedItemsAsync(string url);
     }
 }

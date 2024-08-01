@@ -237,7 +237,6 @@ namespace CryptоWorld.News.Core.Services.News
                     !dbContext.Articles.Any(a => a.PublicationDate == articleModel.PublicationDate))
                 {
                     articles.Add(articleModel);
-
                 }
             }
 
@@ -245,17 +244,18 @@ namespace CryptоWorld.News.Core.Services.News
             await dbContext.SaveChangesAsync();
         }
 
-        private async Task<Source> GetOrCreateSource(string sourceName, string sourceUrl)
+        public async Task<Source> GetOrCreateSource(string sourceName, string sourceUrl)
         {
             try
             {
-                var source = dbContext.Sources.FirstOrDefault(s => s.Name == sourceName);
+                var source = await dbContext.Sources.FirstOrDefaultAsync(s => s.Url == sourceUrl);
                 if (source == null)
                 {
                     source = new()
                     {
                         Name = sourceName,
-                        Url = sourceUrl
+                        Url = sourceUrl,
+                        CreatedOn = DateTime.Now
                     };
 
                     dbContext.Sources.Add(source);
@@ -271,7 +271,7 @@ namespace CryptоWorld.News.Core.Services.News
             }
         }
 
-        private async Task<Category> GetOrCreateCategory(string categoryName)
+        public async Task<Category> GetOrCreateCategory(string categoryName)
         {
             try
             {
