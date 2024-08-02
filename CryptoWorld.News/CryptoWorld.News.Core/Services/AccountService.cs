@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity;
-using CryptoWorld.News.Core.Interfaces;
+
+﻿using CryptoWorld.News.Core.Interfaces;
 using CryptoWorld.News.Core.ViewModels;
 using CryptoWorld.News.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;

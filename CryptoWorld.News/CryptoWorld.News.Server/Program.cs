@@ -14,6 +14,7 @@ using CryptоWorld.News.Core.Services.News;
 using CryptоWorld.News.Core.ViewModels.HomePage;
 using Serilog;
 using CryptoWorld.News.Core.ExceptionHandler;
+using CryptoWorld.News.Data.Extension;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,7 +66,8 @@ builder.Services.Configure<UrlForNews>(builder.Configuration.GetSection("MoneyBg
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGrid"));
 builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
-builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddExceptionHandler<CustomExceptionHandler>()
+builder.Services.AddScoped<IRepository , Repository>();
 builder.Services.AddTransient<IAlertService, AlertService>();
 
 Log.Logger = new LoggerConfiguration()
