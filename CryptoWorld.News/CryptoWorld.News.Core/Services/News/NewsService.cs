@@ -2,6 +2,7 @@
 using CryptoWorld.News.Core.Enumerations;
 using CryptoWorld.News.Core.ViewModels.HomePage;
 using CryptoWorld.News.Data;
+using CryptoWorld.News.Data.Extension;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.ViewModels.Home_Page;
@@ -9,7 +10,6 @@ using CryptоWorld.News.Core.ViewModels.HomePage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
-using SendGrid.Helpers.Mail;
 using System.Globalization;
 using System.Text;
 
@@ -21,17 +21,17 @@ namespace CryptоWorld.News.Core.Services.News
         private readonly IBrowsingContext context;
         private List<PageNewsModel> homeNews;
         private List<string> urls;
-        private readonly ApplicationDbContext dbContext;
         private readonly UrlForNews urlForNews;
+        private readonly IRepository repository;
 
-        public NewsService(ApplicationDbContext _dbContext, IOptions<UrlForNews> urlForNewsOptions)
+        public NewsService( IOptions<UrlForNews> urlForNewsOptions, IRepository _repository)
         {
             config = Configuration.Default.WithDefaultLoader();
             context = BrowsingContext.New(config);
             homeNews = new List<PageNewsModel>();
             urls = new List<string>();
-            dbContext = _dbContext;
             urlForNews = urlForNewsOptions.Value;
+            repository = _repository;
         }
 
         public async Task<List<PageNewsModel>> GetPageNewsModelAsync(List<string> urls)
@@ -120,7 +120,7 @@ namespace CryptоWorld.News.Core.Services.News
         {
             try
             {
-                var newsQuery = dbContext.Articles.AsQueryable();
+                var newsQuery = repository.AllReadOnly<Article>().AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(category))
                     newsQuery = newsQuery.Where(n => n.Category.Name == category);
@@ -157,7 +157,7 @@ namespace CryptоWorld.News.Core.Services.News
                     NewsSorting.Latest or _ => newsQuery.OrderByDescending(n => n.PublicationDate)
                 };
 
-                var totalNewsCount = await dbContext.Articles.CountAsync();
+                var totalNewsCount = await repository.AllReadOnly<Article>().CountAsync();
 
                 var news = await newsQuery
                      .Skip((currentPage - 1) * newsPerPage)
@@ -187,8 +187,7 @@ namespace CryptоWorld.News.Core.Services.News
         {
             try
             {
-                var categories = await dbContext
-                .Categories
+                var categories = await repository.AllReadOnly<Category>()
                 .Select(c => c.Name)
                 .ToListAsync();
 
@@ -206,8 +205,8 @@ namespace CryptоWorld.News.Core.Services.News
             var category = await GetOrCreateCategory("Crypto");
             var source = await GetOrCreateSource("Money.bg", $"{urlForNews.MoneyBgUrl}");
 
-            List<Article> articles = [];
-            foreach (var article in homeNews)
+            List<Article> articles = new();
+            foreach (var article in models) 
             {
                 var articleModel = new Article()
                 {
@@ -219,36 +218,30 @@ namespace CryptоWorld.News.Core.Services.News
                 };
 
                 string formatDate = "dd.MM.yyyy HH:mm:ss";
-                bool isValidDate = DateTime.TryParseExact(article.DatePublished, formatDate, CultureInfo.InvariantCulture
-                    , DateTimeStyles.None, out DateTime publicationDate
-                );
+                bool isValidDate = DateTime.TryParseExact(article.DatePublished, formatDate, CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out DateTime publicationDate);
 
-                if (isValidDate)
-                {
-                    articleModel.PublicationDate = publicationDate;
-                }
-                else
-                {
-                    articleModel.PublicationDate = DateTime.MinValue;
-                }
-                articleModel.SourceId = source.Id;
-                articleModel.CategoryId = category.Id;
-                if (!dbContext.Articles.Any(a => a.Title == articleModel.Title) &&
-                    !dbContext.Articles.Any(a => a.PublicationDate == articleModel.PublicationDate))
+                articleModel.PublicationDate = isValidDate ? publicationDate : DateTime.MinValue;
+
+                if (!repository.AllReadOnly<Article>().Any(a => a.Title == articleModel.Title && 
+                a.PublicationDate == articleModel.PublicationDate))
                 {
                     articles.Add(articleModel);
                 }
             }
 
-            await dbContext.Articles.AddRangeAsync(articles);
-            await dbContext.SaveChangesAsync();
+            if (articles.Count > 0) 
+            {
+                await repository.AddAsync(articles);
+                await repository.SaveChangesAsync();
+            }
         }
 
         public async Task<Source> GetOrCreateSource(string sourceName, string sourceUrl)
         {
             try
             {
-                var source = await dbContext.Sources.FirstOrDefaultAsync(s => s.Url == sourceUrl);
+                var source = repository.AllReadOnly<Source>().FirstOrDefault(s => s.Name == sourceName);
                 if (source == null)
                 {
                     source = new()
@@ -258,8 +251,8 @@ namespace CryptоWorld.News.Core.Services.News
                         CreatedOn = DateTime.Now
                     };
 
-                    dbContext.Sources.Add(source);
-                    await dbContext.SaveChangesAsync();
+                   await repository.AddAsync(source);
+                    await repository.SaveChangesAsync();
                 }
 
                 return source;
@@ -275,16 +268,16 @@ namespace CryptоWorld.News.Core.Services.News
         {
             try
             {
-                var category = dbContext.Categories.FirstOrDefault(c => c.Name == categoryName);
+                var category = repository.AllReadOnly<Category>().FirstOrDefault(c => c.Name == categoryName);
                 if (category == null)
                 {
                     category = new()
                     {
                         Name = categoryName
                     };
-                    dbContext.Categories.Add(category);
-                    await dbContext.SaveChangesAsync();
-                };
+                    await repository.AddAsync(category);
+                    await repository.SaveChangesAsync();
+                }
 
                 return category;
             }
@@ -298,8 +291,7 @@ namespace CryptоWorld.News.Core.Services.News
 		{
 			var daysAgo = DateTime.Now.AddDays(-days);
 
-			var latestNews = await this.dbContext
-				.Articles
+			var latestNews = await this.repository.AllReadOnly<Article>()
 				.Where(c => c.PublicationDate >= daysAgo)
 				.Select(x => new FilterNewsModel()
 				{

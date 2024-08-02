@@ -26,14 +26,14 @@ namespace CryptoWorld.Application.Server.Controllers
             try
             {
                 int pagesCount = 7;
-                var urls = await homeNewsService.GetNewsUrlsAsync(pagesCount);
+                var urls = await _homeNewsService.GetNewsUrlsAsync(pagesCount);
 
                 if (urls == null)
                 {
                     return BadRequest();
                 }
 
-                var model = await homeNewsService.GetPageNewsModelAsync(urls);
+                var model = await _homeNewsService.GetPageNewsModelAsync(urls);
                 if (model == null)
                 {
                     Log.Warning("No news!");
@@ -45,7 +45,6 @@ namespace CryptoWorld.Application.Server.Controllers
                     return Ok(model);
                 }
             }
-
             catch (Exception ex)
             {
                 Log.Error($"Error loading home page! {ex}");
@@ -64,7 +63,7 @@ namespace CryptoWorld.Application.Server.Controllers
 
 			try
 			{
-				var result = await this.homeNewsService.GetAllNewsForCertainPeriodOfTime(days);
+				var result = await _homeNewsService.GetAllNewsForCertainPeriodOfTime(days);
 				return Ok(result);
 			}
 			catch (Exception ex)
@@ -78,7 +77,7 @@ namespace CryptoWorld.Application.Server.Controllers
         {
             try
             {
-                var queryResult = await homeNewsService.GetSortedNewsAsync(
+                var queryResult = await _homeNewsService.GetSortedNewsAsync(
                news.Category,
                news.SearchTerm,
                news.Region,
