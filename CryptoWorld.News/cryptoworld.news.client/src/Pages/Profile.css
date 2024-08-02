@@ -1,8 +1,8 @@
 .menu-trigger img{
     position: absolute;
-    top: 5px;
+    top: 20px;
     right: 20px;
-    height: 45px;
+    height: 60px;
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
@@ -10,13 +10,12 @@
 
 .dropdown-menu{
     position: absolute;
-    top: 80px;
+    top: 100px;
     right: 20px;
     background-color: #8dadc7;
     border-radius: 5%;
     padding: 10px 20px;
     width: 200px;
-    display: block;
 }
 
 .dropdown-menu::before{
@@ -41,29 +40,19 @@ h3{
     line-height: 1.2rem;
 }
 
-.dropdown-menu ul {
-    list-style-type: none; 
-    padding: 0;
-    margin: 0;
-    display: inline;
-}
-
 .dropdown-menu ul li{
     padding: 10px 0;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
-    
 }
 
 .dropdown-menu ul li:hover a{
-    color: rgb(240, 116, 33);
+    color:rgb(94, 89, 89);
     cursor: pointer;
 }
 
-.dropdownItem {
-    display: flex; 
-    align-items: center; 
-    cursor: pointer;
-    margin: 10px 0; 
+.dropdown-item{
+    display: flex;
+    margin: 10px auto;
 }
 
 .dropdownItem img{
@@ -72,16 +61,14 @@ h3{
     opacity: 0.5;
     transition: var(--speed);
     background-color: #8dadc7;
-    cursor: pointer;
 }
 
 .dropdownItem i{
-    margin: 0 20px;
-    margin-left: 0%;
+    margin: 0 30px;
     color:rgb(94, 89, 89);
 }
 
-.dropdownItem a{
+.dropdown-item a{
     max-width: 100px;
     margin-left: 10px;
     transition: var(--speed);

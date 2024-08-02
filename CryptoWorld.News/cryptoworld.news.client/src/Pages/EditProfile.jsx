@@ -5,7 +5,7 @@ import ChangePassword from './ChangePassword';
 
 const EditProfile = () => {
   const location = useLocation();
-  const formType = location.pathname.includes('ChangeEmail') ? 'email' : 'password';
+  const formType = location.pathname.includes('changeEmail') ? 'email' : 'password';
 
   return (
     <div>

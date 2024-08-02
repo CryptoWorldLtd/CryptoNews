@@ -11,13 +11,13 @@ const Navbar = () => {
                 <NavLink to="/" className="logo">
                     <img alt='logo' src={Logo}></img>
                 </NavLink>
-                <NavLink to="/News" className={({ isActive }) => isActive ? "active" : ""}>
+                <NavLink to="/news" className={({ isActive }) => isActive ? "active" : ""}>
                     News
                 </NavLink>
-                <NavLink to="/Login" className={({ isActive }) => isActive ? "active" : ""}>
+                <NavLink to="/login" className={({ isActive }) => isActive ? "active" : ""}>
                     Login
                 </NavLink>
-                <NavLink to="/Register" className={({ isActive }) => isActive ? "active" : ""}>
+                <NavLink to="/register" className={({ isActive }) => isActive ? "active" : ""}>
                     Register
                 </NavLink>
                 <Profile/>
