@@ -3,7 +3,6 @@ using CryptоWorld.News.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
@@ -50,7 +49,7 @@ namespace CryptoWorld.Application.Server.Controllers
 
 		[HttpGet("news")]
 		[AllowAnonymous]
-		public async Task<IActionResult> NewsForCertainPeriod(int days)
+        public async Task<IActionResult> NewsForCertainPeriod(int days)
 		{
 			if (!ModelState.IsValid)
 			{

@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { NavLink as Link } from 'react-router-dom';
 import axios from 'axios';
-import {  faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock , faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import './Login.module.css';
 import { toast } from 'react-hot-toast';
 
@@ -43,6 +43,8 @@ const Login = () => {
         }
       });
       console.log('Response:', response.data);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('refresh_token', response.data.refreshToken);
       navigate("/");
       toast.success('Login successful!');
     } catch (error) {
@@ -64,11 +66,11 @@ const Login = () => {
             <i>
               <FontAwesomeIcon icon={faEnvelope} />
             </i>
-            <input 
-              type="email" 
-              placeholder="Email" 
+            <input
+              type="email"
+              placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} 
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
         </div>
@@ -77,14 +79,14 @@ const Login = () => {
             <i>
               <FontAwesomeIcon icon={faLock} />
             </i>
-            <input 
-              type={showPassword ? "text" : "password"} 
-              placeholder="Password" 
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} 
+              onChange={(e) => setPassword(e.target.value)}
             />
             <i onClick={handlePasswordVisibility} className='toggle-password'>
-              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye}/>
+              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
             </i>
           </div>
         </div>

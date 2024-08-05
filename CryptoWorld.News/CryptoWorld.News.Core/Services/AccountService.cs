@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 namespace CryptoWorld.News.Core.Services
 {
@@ -86,11 +87,17 @@ namespace CryptoWorld.News.Core.Services
                     throw new ArgumentException("Email address not confirmed!");
 
                 var token = GenerateJwtToken(user);
+                var refreshToken = GenerateRefreshToken();
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(2);
+                await _userManager.UpdateAsync(user);
+
                 return new LoginResponseModel()
                 {
                     Token = token,
                     Email = model.Email,
-                    Id = user.Id.ToString()
+                    Id = user.Id.ToString(),
+                    RefreshToken = refreshToken
                 };
             }
             catch (ArgumentException ex)
@@ -201,7 +208,7 @@ namespace CryptoWorld.News.Core.Services
 
                 var token = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(30),
+                    expires: DateTime.Now.AddMinutes(60),
                     signingCredentials: creds);
 
                 return new JwtSecurityTokenHandler().WriteToken(token);
@@ -250,6 +257,70 @@ namespace CryptoWorld.News.Core.Services
                 Log.Error($"An error occurred during generating confirmation link! {ex}");
                 throw new Exception($"Error in GenerateConfirmationLink {ex}");
             }
+        }
+
+        public async Task<LoginResponseModel> RefreshTokenAsync(string refreshToken)
+        {
+            var principal = GetPrincipalFromExpiredToken(refreshToken);
+            if (principal == null)
+            {
+                throw new ArgumentException("No refresh token");
+                ;
+            }
+
+            var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                throw new ArgumentException("Invalid refresh token.");
+
+            }
+
+            var newAccessToken = GenerateJwtToken(user);
+            var newRefreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            await _userManager.UpdateAsync(user);
+
+            return new LoginResponseModel
+            {
+                Token = newAccessToken,
+                RefreshToken = newRefreshToken,
+                Email = user.Email,
+                Id = user.Id.ToString()
+            };
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }                
+        }
+
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
         }
     }
 }
