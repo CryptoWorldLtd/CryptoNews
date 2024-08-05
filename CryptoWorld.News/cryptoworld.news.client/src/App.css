@@ -15,6 +15,7 @@ th, td {
     padding-right: 1rem;
 }
 
+
 .menu-trigger img{
     position: absolute;
     top: 10px;
@@ -23,27 +24,6 @@ th, td {
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
-}
-
-.dropdown-menu{
-    position: absolute;
-    top: 100px;
-    right: 20px;
-    background-color: #8dadc7;
-    border-radius: 5%;
-    padding: 10px 20px;
-    width: 200px;
-}
-
-.dropdown-menu::before{
-    content: '';
-    position: absolute;
-    top: -5px;
-    right: 20px;
-    height: 20px;
-    width: 20px;
-    background-color: #8dadc7;
-    transform: rotate(45deg);
 }
 
 .dropdown-menu.active{
@@ -59,47 +39,6 @@ th, td {
     transform: translateY(-20px);
     transition: var(--speed) ease;
 }
-
-h3{
-    width: 100%;
-    text-align: center;
-    font-size: 18px;
-    padding: 20px 0;
-    font-weight: 500;
-    font-size: 18px;
-    color: rgb(94, 89, 89);
-    line-height: 1.2rem;
-}
-
-.dropdown-menu ul li{
-    padding: 10px 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.dropdown-menu ul li:hover a{
-    color:rgb(94, 89, 89);
-    cursor: pointer;
-}
-
-.dropdown-item{
-    display: flex;
-    margin: 10px auto;
-}
-
-.dropdownItem img{
-    max-width: 20px;
-    margin-right: 10px;
-    opacity: 0.5;
-    transition: var(--speed);
-    background-color: #8dadc7;
-}
-
-.dropdown-item a{
-    max-width: 100px;
-    margin-left: 10px;
-    transition: var(--speed);
-}
-
 
 #particles canvas {
     z-index: -1;
