@@ -13,6 +13,7 @@ import ResetPassword from './Pages/ResetPassword';
 import News from './Pages/News';
 import ParticlesComponent from './Components/Particles';
 import CreateNews from './Pages/CreateNews.jsx';
+import AdminPage from'./Pages/AdminPage.jsx'
 import { Toaster } from 'react-hot-toast';
 function App() {
     return (
@@ -33,6 +34,8 @@ function App() {
                     <Route path="/resetPassword/:id/:email" element={<ResetPassword />} />
                     <Route path="/news" element={<News />} />
                     <Route path="/createNews" element={<CreateNews />} />
+                    <Route path="/adminPage" element = {<AdminPage/>} />
+
                 </Routes>
             </Router>
             <Toaster />

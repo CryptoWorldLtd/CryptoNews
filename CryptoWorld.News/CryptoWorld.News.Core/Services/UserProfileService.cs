@@ -1,14 +1,8 @@
-﻿using Azure.Core;
-using CryptoWorld.News.Data;
+﻿using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.ViewModels;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace CryptоWorld.News.Core.Services
 {
