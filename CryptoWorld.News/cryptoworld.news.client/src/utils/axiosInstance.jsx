@@ -12,11 +12,11 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem('token');
     if (token) {
       config.headers['Authorization'] = 'Bearer ' + token;
-      //  config.headers['www-authenticate'] = token;
     }
     return config;
   },
   (error) => {
+    console.log(error);
     return Promise.reject(error);
   }
 );
@@ -33,7 +33,7 @@ axiosInstance.interceptors.response.use(
         const token = localStorage.getItem('token');
         const refreshToken = localStorage.getItem('refreshToken');
         try {
-          const requestTokens = await axios.post('https://localhost:7249/Account/refresh-token', {
+          const response = await axios.post('https://localhost:7249/Account/refresh-token', {
             token: token,
             refreshToken: refreshToken
           }, {
@@ -42,8 +42,8 @@ axiosInstance.interceptors.response.use(
             }
           });
 
-          const newToken = requestTokens.token;
-          const newRefreshToken = requestTokens.refreshToken
+          const newToken = response.data.token;
+          const newRefreshToken = response.data.refreshToken
           localStorage.token = newToken;
           localStorage.refreshToken = newRefreshToken;
 
@@ -53,6 +53,7 @@ axiosInstance.interceptors.response.use(
         }
       }
     }
+    console.log(err);
     return Promise.reject(err);
   }
 )

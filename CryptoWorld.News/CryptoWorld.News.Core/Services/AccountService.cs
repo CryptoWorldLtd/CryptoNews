@@ -264,17 +264,15 @@ namespace CryptoWorld.News.Core.Services
             var principal = GetPrincipalFromExpiredToken(accessToken);
             if (principal == null)
             {
-                throw new ArgumentException("No access token");
-                ;
+                throw new ArgumentException("No access token");                
             }
 
             var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-            {
-                throw new ArgumentException("Invalid token.");
-
-            }
+                if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+                {
+                    throw new ArgumentException("Invalid token.");
+                }
 
             var newAccessToken = GenerateJwtToken(user);
             var newRefreshToken = GenerateRefreshToken();

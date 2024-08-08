@@ -4,10 +4,6 @@ import Filter from '../Components/Filter';
 import '../Pages/News.css';
 import axiosInstance from '../utils/axiosInstance';
 import { NavLink as Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
-
-
-
 
 const News = () => {
     const [news, setNews] = useState([]);
@@ -16,56 +12,6 @@ const News = () => {
     const [hasMore, setHasMore] = useState(true);
     const [initialized, setInitialized] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-    const navigate = useNavigate();
-
-
-    axiosInstance.interceptors.request.use(
-        config => {
-            const token = localStorage.getItem('token');
-            if (token) {
-                config.headers['Authorization'] = 'Bearer ' + token;
-            }
-            return config;
-        },
-        error => {
-            return Promise.reject(error);
-        }
-    );
-
-    axiosInstance.interceptors.response.use(
-        response => {
-            return response;
-        },
-        async error => {
-            const originalRequest = error.config;
-            if (error.response.status === 401 && !originalRequest._retry) {
-                originalRequest._retry = true;
-                try {
-                    const response = await axios.post('https://localhost:7249/account/refresh-token', {
-                        token: localStorage.getItem('token'),
-                        refreshToken: localStorage.getItem('refresh_token')
-                    }, {
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    //const response = await axios.post('https://localhost:7249/account/refresh-token', {}, { withCredentials: true });
-                    const newToken = response.data.token;
-                    localStorage.setItem('token', newToken);
-                    localStorage.setItem('refresh_token', response.data.refreshToken);
-                    axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + newToken;
-                    originalRequest.headers['Authorization'] = 'Bearer ' + newToken;
-                    return axiosInstance(originalRequest);
-                } catch (err) {
-                    console.error('Token refresh failed', err);
-                    navigate('/Login')
-                    setIsAuthenticated(false);
-                }
-            }
-            return Promise.reject(error);
-        }
-    );
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -107,9 +53,10 @@ const News = () => {
         }).toString();
         window.history.pushState(null, '', `?${query}`);
 
-        axios.get(`https://localhost:7249/News/filter?${query}`)
+        axiosInstance.get(`https://localhost:7249/News/filter?${query}`)
             .then(response => {
                 const fetchedNews = response.data;
+                setIsAuthenticated(true);
                 if (fetchedNews.length < 1) {
                     setHasMore(false);
                 }
@@ -118,7 +65,9 @@ const News = () => {
                 }
                 setNews(fetchedNews);
             })
-            .catch(error => console.error('Error fetching news', error));
+            .catch(error =>
+                console.error('Error fetching news', error),
+                setIsAuthenticated(false));
     };
 
     const handleFilterChange = (newFilters) => {
