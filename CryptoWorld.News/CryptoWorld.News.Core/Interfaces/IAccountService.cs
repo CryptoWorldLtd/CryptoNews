@@ -11,8 +11,6 @@ namespace CryptoWorld.News.Core.Interfaces
         Task<IdentityResult> VerifyEmailAsync(string token, string email);
         Task<IdentityResult> PasswordResetAsync(string token, string email, string newPassword);
         Task<IdentityResult> GeneratePasswordResetToken(string email);
-        Task<LoginResponseModel> RefreshTokenAsync(string refreshToken);
-        public string GenerateRefreshToken();
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+        Task<TokenRequestModel> RefreshTokenAsync(string accessToken, string refreshToken);        
     }
 }

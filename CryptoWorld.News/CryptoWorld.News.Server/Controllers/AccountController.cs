@@ -172,7 +172,7 @@ namespace CryptoWorld.Application.Server.Controllers
                 return BadRequest("Invalid refresh token.");
             }
 
-            var response = await _accountService.RefreshTokenAsync(model.RefreshToken);
+            var response = await _accountService.RefreshTokenAsync(model.Token ,model.RefreshToken);
             if (response == null)
             {
                 return BadRequest("Invalid refresh token.");

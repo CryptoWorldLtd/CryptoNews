@@ -259,12 +259,12 @@ namespace CryptoWorld.News.Core.Services
             }
         }
 
-        public async Task<LoginResponseModel> RefreshTokenAsync(string refreshToken)
+        public async Task<TokenRequestModel> RefreshTokenAsync(string accessToken ,string refreshToken)
         {
-            var principal = GetPrincipalFromExpiredToken(refreshToken);
+            var principal = GetPrincipalFromExpiredToken(accessToken);
             if (principal == null)
             {
-                throw new ArgumentException("No refresh token");
+                throw new ArgumentException("No access token");
                 ;
             }
 
@@ -272,7 +272,7 @@ namespace CryptoWorld.News.Core.Services
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             {
-                throw new ArgumentException("Invalid refresh token.");
+                throw new ArgumentException("Invalid token.");
 
             }
 
@@ -280,18 +280,17 @@ namespace CryptoWorld.News.Core.Services
             var newRefreshToken = GenerateRefreshToken();
 
             user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(2);
             await _userManager.UpdateAsync(user);
 
-            return new LoginResponseModel
+            return new TokenRequestModel
             {
                 Token = newAccessToken,
-                RefreshToken = newRefreshToken,
-                Email = user.Email,
-                Id = user.Id.ToString()
+                RefreshToken = newRefreshToken,               
             };
         }
 
-        public string GenerateRefreshToken()
+        private string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
             using (var rng = RandomNumberGenerator.Create())
@@ -301,7 +300,7 @@ namespace CryptoWorld.News.Core.Services
             }                
         }
 
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
