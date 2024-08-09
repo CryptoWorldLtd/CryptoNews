@@ -4,7 +4,6 @@ using CryptoWorld.News.Core.ViewModels;
 using CryptoWorld.News.Core.Interfaces;
 using Serilog;
 
-
 namespace CryptoWorld.Application.Server.Controllers
 {
     public class AccountController : BaseApiController
@@ -52,11 +51,11 @@ namespace CryptoWorld.Application.Server.Controllers
         public async Task<ActionResult<LoginResponseModel>> Login([FromBody] LoginRequestModel model)
         {
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
-                
+
             try
             {
                 var token = await _accountService.LoginAsync(model);
-                if(token != null)
+                if (token != null)
                 {
                     Log.Information("Logging of user is successfully");
                     return Ok(token);
@@ -101,7 +100,7 @@ namespace CryptoWorld.Application.Server.Controllers
                 Log.Error($"Unable to verify email! {ex}");
                 return BadRequest(ex.Message);
             }
-               
+
         }
 
         [HttpPost("forgotpassword")]
@@ -130,7 +129,7 @@ namespace CryptoWorld.Application.Server.Controllers
                 Log.Error($"Error sending email for changing password! {ex}");
                 return BadRequest();
             }
-            
+
         }
 
         [HttpPost("resetpassword")]
@@ -157,11 +156,30 @@ namespace CryptoWorld.Application.Server.Controllers
                     return Redirect("https://localhost:5173/login");
                 }
             }
-            catch ( Exception ex)
+            catch (Exception ex)
             {
                 Log.Error($"Error setting new password! {ex}");
                 return BadRequest();
             }
         }
+
+        [HttpPost("refresh-token")]
+        [AllowAnonymous]
+        public async Task<ActionResult<LoginResponseModel>> RefreshToken([FromBody] TokenRequestModel model)
+        {
+            if (string.IsNullOrEmpty(model.RefreshToken))
+            {
+                return BadRequest("Invalid refresh token.");
+            }
+
+            var response = await _accountService.RefreshTokenAsync(model.Token ,model.RefreshToken);
+            if (response == null)
+            {
+                return BadRequest("Invalid refresh token.");
+            }
+
+            return Ok(response);
+        }
+
     }
 }

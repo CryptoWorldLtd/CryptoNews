@@ -28,6 +28,7 @@ const Profile = () => {
     const handleNavigation = (path) => {
         setOpen(false);
         navigate(path);
+        localStorage.removeItem('token');
     };
 
     return (
