@@ -24,7 +24,6 @@ namespace CryptoWorld.News.Core.Services
         private int _accessTokenExpirationMinutes;
         private int _refreshTokenExpirationDays;
 
-
         public AccountService(
                 UserManager<ApplicationUser> userManager,
                 SignInManager<ApplicationUser> signInManager,
