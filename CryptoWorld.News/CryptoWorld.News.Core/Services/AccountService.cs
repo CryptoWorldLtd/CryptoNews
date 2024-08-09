@@ -21,6 +21,9 @@ namespace CryptoWorld.News.Core.Services
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSenderService _emailSenderService;
         private string _secretKey;
+        private int _accessTokenExpirationMinutes;
+        private int _refreshTokenExpirationDays;
+
 
         public AccountService(
                 UserManager<ApplicationUser> userManager,
@@ -30,7 +33,9 @@ namespace CryptoWorld.News.Core.Services
             )
         {
             _userManager = userManager;
-            _secretKey = config["JWT:secretKey"];
+            _secretKey = config["Jwt:secretKey"];
+            _accessTokenExpirationMinutes = int.Parse(config["JWT:AccessTokenExpirationMinutes"]);
+            _refreshTokenExpirationDays = int.Parse(config["JWT:RefreshTokenExpirationDays"]);
             _signInManager = signInManager;
             _emailSenderService = emailSenderService;
         }
@@ -89,7 +94,7 @@ namespace CryptoWorld.News.Core.Services
                 var token = GenerateJwtToken(user);
                 var refreshToken = GenerateRefreshToken();
                 user.RefreshToken = refreshToken;
-                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(2);
+                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(_refreshTokenExpirationDays);
                 await _userManager.UpdateAsync(user);
 
                 return new LoginResponseModel()
@@ -208,7 +213,7 @@ namespace CryptoWorld.News.Core.Services
 
                 var token = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(60),
+                    expires: DateTime.Now.AddMinutes(_accessTokenExpirationMinutes),
                     signingCredentials: creds);
 
                 return new JwtSecurityTokenHandler().WriteToken(token);
@@ -278,7 +283,7 @@ namespace CryptoWorld.News.Core.Services
             var newRefreshToken = GenerateRefreshToken();
 
             user.RefreshToken = newRefreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(2);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(_refreshTokenExpirationDays);
             await _userManager.UpdateAsync(user);
 
             return new TokenRequestModel
