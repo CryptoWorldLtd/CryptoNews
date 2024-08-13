@@ -3,9 +3,11 @@ using AngleSharp.Html.Parser;
 using CryptoWorld.News.Core.Interfaces;
 using CryptoWorld.News.Core.ViewModels;
 using CryptoWorld.News.Data;
+using CryptoWorld.News.Data.Extension;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using Ganss.Xss;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
 using System.ServiceModel.Syndication;
@@ -20,14 +22,14 @@ namespace CryptoWorld.News.Core.Services.News
 
         private readonly List<string> rssFeedUrls;
         private readonly List<string> trustedSources;
-        private readonly ApplicationDbContext dbContext;
+        private readonly IRepository repository;
         private readonly INewsService newsService;
 
-        public RssFeedService(IOptions<RssFeedSettings> rssSettings, ApplicationDbContext _dbContext, INewsService _newsService)
+        public RssFeedService(IOptions<RssFeedSettings> rssSettings, IRepository _repository, INewsService _newsService)
         {
             rssFeedUrls = rssSettings.Value.RssFeedUrls;
             trustedSources = rssSettings.Value.TrustedSources;
-            dbContext = _dbContext;
+            repository = _repository;  
             newsService = _newsService;
         }
 
@@ -110,17 +112,16 @@ namespace CryptoWorld.News.Core.Services.News
                     Link = model.Link,
                     Content = model.Content,
                     PublicationDate = publicationDate,
-                    Source = source,
                     Description = model.Description,
                     SourceId = source.Id,
-                    Category = category,
+                    CategoryId = category.Id,
                     CreatedOn = DateTime.Now
                 };
 
-                if (!dbContext.Articles.Any(a => a.Title == article.Title))
+                if (!repository.AllReadOnly<Article>().Any(a => a.Title == article.Title))
                 {
-                    await dbContext.Articles.AddAsync(article);
-                    await dbContext.SaveChangesAsync();
+                    await repository.AddAsync(article);
+                    await repository.SaveChangesAsync();
                 }
             }
         }
