@@ -69,7 +69,7 @@ builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddScoped<IRepository , Repository>();
 builder.Services.AddTransient<IAlertService, AlertService>();
-builder.Services.AddScoped<IRssFeedService, RssFeedService>();
+builder.Services.AddHttpClient<IRssFeedService, RssFeedService>();
 builder.Services.Configure<RssFeedSettings>(builder.Configuration.GetSection("RssFeedSettings"));
 
 Log.Logger = new LoggerConfiguration()

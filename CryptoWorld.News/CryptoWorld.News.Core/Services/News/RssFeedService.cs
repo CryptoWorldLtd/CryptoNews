@@ -1,13 +1,9 @@
 ﻿using AngleSharp;
-using AngleSharp.Html.Parser;
 using CryptoWorld.News.Core.Interfaces;
 using CryptoWorld.News.Core.ViewModels;
-using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Extension;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
-using Ganss.Xss;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
 using System.ServiceModel.Syndication;
@@ -24,13 +20,18 @@ namespace CryptoWorld.News.Core.Services.News
         private readonly List<string> trustedSources;
         private readonly IRepository repository;
         private readonly INewsService newsService;
+        private readonly HttpClient httpClient;
 
-        public RssFeedService(IOptions<RssFeedSettings> rssSettings, IRepository _repository, INewsService _newsService)
+        public RssFeedService(IOptions<RssFeedSettings> rssSettings,
+            IRepository _repository,
+            INewsService _newsService,
+            HttpClient _httpClient)
         {
             rssFeedUrls = rssSettings.Value.RssFeedUrls;
             trustedSources = rssSettings.Value.TrustedSources;
             repository = _repository;  
             newsService = _newsService;
+            httpClient = _httpClient;
         }
 
         public async Task<List<RssResponseModel>> GetFeedItemsAsync()
@@ -47,7 +48,6 @@ namespace CryptoWorld.News.Core.Services.News
 
                 foreach (var url in rssFeedUrls)
                 {
-                    using var httpClient = new HttpClient();
                     var response = await httpClient.GetStringAsync(url);
 
                     using var stringReader = new System.IO.StringReader(response);
