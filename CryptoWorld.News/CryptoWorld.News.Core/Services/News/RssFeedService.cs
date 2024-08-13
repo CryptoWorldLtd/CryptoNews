@@ -6,6 +6,7 @@ using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using Microsoft.Extensions.Options;
 using Serilog;
+using System.Net.Http;
 using System.ServiceModel.Syndication;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -20,18 +21,18 @@ namespace CryptoWorld.News.Core.Services.News
         private readonly List<string> trustedSources;
         private readonly IRepository repository;
         private readonly INewsService newsService;
-        private readonly HttpClient httpClient;
+        private readonly IHttpClientFactory httpClientFactory;
 
         public RssFeedService(IOptions<RssFeedSettings> rssSettings,
             IRepository _repository,
             INewsService _newsService,
-            HttpClient _httpClient)
+            IHttpClientFactory _httpClientFactory)
         {
             rssFeedUrls = rssSettings.Value.RssFeedUrls;
             trustedSources = rssSettings.Value.TrustedSources;
             repository = _repository;  
             newsService = _newsService;
-            httpClient = _httpClient;
+            httpClientFactory = _httpClientFactory;
         }
 
         public async Task<List<RssResponseModel>> GetFeedItemsAsync()
@@ -40,6 +41,8 @@ namespace CryptoWorld.News.Core.Services.News
 
             try
             {
+                var httpClient = httpClientFactory.CreateClient();
+
                 if (rssFeedUrls == null || !rssFeedUrls.Any())
                 {
                     Log.Error("RSS feed URLs are not configured or are empty.");
@@ -85,9 +88,17 @@ namespace CryptoWorld.News.Core.Services.News
                     await CreateNewsFromRssFeedAsync(feedItems);
                 }
             }
+            catch (HttpRequestException httpEx)
+            {
+                Log.Error($"HTTP error fetching RSS feed: {httpEx.Message}");
+            }
+            catch (XmlException xmlEx)
+            {
+                Log.Error($"XML parsing error: {xmlEx.Message}");
+            }
             catch (Exception ex)
             {
-                Log.Error($"Error fetching RSS feed: {ex.Message}");
+                Log.Error($"Unexpected error fetching RSS feed: : {ex.Message}");
             }
 
             return feedItems;
