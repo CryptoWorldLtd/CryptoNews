@@ -29,16 +29,19 @@ namespace CryptoWorld.News.Data.Extension
             }
         }
 
-        public async Task AddRangeAsync<T>(IEnumerable<T> entities)
+        public async Task AddRangeAsync<T>(IEnumerable<T> entities) where T : class
         {
+            if (entities == null || !entities.Any())
+                throw new ArgumentException("The collection of entities cannot be null or empty.");
+
             try
             {
-               await dbContext.AddRangeAsync(entities);
+                await DbSet<T>().AddRangeAsync(entities);
             }
             catch (Exception ex)
             {
-                Log.Error("Error while adding range in db!");
-                throw new Exception($"Error while adding range in db ,{ex}");
+                Log.Error("Error while adding entities to the database");
+                throw new Exception($"Error while adding entities to the database, {ex}");
             }
         }
 

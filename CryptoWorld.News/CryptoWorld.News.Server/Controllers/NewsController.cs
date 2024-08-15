@@ -53,8 +53,8 @@ namespace CryptoWorld.Application.Server.Controllers
         }
 
 		[HttpGet("news")]
-		[AllowAnonymous]
-		public async Task<IActionResult> NewsForCertainPeriod(int days)
+		[Authorize]
+        public async Task<IActionResult> NewsForCertainPeriod(int days)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -73,6 +73,7 @@ namespace CryptoWorld.Application.Server.Controllers
 		}
 
 		[HttpGet("filter")]
+        [Authorize]
         public async Task<IActionResult> GetSortedNewsAsync([FromQuery] FilteredNewsModel news)
         {
             try

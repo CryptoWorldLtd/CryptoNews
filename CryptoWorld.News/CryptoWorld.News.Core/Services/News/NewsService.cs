@@ -24,7 +24,7 @@ namespace CryptоWorld.News.Core.Services.News
         private readonly UrlForNews urlForNews;
         private readonly IRepository repository;
 
-        public NewsService( IOptions<UrlForNews> urlForNewsOptions, IRepository _repository)
+        public NewsService(IOptions<UrlForNews> urlForNewsOptions, IRepository _repository)
         {
             config = Configuration.Default.WithDefaultLoader();
             context = BrowsingContext.New(config);
@@ -206,7 +206,7 @@ namespace CryptоWorld.News.Core.Services.News
             var source = await GetOrCreateSource("Money.bg", $"{urlForNews.MoneyBgUrl}");
 
             List<Article> articles = new();
-            foreach (var article in models) 
+            foreach (var article in models)
             {
                 var articleModel = new Article()
                 {
@@ -223,16 +223,16 @@ namespace CryptоWorld.News.Core.Services.News
 
                 articleModel.PublicationDate = isValidDate ? publicationDate : DateTime.MinValue;
 
-                if (!repository.AllReadOnly<Article>().Any(a => a.Title == articleModel.Title && 
+                if (!repository.AllReadOnly<Article>().Any(a => a.Title == articleModel.Title &&
                 a.PublicationDate == articleModel.PublicationDate))
                 {
                     articles.Add(articleModel);
                 }
             }
 
-            if (articles.Count > 0) 
+            if (articles.Count > 0)
             {
-                await repository.AddAsync(articles);
+                await repository.AddRangeAsync(articles);
                 await repository.SaveChangesAsync();
             }
         }
@@ -251,7 +251,7 @@ namespace CryptоWorld.News.Core.Services.News
                         CreatedOn = DateTime.Now
                     };
 
-                   await repository.AddAsync(source);
+                    await repository.AddAsync(source);
                     await repository.SaveChangesAsync();
                 }
 
@@ -287,22 +287,22 @@ namespace CryptоWorld.News.Core.Services.News
                 throw new Exception($"Error in GetOrCreateCategory {ex}");
             }
         }
-		public async Task<List<FilterNewsModel>> GetAllNewsForCertainPeriodOfTime(int days)
-		{
-			var daysAgo = DateTime.Now.AddDays(-days);
+        public async Task<List<FilterNewsModel>> GetAllNewsForCertainPeriodOfTime(int days)
+        {
+            var daysAgo = DateTime.Now.AddDays(-days);
 
-			var latestNews = await this.repository.AllReadOnly<Article>()
-				.Where(c => c.PublicationDate >= daysAgo)
-				.Select(x => new FilterNewsModel()
-				{
-					Title = x.Title,
-					ImageUrl = x.ImageUrl,
-					Content = x.Content,
-					DatePublished = x.PublicationDate
-				})
-				.ToListAsync();
+            var latestNews = await this.repository.AllReadOnly<Article>()
+                .Where(c => c.PublicationDate >= daysAgo)
+                .Select(x => new FilterNewsModel()
+                {
+                    Title = x.Title,
+                    ImageUrl = x.ImageUrl,
+                    Content = x.Content,
+                    DatePublished = x.PublicationDate
+                })
+                .ToListAsync();
 
-			return latestNews;
-		}
-	}
+            return latestNews;
+        }
+    }
 }

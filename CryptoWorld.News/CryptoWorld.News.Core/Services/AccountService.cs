@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 namespace CryptoWorld.News.Core.Services
 {
@@ -20,6 +21,8 @@ namespace CryptoWorld.News.Core.Services
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSenderService _emailSenderService;
         private string _secretKey;
+        private int _accessTokenExpirationMinutes;
+        private int _refreshTokenExpirationDays;
 
         public AccountService(
                 UserManager<ApplicationUser> userManager,
@@ -29,7 +32,9 @@ namespace CryptoWorld.News.Core.Services
             )
         {
             _userManager = userManager;
-            _secretKey = config["JWT:secretKey"];
+            _secretKey = config["Jwt:secretKey"];
+            _accessTokenExpirationMinutes = int.Parse(config["JWT:AccessTokenExpirationMinutes"]);
+            _refreshTokenExpirationDays = int.Parse(config["JWT:RefreshTokenExpirationDays"]);
             _signInManager = signInManager;
             _emailSenderService = emailSenderService;
         }
@@ -86,11 +91,17 @@ namespace CryptoWorld.News.Core.Services
                     throw new ArgumentException("Email address not confirmed!");
 
                 var token = GenerateJwtToken(user);
+                var refreshToken = GenerateRefreshToken();
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(_refreshTokenExpirationDays);
+                await _userManager.UpdateAsync(user);
+
                 return new LoginResponseModel()
                 {
                     Token = token,
                     Email = model.Email,
-                    Id = user.Id.ToString()
+                    Id = user.Id.ToString(),
+                    RefreshToken = refreshToken
                 };
             }
             catch (ArgumentException ex)
@@ -201,7 +212,7 @@ namespace CryptoWorld.News.Core.Services
 
                 var token = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(30),
+                    expires: DateTime.Now.AddMinutes(_accessTokenExpirationMinutes),
                     signingCredentials: creds);
 
                 return new JwtSecurityTokenHandler().WriteToken(token);
@@ -250,6 +261,67 @@ namespace CryptoWorld.News.Core.Services
                 Log.Error($"An error occurred during generating confirmation link! {ex}");
                 throw new Exception($"Error in GenerateConfirmationLink {ex}");
             }
+        }
+
+        public async Task<TokenRequestModel> RefreshTokenAsync(string accessToken ,string refreshToken)
+        {
+            var principal = GetPrincipalFromExpiredToken(accessToken);
+            if (principal == null)
+            {
+                throw new ArgumentException("No access token");                
+            }
+
+            var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
+                if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+                {
+                    throw new ArgumentException("Invalid token.");
+                }
+
+            var newAccessToken = GenerateJwtToken(user);
+            var newRefreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(_refreshTokenExpirationDays);
+            await _userManager.UpdateAsync(user);
+
+            return new TokenRequestModel
+            {
+                Token = newAccessToken,
+                RefreshToken = newRefreshToken,               
+            };
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }                
+        }
+
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
         }
     }
 }

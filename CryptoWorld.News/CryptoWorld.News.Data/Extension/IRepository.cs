@@ -9,7 +9,7 @@
         Task DeleteAsync<T>(T entity) where T : class;
         Task UpdateAsync<T>(T entity) where T : class;
         Task SaveChangesAsync();
-        Task AddRangeAsync<T>(IEnumerable<T> entities);
+        Task AddRangeAsync<T>(IEnumerable<T> entities) where T : class;
         IQueryable<T> AllReadOnly<T>() where T : class;
 
         

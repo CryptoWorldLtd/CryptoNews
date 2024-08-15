@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using CryptoWorld.News.Core.ExceptionHandler;
+using CryptoWorld.News.Data.Extension;
+using CryptoWorld.News.Data.Seeding;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +38,9 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.SignIn.RequireConfirmedAccount = false;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddRoles<ApplicationRole>();
+    
 builder.Services
     .AddAuthentication(
                 options =>
@@ -84,12 +89,14 @@ var app = builder.Build();
 //Apply migrations after project run
 using (var serviceScope = app.Services.CreateScope())
 {
+    var services = serviceScope.ServiceProvider;
     if (app.Environment.IsDevelopment())
     {
-        try
+        try 
         {
             var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             dbContext.Database.Migrate();
+            await Seeder.SeedAsync(services);
         }
         catch (Exception ex)
         {
