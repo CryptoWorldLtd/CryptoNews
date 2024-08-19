@@ -237,7 +237,7 @@ namespace CryptоWorld.News.Core.Services.News
             }
         }
 
-        private async Task<Source> GetOrCreateSource(string sourceName, string sourceUrl)
+        public async Task<Source> GetOrCreateSource(string sourceName, string sourceUrl)
         {
             try
             {
@@ -247,7 +247,8 @@ namespace CryptоWorld.News.Core.Services.News
                     source = new()
                     {
                         Name = sourceName,
-                        Url = sourceUrl
+                        Url = sourceUrl,
+                        CreatedOn = DateTime.Now
                     };
 
                     await repository.AddAsync(source);
@@ -263,7 +264,7 @@ namespace CryptоWorld.News.Core.Services.News
             }
         }
 
-        private async Task<Category> GetOrCreateCategory(string categoryName)
+        public async Task<Category> GetOrCreateCategory(string categoryName)
         {
             try
             {

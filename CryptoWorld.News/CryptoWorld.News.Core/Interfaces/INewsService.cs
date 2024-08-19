@@ -1,5 +1,6 @@
 ﻿using CryptoWorld.News.Core.Enumerations;
 using CryptoWorld.News.Core.ViewModels.HomePage;
+using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.ViewModels.Home_Page;
 
 namespace CryptоWorld.News.Core.Interfaces
@@ -19,5 +20,7 @@ namespace CryptоWorld.News.Core.Interfaces
            int currentPage = 1,
            int newsPerPage = 5);
         public Task<List<FilterNewsModel>> GetAllNewsForCertainPeriodOfTime(int days);
+        public Task<Source> GetOrCreateSource(string sourceName, string sourceUrl);
+        public Task<Category> GetOrCreateCategory(string categoryName);
     }
 }

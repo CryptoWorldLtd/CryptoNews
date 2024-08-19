@@ -1,4 +1,5 @@
-﻿using CryptoWorld.News.Core.ViewModels.HomePage;
+﻿using CryptoWorld.News.Core.Interfaces;
+using CryptoWorld.News.Core.ViewModels.HomePage;
 using CryptоWorld.News.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,14 @@ namespace CryptoWorld.Application.Server.Controllers
 {
     public class NewsController : BaseApiController
     {
-        private readonly INewsService _homeNewsService;
-        public NewsController(INewsService homeNewsService)
+
+        private readonly INewsService homeNewsService;
+        private readonly IRssFeedService rssFeedService;
+
+        public NewsController(INewsService _homeNewsService, IRssFeedService _rssFeedService)
         {
-            _homeNewsService = homeNewsService;
+            homeNewsService = _homeNewsService;
+            rssFeedService = _rssFeedService;
         }
 
         [HttpGet("home")]
@@ -21,14 +26,14 @@ namespace CryptoWorld.Application.Server.Controllers
             try
             {
                 int pagesCount = 7;
-                var urls = await _homeNewsService.GetNewsUrlsAsync(pagesCount);
+                var urls = await homeNewsService.GetNewsUrlsAsync(pagesCount);
 
                 if (urls == null)
                 {
                     return BadRequest();
                 }
 
-                var model = await _homeNewsService.GetPageNewsModelAsync(urls);
+                var model = await homeNewsService.GetPageNewsModelAsync(urls);
                 if (model == null)
                 {
                     Log.Warning("No news!");
@@ -58,7 +63,7 @@ namespace CryptoWorld.Application.Server.Controllers
 
 			try
 			{
-				var result = await _homeNewsService.GetAllNewsForCertainPeriodOfTime(days);
+				var result = await homeNewsService.GetAllNewsForCertainPeriodOfTime(days);
 				return Ok(result);
 			}
 			catch (Exception ex)
@@ -73,7 +78,7 @@ namespace CryptoWorld.Application.Server.Controllers
         {
             try
             {
-                var queryResult = await _homeNewsService.GetSortedNewsAsync(
+                var queryResult = await homeNewsService.GetSortedNewsAsync(
                news.Category,
                news.SearchTerm,
                news.Region,
@@ -97,6 +102,31 @@ namespace CryptoWorld.Application.Server.Controllers
             {
                 Log.Error($"Error loading news with search criteria! {ex}");
                 return BadRequest();
+            }
+        }
+
+        [HttpGet("rssFeed")]
+        public async Task<IActionResult> GetRssFeed()
+        {
+            
+            try
+            {
+                var items = await rssFeedService.GetFeedItemsAsync();
+                var result = items.Select(item => new {
+                    item.Title,
+                    item.Link,
+                    item.Description,
+                    item.Content,
+                    item.PublishDate,
+                    item.Copyright
+                }).ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetFeed: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
     }

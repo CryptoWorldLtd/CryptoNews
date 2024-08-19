@@ -1,17 +1,19 @@
+using CryptoWorld.News.Core.ExceptionHandler;
+using CryptoWorld.News.Core.Interfaces;
 using CryptoWorld.News.Core.Services;
+using CryptoWorld.News.Core.Services.News;
+using CryptoWorld.News.Core.ViewModels;
 using CryptoWorld.News.Data;
+using CryptoWorld.News.Data.Extension;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
-using CryptoWorld.News.Core.Interfaces;
-using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.Services.News;
 using CryptоWorld.News.Core.ViewModels.HomePage;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using CryptoWorld.News.Core.ExceptionHandler;
 using CryptoWorld.News.Data.Extension;
@@ -72,6 +74,9 @@ builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddScoped<IRepository , Repository>();
 builder.Services.AddTransient<IAlertService, AlertService>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<IRssFeedService, RssFeedService>();
+builder.Services.Configure<RssFeedSettings>(builder.Configuration.GetSection("RssFeedSettings"));
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
