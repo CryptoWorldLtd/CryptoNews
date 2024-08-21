@@ -1,11 +1,8 @@
-﻿using CryptoWorld.News.Core.ViewModels;
+﻿namespace CryptoWorld.News.Core.Interfaces;
 
-namespace CryptoWorld.News.Core.Interfaces
+using CryptoWorld.News.Core.ViewModels;
+
+public interface IRssFeedService
 {
-    public interface IRssFeedService
-    {
-        public Task<List<RssResponseModel>> GetFeedItemsAsync();
-
-        public Task CreateNewsFromRssFeedAsync(List<RssResponseModel> models);
-    }
+    public Task<List<RssResponseModel>> GetFeedItemsAsync();
 }
