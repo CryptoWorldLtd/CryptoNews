@@ -1,0 +1,44 @@
+version: '3.4'
+
+networks:
+  cryptoworldapp:
+services:
+  cryptoworlddb:
+    container_name: backend-db
+    image: mcr.microsoft.com/mssql/server
+    ports:
+      - 8002:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Pa$$w0rdPa$$w0rd
+    networks:
+      - cryptoworldapp
+
+  cryptoworld.application.server:
+    container_name: backend
+    image: ${DOCKER_REGISTRY-}cryptoworldapplicationserver
+    build:
+      context: .
+      dockerfile: ./CryptoWorld.News.Server/Dockerfile
+    ports:
+       - 8001:8080
+    depends_on:
+       - cryptoworlddb
+    environment:
+       - DB_HOST=cryptoworlddb
+       - DB_NAME=CryptoWorldNews
+       - DB_SA_PASSWORD=Pa$$w0rdPa$$w0rd
+    networks:
+       - cryptoworldapp
+ 
+  cryptoworldfrontend:
+    container_name: frontend    
+    build:
+      context: .
+      dockerfile: cryptoworld.news.client/Dockerfile
+    ports:
+      - 5173:5173
+    depends_on:
+      - cryptoworld.application.server
+    networks:
+      - cryptoworldapp
