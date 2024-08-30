@@ -15,16 +15,43 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using CryptoWorld.News.Core.ExceptionHandler;
-using CryptoWorld.News.Data.Extension;
 using CryptoWorld.News.Data.Seeding;
+using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("JwtBearer", new OpenApiSecurityScheme
+    {
+
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+         new OpenApiSecurityScheme
+         {
+         
+             Reference = new OpenApiReference
+             { 
+             
+                 Type = ReferenceType.SecurityScheme,
+                 Id = "Bearer"
+             }
+         },
+         new string[]{}
+        }
+    });
+});
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -40,7 +67,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders()
     .AddRoles<ApplicationRole>();
-    
+
 builder.Services
     .AddAuthentication(
                 options =>
@@ -62,9 +89,11 @@ builder.Services
                         IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:secretKey"]))
                     };
                 });
+builder.Services.AddAuthorization();
+
 builder.Services.AddCors();
-builder.Services.AddScoped<IAccountService,AccountService>();
-builder.Services.AddScoped<IUserProfileService,UserProfileService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddScoped<UrlForNews>();
 builder.Services.Configure<UrlForNews>(builder.Configuration.GetSection("MoneyBgUrl"));
@@ -72,7 +101,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGrid"));
 builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
-builder.Services.AddScoped<IRepository , Repository>();
+builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddTransient<IAlertService, AlertService>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IRssFeedService, RssFeedService>();
@@ -81,7 +110,7 @@ builder.Services.Configure<RssFeedSettings>(builder.Configuration.GetSection("Rs
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.Console()
-    .WriteTo.File("logs/CryptoNewsLogsFromSerilog-.txt",rollingInterval: RollingInterval.Day)
+    .WriteTo.File("logs/CryptoNewsLogsFromSerilog-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
 var app = builder.Build();
@@ -92,7 +121,7 @@ using (var serviceScope = app.Services.CreateScope())
     var services = serviceScope.ServiceProvider;
     if (app.Environment.IsDevelopment())
     {
-        try 
+        try
         {
             var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             dbContext.Database.Migrate();
