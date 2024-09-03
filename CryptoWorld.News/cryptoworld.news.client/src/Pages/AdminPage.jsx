@@ -1,5 +1,5 @@
 import  React from 'react';
-import { DataGrid } from '@mui/x-data-grid'; // Import DataGrid
+import { DataGrid } from '@mui/x-data-grid'; 
 
 const columns = [
   { field: 'userId', headerName: 'UserID', width: 70 },
@@ -18,7 +18,7 @@ const columns = [
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
     width: 160,
-    valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    
   },
 ];
 
