@@ -85,7 +85,7 @@ namespace CryptоWorld.News.Core.Services
 
         public async Task<List<ApplicationUser>> GetAllUsersAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _userManager.Users.ToListAsync();
             
         }
     }

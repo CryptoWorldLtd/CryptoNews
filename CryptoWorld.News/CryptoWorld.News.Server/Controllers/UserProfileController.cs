@@ -1,20 +1,15 @@
-﻿using CryptoWorld.News.Core.Interfaces;
-using CryptoWorld.News.Core.Services;
-using CryptoWorld.News.Core.ViewModels;
-using CryptoWorld.News.Data;
+﻿using CryptoWorld.News.Data;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.ViewModels;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CryptoWorld.Application.Server.Controllers
 {
-    [Authorize]
+   //Authorize]
     public class UserProfileController : BaseApiController
     {
         private readonly IUserProfileService _profileService;
