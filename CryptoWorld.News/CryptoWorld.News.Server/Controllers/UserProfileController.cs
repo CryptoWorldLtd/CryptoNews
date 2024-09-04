@@ -96,5 +96,10 @@ namespace CryptoWorld.Application.Server.Controllers
             return Ok(new { message = "Successfully logged out" });
         }
 
+        [HttpGet("users")]
+        public async Task<List<ApplicationUser>> GetUsers()
+        {
+                return await _profileService.GetAllUsersAsync();
+        }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using CryptoWorld.News.Data;
+using CryptoWorld.News.Data.Extension;
 using CryptoWorld.News.Data.Models;
 using CryptоWorld.News.Core.Interfaces;
 using CryptоWorld.News.Core.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace CryptоWorld.News.Core.Services
 {
@@ -11,6 +13,7 @@ namespace CryptоWorld.News.Core.Services
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
+        
         public UserProfileService(
             UserManager<ApplicationUser> userManager,
             ApplicationDbContext context,
@@ -78,6 +81,12 @@ namespace CryptоWorld.News.Core.Services
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<List<ApplicationUser>> GetAllUsersAsync()
+        {
+            return await _context.Users.ToListAsync();
+            
         }
     }
 }
